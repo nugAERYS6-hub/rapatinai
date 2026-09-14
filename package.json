@@ -1,0 +1,19 @@
+{
+    "name": "Rapatin AI",
+    "version": "1.0.0",
+    "description": "Aplikasi Notulensi Rapat",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "better-sqlite3": "^13.0.3",
+        "docx": "^9.7.1",
+        "dotenv": "^17.4.2",
+        "express": "^4.19.2",
+        "pdfkit": "^0.20.2"
+    },
+    "allowScripts": {
+        "better-sqlite3@13.0.3": true
+    }
+}

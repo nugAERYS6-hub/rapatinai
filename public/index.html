@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RapatinAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">RapatinAI</div>
+
+      <button id="tombol-rapat-baru" class="tombol-rapat-baru">+ Rapat Baru</button>
+
+      <div class="sidebar-judul">Riwayat Rapat</div>
+      <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
+        <p class="sidebar-kosong">Belum ada rapat</p>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+
+      <div id="tampilan-form">
+        <h1>Rapat Baru</h1>
+        <p class="subjudul">Isi data rapat di bawah ini</p>
+
+        <div class="toolbar-suara">
+          <button type="button" id="tombol-mic" class="tombol-mic">🎙️ Mulai Bicara</button>
+          <span id="status-mic"></span>
+        </div>
+
+        <form id="form-rapat">
+          <div class="seksi-form">
+            <div class="judul-seksi">Informasi Rapat</div>
+
+            <div class="baris-grid">
+              <div class="grup-input">
+                <label for="tanggal">Tanggal Rapat</label>
+                <input type="date" id="tanggal" required>
+              </div>
+              <div class="grup-input">
+                <label for="topik">Topik Rapat</label>
+                <input type="text" id="topik" placeholder="Contoh: Rapat Anggaran 2026" required>
+              </div>
+            </div>
+
+            <div class="baris-grid">
+              <div class="grup-input">
+                <label for="pimpinan">Pimpinan Rapat</label>
+                <input type="text" id="pimpinan" required>
+              </div>
+              <div class="grup-input">
+                <label for="notulis">Notulis</label>
+                <input type="text" id="notulis" required>
+              </div>
+            </div>
+
+            <div class="grup-input">
+              <label for="anggota">Anggota Rapat (pisahkan pakai koma)</label>
+              <input type="text" id="anggota" placeholder="Budi, Siti, Andi">
+            </div>
+          </div>
+
+          <div class="seksi-form">
+            <div class="judul-seksi">Poin Pembahasan & Keputusan</div>
+            <div id="daftar-poin"></div>
+            <button type="button" id="tambah-poin" class="tombol-tambah">+ Tambah Poin</button>
+          </div>
+
+          <div class="seksi-form">
+            <div class="judul-seksi">Tindak Lanjut</div>
+            <p class="keterangan-seksi">Usulan ide baru akan dibuat otomatis oleh AI setelah rapat disimpan.</p>
+            <div id="daftar-tindak-lanjut"></div>
+            <button type="button" id="tambah-tindak-lanjut" class="tombol-tambah">+ Tambah Tindak Lanjut</button>
+          </div>
+
+          <button type="submit" class="tombol-simpan">Simpan Rapat</button>
+        </form>
+      </div>
+
+      <div id="tampilan-detail" class="tersembunyi">
+        <div id="konten-detail"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
