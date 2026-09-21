@@ -1,95 +1,459 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RapatinAI</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <div class="app-shell">
-
-    <aside class="sidebar">
-      <div class="sidebar-logo">RapatinAI</div>
-
-      <button id="tombol-rapat-baru" class="tombol-rapat-baru">+ Rapat Baru</button>
-
-      <div class="sidebar-judul">Riwayat Rapat</div>
-      <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
-        <p class="sidebar-kosong">Belum ada rapat</p>
-      </div>
-    </aside>
-
-    <main class="main-panel">
-
-      <div id="tampilan-form">
-        <h1>Rapat Baru</h1>
-        <p class="subjudul">Isi data rapat di bawah ini</p>
-
-        <div class="toolbar-suara">
-          <button type="button" id="tombol-mic" class="tombol-mic">🎙️ Mulai Bicara</button>
-          <span id="status-mic"></span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RapatinAI — Executive Meeting Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- SIDEBAR NAVIGASI EKSEKUTIF -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="brand">
+            <span class="brand-title-notulensi">Notulensi</span>
+          </div>
+          <button type="button" id="tombol-tutup-sidebar-mobile" class="tombol-icon-mobile" aria-label="Tutup sidebar">
+            ✕
+          </button>
         </div>
 
-        <form id="form-rapat">
-          <div class="seksi-form">
-            <div class="judul-seksi">Informasi Rapat</div>
+        <!-- SEARCH & FILTER CEPAT (PALING ATAS) -->
+        <div class="sidebar-search-box">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="input-cari-rapat"
+              placeholder="Cari topik, nama, poin..."
+              autocomplete="off"
+            />
+            <button type="button" id="tombol-clear-cari" class="tombol-clear tersembunyi" title="Hapus pencarian">×</button>
+          </div>
 
-            <div class="baris-grid">
-              <div class="grup-input">
-                <label for="tanggal">Tanggal Rapat</label>
-                <input type="date" id="tanggal" required>
-              </div>
-              <div class="grup-input">
-                <label for="topik">Topik Rapat</label>
-                <input type="text" id="topik" placeholder="Contoh: Rapat Anggaran 2026" required>
-              </div>
-            </div>
+          <div class="filter-pills" id="filter-pills">
+            <button type="button" class="pill aktif" data-filter="all">Semua</button>
+            <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
+            <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
+          </div>
+        </div>
 
-            <div class="baris-grid">
-              <div class="grup-input">
-                <label for="pimpinan">Pimpinan Rapat</label>
-                <input type="text" id="pimpinan" required>
-              </div>
-              <div class="grup-input">
-                <label for="notulis">Notulis</label>
-                <input type="text" id="notulis" required>
-              </div>
-            </div>
+        <!-- WIDGET STATISTIK CEPAT -->
+        <div class="stats-card">
+          <div class="stat-item">
+            <span class="stat-label">Total Rapat</span>
+            <span class="stat-val" id="stat-total-rapat">-</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-label">Bulan Ini</span>
+            <span class="stat-val" id="stat-bulan-ini">-</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-label">AI Ready</span>
+            <span class="stat-val stat-val-ai" id="stat-ai-ready">-</span>
+          </div>
+        </div>
 
-            <div class="grup-input">
-              <label for="anggota">Anggota Rapat (pisahkan pakai koma)</label>
-              <input type="text" id="anggota" placeholder="Budi, Siti, Andi">
+        <!-- DAFTAR RAPAT DENGAN SCROLL HALUS & PAGINATION -->
+        <div class="sidebar-section-title">
+          <span>Riwayat Notulen</span>
+          <span class="counter-badge" id="counter-daftar">0</span>
+        </div>
+
+        <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
+          <div class="sidebar-skeleton-wrap">
+            <div class="skeleton skeleton-item"></div>
+            <div class="skeleton skeleton-item"></div>
+            <div class="skeleton skeleton-item"></div>
+          </div>
+        </div>
+
+        <!-- PAGINATION BAR -->
+        <div class="sidebar-pagination" id="sidebar-pagination">
+          <button type="button" id="btn-prev-page" class="btn-page" disabled>‹</button>
+          <span id="label-page-info" class="label-page">Hal 1 / 1</span>
+          <button type="button" id="btn-next-page" class="btn-page" disabled>›</button>
+        </div>
+
+        <!-- FOOTER SIDEBAR -->
+        <div class="sidebar-footer">
+          <div class="db-status-badge" title="Database SQLite WAL Mode & FTS5 Aktif">
+            <span class="pulse-dot"></span>
+            <span>SQLite Enterprise Engine</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- OVERLAY UNTUK MOBILE -->
+      <div id="sidebar-overlay" class="sidebar-overlay tersembunyi"></div>
+
+      <!-- MAIN CONTENT PANEL -->
+      <main class="main-panel">
+        <!-- TOP COMMAND BAR -->
+        <header class="top-command-bar">
+          <div class="command-bar-left">
+            <button type="button" id="tombol-buka-sidebar-mobile" class="tombol-burger-mobile" aria-label="Menu navigasi">
+              ☰
+            </button>
+            <div class="breadcrumb" id="breadcrumb-area">
+              <span class="breadcrumb-root">RapatinAI</span>
+              <span class="breadcrumb-separator">/</span>
+              <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
             </div>
           </div>
 
-          <div class="seksi-form">
-            <div class="judul-seksi">Poin Pembahasan & Keputusan</div>
-            <div id="daftar-poin"></div>
-            <button type="button" id="tambah-poin" class="tombol-tambah">+ Tambah Poin</button>
+          <div class="command-bar-right">
+            <div class="draft-status-pill tersembunyi" id="draf-auto-save-pill">
+              <span class="draf-icon">💾</span>
+              <span id="draf-auto-save-text">Draf otomatis tersimpan</span>
+            </div>
+            <button type="button" id="btn-header-new" class="btn-header-action" title="Buat Notulen Rapat Baru">
+              <span class="btn-plus-icon">＋</span>
+              <span>Rapat Baru</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="main-scrollable-content">
+          <!-- ============================================== -->
+          <!-- VIEW 1: TAMPILAN DETAIL RAPAT EKSEKUTIF        -->
+          <!-- ============================================== -->
+          <section id="tampilan-detail" class="view-section tersembunyi">
+            <!-- HERO HEADER RAPAT -->
+            <div class="detail-hero-card">
+              <div class="hero-top-row">
+                <span class="badge-status-rapat" id="detail-badge-status">Selesai</span>
+                <span class="detail-tanggal-pill" id="detail-tanggal">
+                  📅 <span>-</span>
+                </span>
+                <span class="detail-tanggal-pill" id="detail-waktu">
+                  ⏰ <span>-</span>
+                </span>
+                <span class="detail-tanggal-pill" id="detail-tempat">
+                  📍 <span>-</span>
+                </span>
+              </div>
+
+              <h1 class="detail-judul-topik" id="detail-topik">-</h1>
+
+              <div class="detail-officials-grid">
+                <div class="official-card">
+                  <div class="official-avatar" id="avatar-pimpinan">P</div>
+                  <div class="official-info">
+                    <span class="official-role">Pimpinan Rapat</span>
+                    <span class="official-name" id="detail-pimpinan">-</span>
+                  </div>
+                </div>
+
+                <div class="official-card">
+                  <div class="official-avatar" id="avatar-notulis">N</div>
+                  <div class="official-info">
+                    <span class="official-role">Notulis</span>
+                    <span class="official-name" id="detail-notulis">-</span>
+                  </div>
+                </div>
+
+                <div class="official-card">
+                  <div class="official-avatar">👥</div>
+                  <div class="official-info">
+                    <span class="official-role">Total Peserta</span>
+                    <span class="official-name" id="detail-total-peserta">0 Orang</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ACTION TOOLBAR -->
+              <div class="detail-action-ribbon">
+                <div class="action-group ai-group">
+                  <button type="button" id="btn-ai-ringkasan" class="btn-ai-action">
+                    <span class="btn-icon">✨</span>
+                    <span>Ringkasan AI</span>
+                  </button>
+                  <button type="button" id="btn-ai-ide" class="btn-ai-action">
+                    <span class="btn-icon">💡</span>
+                    <span>Ide Strategis AI</span>
+                  </button>
+                </div>
+
+                <div class="action-group export-group">
+                  <a id="btn-unduh-pdf" href="#" class="btn-export" target="_blank">
+                    <span>📄 Unduh PDF</span>
+                  </a>
+                  <a id="btn-unduh-word" href="#" class="btn-export" target="_blank">
+                    <span>📝 Unduh Word</span>
+                  </a>
+                  <button type="button" id="btn-salin-notulen" class="btn-export" title="Salin ringkasan ke clipboard">
+                    <span>📋 Salin</span>
+                  </button>
+                  <button type="button" id="btn-edit-rapat" class="btn-manage btn-edit">
+                    <span>✏️ Edit</span>
+                  </button>
+                  <button type="button" id="btn-hapus-rapat" class="btn-manage btn-delete">
+                    <span>🗑️ Hapus</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB / CARDS SECTION -->
+            <div class="detail-cards-container">
+              <!-- KARTU HASIL AI -->
+              <div class="card-luxury ai-intelligence-card" id="kotak-ai-container">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-header-icon">🧠</span>
+                    <h2>Pusat Intelijensi AI (Gemini Flash)</h2>
+                  </div>
+                  <span class="ai-model-tag">Fast Inference</span>
+                </div>
+
+                <div class="ai-panels-grid">
+                  <!-- Panel Ringkasan -->
+                  <div class="ai-box">
+                    <div class="ai-box-header">
+                      <span class="ai-box-title">Ringkasan Eksekutif Naratif</span>
+                      <button type="button" id="btn-copy-ringkasan" class="btn-micro-copy" title="Salin ringkasan">Salin</button>
+                    </div>
+                    <div class="ai-box-content" id="konten-ringkasan-ai">
+                      <p class="placeholder-ai">Belum dibuat ringkasan. Klik tombol <b>Ringkasan AI</b> di atas untuk menyusun narasi resmi.</p>
+                    </div>
+                  </div>
+
+                  <!-- Panel Ide Rekomendasi -->
+                  <div class="ai-box">
+                    <div class="ai-box-header">
+                      <span class="ai-box-title">Rekomendasi & Ide Baru Strategis</span>
+                      <button type="button" id="btn-copy-ide" class="btn-micro-copy" title="Salin ide baru">Salin</button>
+                    </div>
+                    <div class="ai-box-content" id="konten-ide-ai">
+                      <p class="placeholder-ai">Belum ada rekomendasi. Klik tombol <b>Ide Strategis AI</b> untuk mendapatkan usulan kebijakan baru.</p>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- KARTU PESERTA RAPAT -->
+              <div class="card-luxury">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-header-icon">👥</span>
+                    <h2>Daftar Peserta Rapat</h2>
+                  </div>
+                  <span class="badge-count" id="badge-peserta-count">0 Peserta</span>
+                </div>
+                <div class="grid-peserta-cards" id="konten-peserta-grid"></div>
+              </div>
+
+              <!-- KARTU POIN PEMBAHASAN & HASIL RAPAT -->
+              <div class="card-luxury">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-header-icon">📋</span>
+                    <h2>Notulensi</h2>
+                  </div>
+                  <span class="badge-count" id="badge-poin-count">0 Notulensi</span>
+                </div>
+                <div class="list-pembahasan" id="konten-poin-list"></div>
+              </div>
+
+              <!-- KARTU PRATINJAU DOKUMEN CETAK RESMI -->
+              <div class="card-luxury document-preview-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="card-header-icon">🖨️</span>
+                    <h2>Pratinjau Format Dokumen Baku</h2>
+                  </div>
+                  <button type="button" id="btn-print-doc" class="btn-print-action">
+                    Cetak Dokumen (Ctrl+P)
+                  </button>
+                </div>
+                <div class="paper-preview" id="paper-preview-content"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================== -->
+          <!-- VIEW 2: TAMPILAN SMART FORM (CREATE / EDIT)    -->
+          <!-- ============================================== -->
+          <section id="tampilan-form" class="view-section">
+            <div class="form-luxury-container">
+              <div class="form-header-banner">
+                <div>
+                  <h1 class="form-title" id="judul-form">Rapat Baru</h1>
+                  <p class="form-subtitle">Susun catatan rapat.</p>
+                </div>
+                <div class="form-mode-pill" id="form-mode-tag">Mode Input</div>
+              </div>
+
+              <!-- FORM UTAMA -->
+              <form id="form-rapat" novalidate>
+                <input type="hidden" id="edit-id-rapat" value="" />
+
+                <!-- SEKSI 1: INFORMASI UMUM -->
+                <div class="form-card-section">
+                  <div class="section-badge">Bagian 1</div>
+                  <h3 class="section-title">Informasi Dasar Rapat</h3>
+
+                  <div class="form-grid-2">
+                    <div class="input-field-group">
+                      <label for="tanggal">Tanggal Pelaksanaan <span class="req">*</span></label>
+                      <input type="date" id="tanggal" required />
+                    </div>
+
+                    <div class="input-field-group">
+                      <label for="topik">Topik / Agenda Rapat <span class="req">*</span></label>
+                      <input
+                        type="text"
+                        id="topik"
+                        placeholder="Contoh: Rapat Koordinasi RKPD TA 2027"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="input-field-group">
+                      <label for="pimpinan">Pimpinan Rapat <span class="req">*</span></label>
+                      <input
+                        type="text"
+                        id="pimpinan"
+                        placeholder="Nama dan gelar pimpinan"
+                        required
+                      />
+                    </div>
+
+                    <div class="input-field-group">
+                      <label for="notulis">Notulis Rapat <span class="req">*</span></label>
+                      <input
+                        type="text"
+                        id="notulis"
+                        placeholder="Nama notulis yang mencatat"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="input-field-group">
+                      <label for="waktu">Waktu Pelaksanaan</label>
+                      <input
+                        type="text"
+                        id="waktu"
+                        placeholder="Contoh: Pukul 08:00 s/d 09:00"
+                      />
+                    </div>
+
+                    <div class="input-field-group">
+                      <label for="tempat">Tempat Pelaksanaan</label>
+                      <input
+                        type="text"
+                        id="tempat"
+                        placeholder="Contoh: Ruang Komite Medik RS Urip Sumoharjo"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SEKSI 2: DAFTAR PESERTA -->
+                <div class="form-card-section">
+                  <div class="section-badge">Bagian 2</div>
+                  <div class="section-title-row">
+                    <div>
+                      <h3 class="section-title">Peserta Rapat Hadir</h3>
+                      <p class="section-desc">Masukkan seluruh pejabat atau anggota tim yang menghadiri pertemuan.</p>
+                    </div>
+                    <button type="button" id="tombol-buka-modal-anggota" class="btn-add-dashed">
+                      ＋ Tambah Peserta
+                    </button>
+                  </div>
+
+                  <div id="daftar-anggota-chips" class="attendee-chips-wall">
+                    <div class="empty-state-hint">Belum ada peserta ditambahkan. Klik tombol di atas.</div>
+                  </div>
+                </div>
+
+                <!-- SEKSI 3: NOTULENSI -->
+                <div class="form-card-section">
+                  <div class="section-badge">Bagian 3</div>
+                  <div class="section-title-row">
+                    <div>
+                      <h3 class="section-title">Notulensi</h3>
+                      <p class="section-desc">Tuliskan seluruh catatan pembahasan dan hasil rapat.</p>
+                    </div>
+                    <button type="button" id="tambah-poin" class="btn-add-dashed">
+                      ＋ Tambah Notulensi
+                    </button>
+                  </div>
+
+                  <div id="daftar-poin-inputs" class="dynamic-inputs-container"></div>
+                </div>
+
+                <!-- ACTION FOOTER -->
+                <div class="form-submit-footer">
+                  <button type="button" id="tombol-batal-form" class="btn-batal-besar">
+                    Batal
+                  </button>
+                  <button type="submit" class="btn-simpan-besar" id="tombol-simpan-submit">
+                    <span class="submit-icon">💾</span>
+                    <span id="label-simpan-submit">Simpan Notulen Rapat</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL POPUP: TAMBAH PESERTA RAPAT              -->
+    <!-- ============================================== -->
+    <dialog id="modal-anggota" class="luxury-modal">
+      <div class="modal-card">
+        <div class="modal-card-header">
+          <h3>Tambah Peserta Rapat</h3>
+          <button type="button" class="btn-close-modal" id="btn-close-modal-x" aria-label="Tutup">✕</button>
+        </div>
+
+        <form id="form-modal-anggota" onsubmit="return false;">
+          <div class="input-field-group">
+            <label for="modal-nama">Nama Peserta <span class="req">*</span></label>
+            <input type="text" id="modal-nama" placeholder="Contoh: Dr. Ir. H. Ahmad Fauzi, M.Si" required />
           </div>
 
-          <div class="seksi-form">
-            <div class="judul-seksi">Tindak Lanjut</div>
-            <p class="keterangan-seksi">Usulan ide baru akan dibuat otomatis oleh AI setelah rapat disimpan.</p>
-            <div id="daftar-tindak-lanjut"></div>
-            <button type="button" id="tambah-tindak-lanjut" class="tombol-tambah">+ Tambah Tindak Lanjut</button>
+          <div class="input-field-group">
+            <label for="modal-jabatan">Jabatan</label>
+            <input type="text" id="modal-jabatan" placeholder="Contoh: Kepala Bidang Perencanaan" />
           </div>
 
-          <button type="submit" class="tombol-simpan">Simpan Rapat</button>
+          <div class="input-field-group">
+            <label for="modal-instansi">Asal Instansi / OPD</label>
+            <input type="text" id="modal-instansi" placeholder="Contoh: BAPPEDA Provinsi" />
+          </div>
+
+          <div class="modal-card-footer">
+            <button type="button" id="tombol-batal-anggota" class="btn-secondary">
+              Batal
+            </button>
+            <button type="submit" id="tombol-simpan-anggota" class="btn-primary">
+              Tambahkan Peserta
+            </button>
+          </div>
         </form>
       </div>
+    </dialog>
 
-      <div id="tampilan-detail" class="tersembunyi">
-        <div id="konten-detail"></div>
-      </div>
+    <!-- TOAST CONTAINER -->
+    <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-    </main>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
