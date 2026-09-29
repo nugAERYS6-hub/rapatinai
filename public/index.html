@@ -28,7 +28,12 @@
         <!-- SEARCH & FILTER CEPAT (PALING ATAS) -->
         <div class="sidebar-search-box">
           <div class="search-input-wrap">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
             <input
               type="text"
               id="input-cari-rapat"
@@ -105,7 +110,7 @@
               ☰
             </button>
             <div class="breadcrumb" id="breadcrumb-area">
-              <span class="breadcrumb-root">RapatinAI</span>
+              <span class="breadcrumb-root">Notulensi</span>
               <span class="breadcrumb-separator">/</span>
               <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
             </div>
@@ -210,8 +215,8 @@
               <div class="card-luxury ai-intelligence-card" id="kotak-ai-container">
                 <div class="card-header">
                   <div class="card-title-group">
-                    <span class="card-header-icon">🧠</span>
-                    <h2>Pusat Intelijensi AI (Gemini Flash)</h2>
+                    <span class="card-header-icon">✨</span>
+                    <h2>AI</h2>
                   </div>
                   <span class="ai-model-tag">Fast Inference</span>
                 </div>
@@ -270,6 +275,7 @@
                   <div class="card-title-group">
                     <span class="card-header-icon">🖨️</span>
                     <h2>Pratinjau Format Dokumen Baku</h2>
+                    <span class="badge-status-rapat badge-status-selesai" style="font-size: 11px; margin-left: 6px;">Kop BAPPEDA</span>
                   </div>
                   <button type="button" id="btn-print-doc" class="btn-print-action">
                     Cetak Dokumen (Ctrl+P)

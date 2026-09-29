@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const Database = require("better-sqlite3");
 const PDFDocument = require("pdfkit");
 const { Document, Packer, Paragraph, HeadingLevel, TextRun, AlignmentType } = require("docx");
@@ -326,6 +327,7 @@ ${daftarPoin}
 
 ATURAN KETAT:
 - Gunakan HANYA data eksplisit di atas. Jangan mengarang nama dinas/lokasi fiktif.
+- JANGAN memasukkan tempat pelaksanaan rapat pada judul/headline atau pembuka ringkasan, karena tempat sudah ada di formulir informasi rapat.
 - Susun secara naratif mengalir dan profesional (Executive Summary standard).
 - Tekankan apa yang dibahas serta keputusan/hasil yang disepakati bersama.`;
 
@@ -712,19 +714,34 @@ app.get("/api/rapat/:id/export-pdf", (req, res) => {
 
     doc.pipe(res);
 
+    // 0. Kop Surat Resmi Bappeda Maluku Utara
+    const pathLogo = path.join(__dirname, "public", "logo-bappeda.jpg");
+    if (fs.existsSync(pathLogo)) {
+      doc.image(pathLogo, 60, 42, { width: 55 });
+    }
+    const headerLeft = 120;
+    const headerWidth = 415;
+    doc.fontSize(10.5).font("Helvetica-Bold").fillColor("#000000").text("PEMERINTAH PROVINSI MALUKU UTARA", headerLeft, 44, { width: headerWidth, align: "center" });
+    doc.fontSize(12).font("Helvetica-Bold").text("BADAN PERENCANAAN PEMBANGUNAN DAERAH", headerLeft, 58, { width: headerWidth, align: "center" });
+    doc.fontSize(8).font("Helvetica").text("Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827", headerLeft, 74, { width: headerWidth, align: "center" });
+    doc.fontSize(7.5).font("Helvetica").text("Laman: bappeda.malutprov.go.id  |  Pos-el: bappeda@malutprov.go.id", headerLeft, 86, { width: headerWidth, align: "center" });
+
+    // Garis Pemisah Kop Surat (Garis Ganda)
+    doc.strokeColor("#000000").lineWidth(2).moveTo(60, 105).lineTo(535, 105).stroke();
+    doc.lineWidth(0.6).moveTo(60, 108).lineTo(535, 108).stroke();
+
+    doc.y = 122;
+
     // 1. Header Judul Laporan Terpusat
     doc.fontSize(12).font("Helvetica-Bold").fillColor("#000000").text("LAPORAN HASIL RAPAT", { align: "center" });
     doc.fontSize(11).font("Helvetica-Bold").text(rapat.topik.toUpperCase(), { align: "center" });
-    if (rapat.tempat) {
-      doc.fontSize(11).font("Helvetica-Bold").text(rapat.tempat.toUpperCase(), { align: "center" });
-    }
-    doc.moveDown(1.4);
+    doc.moveDown(1.2);
 
     // 2. Metadata Tabel dengan Titik Dua Sejajar
     const labelX = 60;
     const colonX = 180;
     const valX = 192;
-    const lineGap = 18;
+    const lineGap = 13.5;
     let curY = doc.y;
 
     const barisMeta = [
@@ -799,7 +816,7 @@ app.get("/api/rapat/:id/export-pdf", (req, res) => {
     if (rapat.ringkasanAI || rapat.ideBaruAI) {
       doc.moveDown(1.5);
       if (rapat.ringkasanAI) {
-        doc.font("Helvetica-Bold").fontSize(10.5).text("RINGKASAN EKSEKUTIF (AI):");
+        doc.font("Helvetica-Bold").fontSize(10.5).text("Ringkasan:");
         doc.moveDown(0.3);
         doc.font("Helvetica").fontSize(9.5).text(rapat.ringkasanAI, { indent: 10, align: "justify", lineGap: 2 });
         doc.moveDown(0.8);
@@ -826,9 +843,69 @@ app.get("/api/rapat/:id/export-word", async (req, res) => {
 
     const rapat = ubahBarisJadiRapatLengkap(baris);
     const safeTopic = rapat.topik.replace(/[^a-zA-Z0-9-_]/g, "_");
-    const namaFile = `Laporan_Rapat_${safeTopic}_${rapat.tanggal}.docx`;
+    const kopParagraphs = [
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 40 },
+        children: [
+          new TextRun({
+            text: "PEMERINTAH PROVINSI MALUKU UTARA",
+            bold: true,
+            size: 24,
+            font: "Times New Roman",
+          }),
+        ],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 40 },
+        children: [
+          new TextRun({
+            text: "BADAN PERENCANAAN PEMBANGUNAN DAERAH",
+            bold: true,
+            size: 26,
+            font: "Times New Roman",
+          }),
+        ],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 30 },
+        children: [
+          new TextRun({
+            text: "Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827",
+            size: 18,
+            font: "Times New Roman",
+          }),
+        ],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 100 },
+        children: [
+          new TextRun({
+            text: "Laman: bappeda.malutprov.go.id  |  Pos-el: bappeda@malutprov.go.id",
+            size: 17,
+            font: "Times New Roman",
+          }),
+        ],
+      }),
+      new Paragraph({
+        border: {
+          bottom: {
+            color: "000000",
+            space: 1,
+            value: "double",
+            size: 12,
+          },
+        },
+        children: [],
+      }),
+      new Paragraph({ text: "" }),
+    ];
 
     const children = [
+      ...kopParagraphs,
       new Paragraph({
         text: "LAPORAN HASIL RAPAT",
         heading: HeadingLevel.HEADING_1,
@@ -840,16 +917,6 @@ app.get("/api/rapat/:id/export-word", async (req, res) => {
         alignment: AlignmentType.CENTER,
       }),
     ];
-
-    if (rapat.tempat) {
-      children.push(
-        new Paragraph({
-          text: rapat.tempat.toUpperCase(),
-          heading: HeadingLevel.HEADING_3,
-          alignment: AlignmentType.CENTER,
-        })
-      );
-    }
 
     children.push(new Paragraph({ text: "" }));
 
@@ -944,7 +1011,7 @@ app.get("/api/rapat/:id/export-word", async (req, res) => {
       children.push(new Paragraph({ text: "" }));
       children.push(
         new Paragraph({
-          text: "RINGKASAN EKSEKUTIF (AI)",
+          text: "Ringkasan",
           heading: HeadingLevel.HEADING_2,
         })
       );

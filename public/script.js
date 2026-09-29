@@ -234,19 +234,12 @@ function renderSidebarList() {
       item.classList.add("aktif");
     }
 
-    const hasAiBadge = (rapat.hasRingkasan || rapat.hasIdeBaru)
-      ? `<span class="mini-pill-ai">✨ AI</span>`
-      : "";
-
     item.innerHTML = `
       <div class="item-row-top">
         <span class="item-topik" title="${rapat.topik}">${rapat.topik}</span>
       </div>
       <div class="item-row-meta">
         <span class="item-tanggal">${rapat.tanggal || "-"}</span>
-        <div class="item-badges">
-          ${hasAiBadge}
-        </div>
       </div>
     `;
 
@@ -410,47 +403,62 @@ function renderPaperPreview(rapat) {
 
   el.paperPreviewContent.innerHTML = `
     <div style="max-width: 720px; margin: 0 auto; color: #000000; font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.6;">
-      <div style="text-align: center; margin-bottom: 28px;">
+      <!-- KOP SURAT RESMI BAPPEDA PROVINSI MALUKU UTARA -->
+      <div class="kop-surat-wrapper">
+        <div class="kop-logo-box">
+          <img src="logo-bappeda.jpg" alt="Logo BAPPEDA Maluku Utara" class="kop-logo-img" />
+        </div>
+        <div class="kop-text-box">
+          <div class="kop-instansi-prov">PEMERINTAH PROVINSI MALUKU UTARA</div>
+          <div class="kop-nama-dinas">BADAN PERENCANAAN PEMBANGUNAN DAERAH</div>
+          <div class="kop-alamat">Jalan Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827</div>
+          <div class="kop-kontak">Laman: bappeda.malutprov.go.id &nbsp;|&nbsp; Pos-el: bappeda@malutprov.go.id</div>
+        </div>
+        <div class="kop-spacer"></div>
+      </div>
+      <div class="kop-garis-tebal"></div>
+      <div class="kop-garis-tipis"></div>
+
+      <div style="text-align: center; margin-bottom: 20px;">
         <div style="font-size: 13.5pt; font-weight: bold; letter-spacing: 0.5px;">LAPORAN HASIL RAPAT</div>
         <div style="font-size: 12.5pt; font-weight: bold; margin-top: 2px;">${(rapat.topik || "").toUpperCase()}</div>
-        ${rapat.tempat ? `<div style="font-size: 12pt; font-weight: bold; margin-top: 2px;">${rapat.tempat.toUpperCase()}</div>` : ""}
       </div>
 
-      <table style="width: 100%; font-size: 11pt; border-collapse: collapse; margin-bottom: 22px;">
+      <table style="width: 100%; font-size: 11pt; border-collapse: collapse; margin-bottom: 12px; line-height: 1.2;">
         <tr>
-          <td style="width: 170px; padding: 2.5px 0; vertical-align: top;">Hari / tanggal</td>
-          <td style="width: 15px; padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">${hariTanggalStr}</td>
+          <td style="width: 170px; padding: 1px 0; vertical-align: top;">Hari / tanggal</td>
+          <td style="width: 15px; padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">${hariTanggalStr}</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Waktu</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">${rapat.waktu || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">Waktu</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">${rapat.waktu || "-"}</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Tempat</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">${rapat.tempat || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">Tempat</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">${rapat.tempat || "-"}</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Pemimpin rapat</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">${rapat.pimpinanRapat || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">Pemimpin rapat</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">${rapat.pimpinanRapat || "-"}</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Notulen</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">${rapat.notulis || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">Notulen</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">${rapat.notulis || "-"}</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Peserta</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">Terlampir</td>
+          <td style="padding: 1px 0; vertical-align: top;">Peserta</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;">Terlampir</td>
         </tr>
         <tr>
-          <td style="padding: 2.5px 0; vertical-align: top;">Hasil rapat</td>
-          <td style="padding: 2.5px 0; vertical-align: top;">:</td>
-          <td style="padding: 2.5px 0; vertical-align: top;"></td>
+          <td style="padding: 1px 0; vertical-align: top;">Hasil rapat</td>
+          <td style="padding: 1px 0; vertical-align: top;">:</td>
+          <td style="padding: 1px 0; vertical-align: top;"></td>
         </tr>
       </table>
 
@@ -503,7 +511,7 @@ function renderPaperPreview(rapat) {
 
       ${rapat.ringkasanAI ? `
         <div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 18px;">
-          <div style="font-weight: bold; font-size: 11pt; margin-bottom: 6px;">RINGKASAN EKSEKUTIF (AI)</div>
+          <div style="font-weight: bold; font-size: 11pt; margin-bottom: 6px;">Ringkasan</div>
           <div style="font-size: 10.5pt; text-align: justify; line-height: 1.6;">${rapat.ringkasanAI}</div>
         </div>
       ` : ""}
@@ -597,9 +605,12 @@ el.btnSalinNotulen.addEventListener("click", () => {
     : "   - Tidak ada catatan hasil rapat -";
 
   const teksLengkap = `
+PEMERINTAH PROVINSI MALUKU UTARA
+BADAN PERENCANAAN PEMBANGUNAN DAERAH (BAPPEDA)
+Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827
+================================================================================
 LAPORAN HASIL RAPAT
 ${(r.topik || "").toUpperCase()}
-${r.tempat ? r.tempat.toUpperCase() + "\n" : ""}
 Hari / tanggal   : ${hariTanggal}
 Waktu            : ${r.waktu || "-"}
 Tempat           : ${r.tempat || "-"}
