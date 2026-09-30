@@ -310,9 +310,34 @@ async function tampilkanDetailRapat(id) {
   }
 }
 
+function bersihkanRingkasan(text) {
+  if (!text) return "";
+  let str = text.trim();
+  while (true) {
+    const next = str
+      .replace(/^(?:#+\s*)?(?:\*{1,3})?\s*(?:ringkasan\s+eksekutif|executive\s+summary|ringkasan\s+hasil\s+rapat|ringkasan)(?:\s*[:\-])?\s*(?:\*{1,3})?\s*(\n+|$)/i, "")
+      .replace(/^(?:\*{1,3})?\s*(?:rapat\s+[^\n]+?)(?:\*{1,3})?\s*(\n+|$)/i, "")
+      .trim();
+    if (next === str) break;
+    str = next;
+  }
+  return str;
+}
+
+function formatRingkasanHTML(text, indent = false) {
+  const bersih = bersihkanRingkasan(text);
+  if (!bersih) return "";
+  return bersih
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => `<p style="margin-bottom: 8px; ${indent ? "text-indent: 28px;" : ""}">${p.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</p>`)
+    .join("");
+}
+
 function renderAiContent(rapat) {
   if (rapat.ringkasanAI) {
-    el.kontenRingkasanAi.innerHTML = `<p>${rapat.ringkasanAI}</p>`;
+    el.kontenRingkasanAi.innerHTML = formatRingkasanHTML(rapat.ringkasanAI, false);
   } else {
     el.kontenRingkasanAi.innerHTML = `
       <p class="placeholder-ai">Belum dibuat ringkasan. Klik tombol <b>Ringkasan AI</b> di atas untuk menyusun narasi resmi.</p>
@@ -387,16 +412,16 @@ function renderPoinList(poinList) {
 function renderPaperPreview(rapat) {
   const poinHtml = (rapat.poinPembahasan && rapat.poinPembahasan.length > 0)
     ? rapat.poinPembahasan
-        .map((p, i) => {
-          const teks = typeof p === "string" ? p : (p.isi || "");
-          return `
+      .map((p, i) => {
+        const teks = typeof p === "string" ? p : (p.isi || "");
+        return `
             <div style="display: flex; margin-bottom: 7px; text-align: justify; line-height: 1.6;">
               <span style="width: 26px; flex-shrink: 0;">${i + 1}.</span>
               <span style="flex: 1;">${teks}</span>
             </div>
           `;
-        })
-        .join("")
+      })
+      .join("")
     : `<div style="font-style: italic; color: #64748b; padding-left: 26px;">- Tidak ada catatan hasil rapat -</div>`;
 
   const hariTanggalStr = formatHariTanggal(rapat.tanggal);
@@ -512,7 +537,7 @@ function renderPaperPreview(rapat) {
       ${rapat.ringkasanAI ? `
         <div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 18px;">
           <div style="font-weight: bold; font-size: 11pt; margin-bottom: 6px;">Ringkasan</div>
-          <div style="font-size: 10.5pt; text-align: justify; line-height: 1.6;">${rapat.ringkasanAI}</div>
+          <div style="font-size: 10.5pt; text-align: justify; line-height: 1.6;">${formatRingkasanHTML(rapat.ringkasanAI, true)}</div>
         </div>
       ` : ""}
     </div>
@@ -537,8 +562,8 @@ el.btnAiRingkasan.addEventListener("click", async () => {
     const json = await res.json();
     if (!json.success) throw new Error(json.pesan || "Gagal membuat ringkasan");
 
-    STATE.rapatAktif.ringkasanAI = json.ringkasanAI;
-    el.kontenRingkasanAi.innerHTML = `<p class="item-muncul">${json.ringkasanAI}</p>`;
+    STATE.rapatAktif.ringkasanAI = bersihkanRingkasan(json.ringkasanAI);
+    el.kontenRingkasanAi.innerHTML = `<div class="item-muncul">${formatRingkasanHTML(STATE.rapatAktif.ringkasanAI, false)}</div>`;
     tampilkanToast("Ringkasan AI berhasil dibuat!");
     muatStats();
     renderPaperPreview(STATE.rapatAktif);
@@ -940,7 +965,7 @@ function simpanDrafOtomatis() {
   try {
     localStorage.setItem(STATE.draftStorageKey, JSON.stringify(draftData));
     el.drafAutoSavePill.classList.remove("tersembunyi");
-  } catch (e) {}
+  } catch (e) { }
 }
 
 function pulihkanDrafOtomatis() {
@@ -971,7 +996,7 @@ function pulihkanDrafOtomatis() {
     }
 
     el.drafAutoSavePill.classList.remove("tersembunyi");
-  } catch (e) {}
+  } catch (e) { }
 }
 
 function hapusDrafOtomatis() {

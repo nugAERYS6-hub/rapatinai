@@ -90,7 +90,7 @@ try {
     UPDATE rapat SET updated_at = datetime('now', 'localtime') WHERE updated_at IS NULL;
     UPDATE rapat SET status = 'Selesai' WHERE status IS NULL;
   `);
-} catch (e) {}
+} catch (e) { }
 
 // B-Tree Indexes untuk query cepat
 db.exec(`
@@ -304,6 +304,20 @@ async function panggilGemini(prompt, temperature = 0.3) {
   throw lastError || new Error("Semua percobaan model Gemini gagal.");
 }
 
+function bersihkanRingkasan(text) {
+  if (!text) return "";
+  let str = text.trim();
+  while (true) {
+    const next = str
+      .replace(/^(?:#+\s*)?(?:\*{1,3})?\s*(?:ringkasan\s+eksekutif|executive\s+summary|ringkasan\s+hasil\s+rapat|ringkasan)(?:\s*[:\-])?\s*(?:\*{1,3})?\s*(\n+|$)/i, "")
+      .replace(/^(?:\*{1,3})?\s*(?:rapat\s+[^\n]+?)(?:\*{1,3})?\s*(\n+|$)/i, "")
+      .trim();
+    if (next === str) break;
+    str = next;
+  }
+  return str;
+}
+
 async function mintaRingkasanAI(rapat) {
   const daftarPoin = (rapat.poinPembahasan || [])
     .map((p) => `- ${typeof p === "string" ? p : (p.isi || "")}`)
@@ -326,10 +340,13 @@ Catatan Notulensi / Hasil Rapat:
 ${daftarPoin}
 
 ATURAN KETAT:
+- JANGAN menuliskan judul, subjudul, headline, atau statement awalan apa pun seperti "**RINGKASAN EKSEKUTIF**", "**Rapat...**", "Ringkasan:", atau label pembuka sejenisnya.
+- Langsung mulai pada kalimat pertama narasi paragraf ringkasan (misalnya: "Pada tanggal ...").
 - Gunakan HANYA data eksplisit di atas. Jangan mengarang nama dinas/lokasi fiktif.
-- JANGAN memasukkan tempat pelaksanaan rapat pada judul/headline atau pembuka ringkasan, karena tempat sudah ada di formulir informasi rapat.
+- JANGAN memasukkan tempat pelaksanaan rapat pada pembuka ringkasan, karena tempat sudah ada di formulir informasi rapat.
 - Susun secara naratif mengalir dan profesional (Executive Summary standard).
-- Tekankan apa yang dibahas serta keputusan/hasil yang disepakati bersama.`;
+- Tekankan apa yang dibahas serta keputusan/hasil yang disepakati bersama.
+- JANGAN menggunakan formatting markdown tebal ganda (**) untuk memberi label/judul baru.`;
 
   return panggilGemini(prompt, 0.2);
 }
@@ -653,7 +670,8 @@ app.post("/api/rapat/:id/rangkum", async (req, res) => {
     if (!baris) return res.status(404).json({ success: false, pesan: "Rapat tidak ditemukan" });
 
     const rapat = ubahBarisJadiRapatLengkap(baris);
-    const ringkasan = await mintaRingkasanAI(rapat);
+    const ringkasanRaw = await mintaRingkasanAI(rapat);
+    const ringkasan = bersihkanRingkasan(ringkasanRaw);
 
     db.prepare("UPDATE rapat SET ringkasanAI = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?").run(ringkasan, rapat.id);
     res.json({ success: true, ringkasanAI: ringkasan });
@@ -818,7 +836,8 @@ app.get("/api/rapat/:id/export-pdf", (req, res) => {
       if (rapat.ringkasanAI) {
         doc.font("Helvetica-Bold").fontSize(10.5).text("Ringkasan:");
         doc.moveDown(0.3);
-        doc.font("Helvetica").fontSize(9.5).text(rapat.ringkasanAI, { indent: 10, align: "justify", lineGap: 2 });
+        const teksBersih = bersihkanRingkasan(rapat.ringkasanAI).replace(/\*\*/g, "");
+        doc.font("Helvetica").fontSize(9.5).text(teksBersih, { indent: 10, align: "justify", lineGap: 2 });
         doc.moveDown(0.8);
       }
       if (rapat.ideBaruAI) {
@@ -1015,7 +1034,19 @@ app.get("/api/rapat/:id/export-word", async (req, res) => {
           heading: HeadingLevel.HEADING_2,
         })
       );
-      children.push(new Paragraph({ text: rapat.ringkasanAI }));
+      const paragrafList = bersihkanRingkasan(rapat.ringkasanAI)
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+
+      paragrafList.forEach((p) => {
+        children.push(
+          new Paragraph({
+            text: p.replace(/\*\*/g, ""),
+            spacing: { after: 120 },
+          })
+        );
+      });
     }
 
     if (rapat.ideBaruAI) {
