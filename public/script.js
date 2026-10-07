@@ -88,7 +88,7 @@ const el = {
   // Form View
   formRapat: document.getElementById("form-rapat"),
   judulForm: document.getElementById("judul-form"),
-  formModeTag: document.getElementById("form-mode-tag"),
+
   editIdRapat: document.getElementById("edit-id-rapat"),
   inputTanggal: document.getElementById("tanggal"),
   inputTopik: document.getElementById("topik"),
@@ -674,7 +674,6 @@ function tampilkanFormBaru() {
   STATE.isEditing = false;
   STATE.editId = null;
   el.judulForm.textContent = "Notulen Rapat Baru";
-  el.formModeTag.textContent = "Mode Input Baru";
   el.labelSimpanSubmit.textContent = "Simpan Notulen Rapat";
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
@@ -707,7 +706,6 @@ function bukaEditRapat() {
   STATE.isEditing = true;
   STATE.editId = r.id;
   el.judulForm.textContent = `Edit: ${r.topik}`;
-  el.formModeTag.textContent = "Mode Edit";
   el.labelSimpanSubmit.textContent = "Perbarui Notulen Rapat";
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
