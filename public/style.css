@@ -332,6 +332,12 @@ body.tema-terang .modal-card-header h3 { color: #0f172a; }
 body.tema-terang label { color: #334155; }
 body.tema-terang .btn-tema-wrapper .btn-tema { background: #f1f5f9; border-color: #e2e8f0; }
 body.tema-terang .breadcrumb-current { color: #0f172a; }
+body.tema-terang .item-topik { color: #0f172a; }
+body.tema-terang .item-rapat-sidebar.aktif .item-topik { color: #0369a1; }
+body.tema-terang .item-tanggal, body.tema-terang .item-row-meta { color: #64748b; }
+body.tema-terang .item-rapat-sidebar { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .item-rapat-sidebar:hover { background: #f8fafc; border-color: #cbd5e1; }
+body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: #38bdf8; }
 
 /* THEME TOGGLE GROUP */
 .theme-toggle-group {
