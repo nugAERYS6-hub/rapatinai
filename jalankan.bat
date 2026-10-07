@@ -12,3 +12,4 @@ echo.
 echo Memulai server Laravel (tekan Ctrl+C untuk berhenti)...
 php artisan serve --port=8000
 pause
+

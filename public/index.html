@@ -26,74 +26,93 @@
         </button>
       </div>
 
-      <!-- SEARCH & FILTER CEPAT (PALING ATAS) -->
-      <div class="sidebar-search-box">
-        <div class="search-input-wrap">
-          <span class="search-icon" aria-hidden="true">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+      <!-- SIDEBAR MENU UTAMA -->
+      <div class="sidebar-menu" id="sidebar-menu">
+        <button type="button" id="menu-rapat-baru" class="menu-item">
+          <span class="menu-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
           </span>
-          <input type="text" id="input-cari-rapat" placeholder="Cari topik, nama, poin..." autocomplete="off" />
-          <button type="button" id="tombol-clear-cari" class="tombol-clear tersembunyi"
-            title="Hapus pencarian">×</button>
-        </div>
-
-        <div class="filter-pills" id="filter-pills">
-          <button type="button" class="pill aktif" data-filter="all">Semua</button>
-          <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
-          <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
-        </div>
+          <span class="menu-text">Rapat Baru</span>
+        </button>
+        <button type="button" id="menu-riwayat-rapat" class="menu-item aktif">
+          <span class="menu-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          </span>
+          <span class="menu-text">Riwayat Rapat</span>
+        </button>
+        <button type="button" id="menu-pengaturan" class="menu-item">
+          <span class="menu-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </span>
+          <span class="menu-text">Pengaturan</span>
+        </button>
       </div>
 
-      <!-- WIDGET STATISTIK CEPAT -->
-      <div class="stats-card">
-        <div class="stat-item">
-          <span class="stat-label">Total Rapat</span>
-          <span class="stat-val" id="stat-total-rapat">-</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-label">Bulan Ini</span>
-          <span class="stat-val" id="stat-bulan-ini">-</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-label">AI Ready</span>
-          <span class="stat-val stat-val-ai" id="stat-ai-ready">-</span>
-        </div>
-      </div>
+      <!-- KONTEN RIWAYAT RAPAT (Search, Filter, List) -->
+      <div id="sidebar-riwayat-content" class="sidebar-riwayat-content">
+        <!-- SEARCH & FILTER CEPAT -->
+        <div class="sidebar-search-box">
+          <div class="search-input-wrap">
+            <span class="search-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input type="text" id="input-cari-rapat" placeholder="Cari topik, nama, poin..." autocomplete="off" />
+            <button type="button" id="tombol-clear-cari" class="tombol-clear tersembunyi"
+              title="Hapus pencarian">×</button>
+          </div>
 
-      <!-- DAFTAR RAPAT DENGAN SCROLL HALUS & PAGINATION -->
-      <div class="sidebar-section-title">
-        <span>Riwayat Notulen</span>
-        <span class="counter-badge" id="counter-daftar">0</span>
-      </div>
-
-      <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
-        <div class="sidebar-skeleton-wrap">
-          <div class="skeleton skeleton-item"></div>
-          <div class="skeleton skeleton-item"></div>
-          <div class="skeleton skeleton-item"></div>
+          <div class="filter-pills" id="filter-pills">
+            <button type="button" class="pill aktif" data-filter="all">Semua</button>
+            <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
+            <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
+          </div>
         </div>
-      </div>
 
-      <!-- PAGINATION BAR -->
-      <div class="sidebar-pagination" id="sidebar-pagination">
-        <button type="button" id="btn-prev-page" class="btn-page" disabled>‹</button>
-        <span id="label-page-info" class="label-page">Hal 1 / 1</span>
-        <button type="button" id="btn-next-page" class="btn-page" disabled>›</button>
-      </div>
-
-      <!-- FOOTER SIDEBAR -->
-      <div class="sidebar-footer">
-        <div class="db-status-badge" title="Database SQLite WAL Mode & FTS5 Aktif">
-          <span class="pulse-dot"></span>
-          <span>SQLite Enterprise Engine</span>
+        <!-- WIDGET STATISTIK CEPAT -->
+        <div class="stats-card">
+          <div class="stat-item">
+            <span class="stat-label">Total Rapat</span>
+            <span class="stat-val" id="stat-total-rapat">-</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-label">Bulan Ini</span>
+            <span class="stat-val" id="stat-bulan-ini">-</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-label">AI Ready</span>
+            <span class="stat-val stat-val-ai" id="stat-ai-ready">-</span>
+          </div>
         </div>
-      </div>
+
+        <!-- DAFTAR RAPAT -->
+        <div class="sidebar-section-title">
+          <span>Riwayat Notulen</span>
+          <span class="counter-badge" id="counter-daftar">0</span>
+        </div>
+
+        <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
+          <div class="sidebar-skeleton-wrap">
+            <div class="skeleton skeleton-item"></div>
+            <div class="skeleton skeleton-item"></div>
+            <div class="skeleton skeleton-item"></div>
+          </div>
+        </div>
+
+        <!-- PAGINATION BAR -->
+        <div class="sidebar-pagination" id="sidebar-pagination">
+          <button type="button" id="btn-prev-page" class="btn-page" disabled>‹</button>
+          <span id="label-page-info" class="label-page">Hal 1 / 1</span>
+          <button type="button" id="btn-next-page" class="btn-page" disabled>›</button>
+        </div>
+      </div> <!-- END KONTEN RIWAYAT RAPAT -->
+
+
     </aside>
 
     <!-- OVERLAY UNTUK MOBILE -->
@@ -119,10 +138,6 @@
             <span class="draf-icon">💾</span>
             <span id="draf-auto-save-text">Draf otomatis tersimpan</span>
           </div>
-          <button type="button" id="btn-header-new" class="btn-header-action" title="Buat Notulen Rapat Baru">
-            <span class="btn-plus-icon">＋</span>
-            <span>Rapat Baru</span>
-          </button>
         </div>
       </header>
 
@@ -289,9 +304,57 @@
         </section>
 
         <!-- ============================================== -->
+        <!-- VIEW 3: TAMPILAN PENGATURAN                     -->
+        <!-- ============================================== -->
+        <section id="tampilan-pengaturan" class="view-section tersembunyi">
+          <div class="form-luxury-container">
+            <div class="form-header-banner">
+              <div>
+                <h1 class="form-title">Pengaturan</h1>
+                <p class="form-subtitle">Kelola data dan tampilan aplikasi.</p>
+              </div>
+            </div>
+
+            <!-- SUBMENU: BACKUP DATABASE -->
+            <div class="form-card-section">
+              <div class="section-badge">Data</div>
+              <h2 class="section-title">Backup Database</h2>
+              <p style="font-size:13.5px; color:#94a3b8; margin-bottom:20px; line-height:1.6;">
+                Unduh salinan lengkap seluruh data notulen dalam format JSON. Simpan sebagai cadangan aman di perangkat Anda.
+              </p>
+              <button type="button" id="btn-backup-db" class="btn-simpan-besar" style="width:auto;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Unduh Backup (JSON)</span>
+              </button>
+            </div>
+
+            <!-- SUBMENU: OPSI TAMPILAN -->
+            <div class="form-card-section">
+              <div class="section-badge">Tampilan</div>
+              <h2 class="section-title">Tema Aplikasi</h2>
+              <p style="font-size:13.5px; color:#94a3b8; margin-bottom:20px; line-height:1.6;">
+                Pilih tema yang nyaman untuk Anda. Preferensi akan tersimpan secara otomatis.
+              </p>
+              <div class="theme-toggle-group">
+                <button type="button" id="btn-tema-gelap" class="btn-tema aktif" data-tema="gelap">
+                  <span style="font-size:18px;">🌙</span>
+                  <span>Tema Gelap</span>
+                  <span class="tema-check-icon" id="check-gelap">✓</span>
+                </button>
+                <button type="button" id="btn-tema-terang" class="btn-tema" data-tema="terang">
+                  <span style="font-size:18px;">☀️</span>
+                  <span>Tema Terang</span>
+                  <span class="tema-check-icon tersembunyi" id="check-terang">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
         <!-- VIEW 2: TAMPILAN SMART FORM (CREATE / EDIT)    -->
         <!-- ============================================== -->
-        <section id="tampilan-form" class="view-section">
+        <section id="tampilan-form" class="view-section tersembunyi">
           <div class="form-luxury-container">
             <div class="form-header-banner">
               <div>
@@ -318,7 +381,7 @@
 
                   <div class="input-field-group">
                     <label for="topik">Topik / Agenda Rapat <span class="req">*</span></label>
-                    <input type="text" id="topik" placeholder="Contoh: Rapat Koordinasi RKPD TA 2027" required />
+                    <input type="text" id="topik" required />
                   </div>
                 </div>
 
@@ -337,12 +400,12 @@
                 <div class="form-grid-2">
                   <div class="input-field-group">
                     <label for="waktu">Waktu Pelaksanaan</label>
-                    <input type="text" id="waktu" placeholder="Contoh: Pukul 08:00 s/d 09:00" />
+                    <input type="text" id="waktu" />
                   </div>
 
                   <div class="input-field-group">
                     <label for="tempat">Tempat Pelaksanaan</label>
-                    <input type="text" id="tempat" placeholder="Contoh: Ruang Komite Medik RS Urip Sumoharjo" />
+                    <input type="text" id="tempat" />
                   </div>
                 </div>
               </div>
@@ -411,17 +474,17 @@
       <form id="form-modal-anggota" onsubmit="return false;">
         <div class="input-field-group">
           <label for="modal-nama">Nama Peserta <span class="req">*</span></label>
-          <input type="text" id="modal-nama" placeholder="Contoh: Dr. Ir. H. Ahmad Fauzi, M.Si" required />
+          <input type="text" id="modal-nama" required />
         </div>
 
         <div class="input-field-group">
           <label for="modal-jabatan">Jabatan</label>
-          <input type="text" id="modal-jabatan" placeholder="Contoh: Kepala Bidang Perencanaan" />
+          <input type="text" id="modal-jabatan" />
         </div>
 
         <div class="input-field-group">
           <label for="modal-instansi">Asal Instansi / OPD</label>
-          <input type="text" id="modal-instansi" placeholder="Contoh: BAPPEDA Provinsi" />
+          <input type="text" id="modal-instansi" />
         </div>
 
         <div class="modal-card-footer">

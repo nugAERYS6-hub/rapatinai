@@ -1,0 +1,473 @@
+<!-- Notulensi - Detail Lengkap & Pratinjau Dokumen Resmi -->
+<!-- Screen ID: 6e532eda26934bb8b4712f933a987f9c -->
+<!DOCTYPE html><html class="h-full" lang="id" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Notulensi - Rapat Koordinasi Bidang IPW</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans for UI & Times New Roman/Serif styling for Official Document -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Tinos:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            document: ['"Tinos"', 'serif', 'Times New Roman'],
+          },
+          colors: {
+            navy: {
+              950: '#060a12',
+              900: '#090d16',
+              850: '#0d1527',
+              800: '#111c34',
+              700: '#1e293b',
+              600: '#334155',
+            },
+            darkbg: '#0b1120',
+            primarySky: '#0284c7',
+            primaryBright: '#0091ea',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Document View and Layout -->
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+<style data-purpose="document-print-rules">
+    .kop-divider-double {
+      border-top: 3.5px solid #000;
+      border-bottom: 1px solid #000;
+      height: 4px;
+      margin: 10px 0 16px 0;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-document, #printable-document * {
+        visibility: visible;
+      }
+      #printable-document {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20mm;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body class="h-full bg-[#090a0f] text-slate-100 font-sans antialiased flex overflow-hidden">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-80 flex-shrink-0 bg-black border-r border-slate-800 flex flex-col justify-between h-full select-none" data-purpose="sidebar">
+<!-- Top & Navigation Group -->
+<div class="flex flex-col flex-1 overflow-y-auto px-4 pt-4 pb-2">
+<!-- Search Input (Directly at top as requested, no top-left logo) -->
+<div class="relative mb-3.5" data-purpose="search-box">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full bg-[#0f172a] border border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-sky-500 transition" placeholder="Cari notulen..." type="text">
+</div>
+<!-- Filter Buttons -->
+<div class="grid grid-cols-3 gap-1.5 p-1 bg-black border border-slate-800 rounded-xl mb-4" data-purpose="filter-tabs">
+<button class="bg-[#0f172a] text-white font-semibold text-xs py-1.5 px-2 rounded-lg text-center transition border border-slate-700">
+          Semua
+        </button>
+<button class="text-slate-400 hover:text-slate-200 text-xs py-1.5 px-2 rounded-lg text-center transition hover:bg-[#0f172a]">
+          Bulan Ini
+        </button>
+<button class="text-slate-400 hover:text-slate-200 text-xs py-1.5 px-2 rounded-lg text-center transition hover:bg-[#0f172a]">
+          Ada AI
+        </button>
+</div>
+<!-- Quick Metrics Counters (3 columns) -->
+<div class="grid grid-cols-3 gap-2 bg-black border border-slate-800 rounded-xl p-3 mb-5" data-purpose="quick-metrics">
+<div class="text-center">
+<div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-tight">TOTAL RAPAT</div>
+<div class="text-xl font-extrabold text-white mt-1">3</div>
+</div>
+<div class="text-center border-x border-slate-800/80">
+<div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-tight">BULAN INI</div>
+<div class="text-xl font-extrabold text-white mt-1">0</div>
+</div>
+<div class="text-center">
+<div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-tight">AI READY</div>
+<div class="text-xl font-extrabold text-sky-400 mt-1">3</div>
+</div>
+</div>
+<!-- Meeting History Section -->
+<div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 px-1 mb-2.5">
+<span class="">RIWAYAT NOTULEN</span>
+<span class="w-5 h-5 flex items-center justify-center rounded-full bg-slate-800/90 text-slate-300 text-[11px] font-semibold">3</span>
+</div>
+<div class="space-y-2 flex-1" data-purpose="meeting-history-list">
+<!-- Active Meeting Item -->
+<div class="relative bg-[#0f172a] border border-slate-700 rounded-xl p-3.5 cursor-pointer transition hover:bg-[#1e293b]"><div class="absolute left-0 top-3 bottom-3 w-1 bg-sky-400 rounded-r-md"></div><h4 class="text-sm font-semibold text-white pl-2 leading-snug">Rapat Koordinasi Bidang IPW</h4><p class="text-xs text-slate-400 pl-2 mt-1 font-mono">2026-09-11</p></div>
+<!-- Inactive Item 1 -->
+<div class="bg-black hover:bg-[#0f172a] border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 cursor-pointer transition"><h4 class="text-sm font-medium text-slate-300 leading-snug">Rapat P-Renja</h4><p class="text-xs text-slate-400 mt-1 font-mono">2026-09-01</p></div>
+<!-- Inactive Item 2 -->
+<div class="bg-black hover:bg-[#0f172a] border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 cursor-pointer transition"><h4 class="text-sm font-medium text-slate-300 leading-snug">Rapat Anggaran 2027</h4><p class="text-xs text-slate-400 mt-1 font-mono">2026-09-01</p></div>
+</div>
+</div>
+<!-- Sidebar Bottom: Pagination & System Status -->
+<div class="px-4 py-3 bg-[#070b12] border-t border-slate-800/80" data-purpose="sidebar-footer">
+<div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+<button aria-label="Halaman Sebelumnya" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-300 disabled:opacity-40 transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.75 19.5 8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<span class="font-medium text-slate-300 text-xs">Hal 1 / 1</span>
+<button aria-label="Halaman Selanjutnya" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-300 disabled:opacity-40 transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m8.25 4.5 7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+</div>
+<div class="flex items-center space-x-2 text-[11px] text-slate-400 pt-1" data-purpose="database-engine-status"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="font-medium tracking-wide text-slate-400">SQLite Enterprise Engine</span></div>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-[#090a0f]" data-purpose="main-wrapper">
+<!-- BEGIN: TopBar -->
+<header class="h-16 px-8 flex items-center justify-between border-b border-slate-800 bg-black z-10" data-purpose="topbar">
+<!-- Breadcrumbs navigation -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-sm text-slate-400 font-medium">
+<span class="hover:text-slate-200 transition cursor-pointer">Notulensi</span>
+<span class="text-slate-400">/</span>
+<span class="text-white font-semibold">Rapat Koordinasi Bidang IPW</span>
+</nav>
+<!-- Right Action: Strictly ONLY '+ Rapat Baru' button (no bells, no avatars) -->
+<div>
+<button class="inline-flex items-center space-x-2 px-4 py-2 bg-[#0f172a] hover:bg-[#1e293b] text-white text-sm font-semibold rounded-xl border border-slate-700 transition">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Rapat Baru</span>
+</button>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: ScrollableDetailPageContent -->
+<main class="flex-1 overflow-y-auto px-6 lg:px-12 py-8 space-y-8" data-purpose="detail-page-content">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- ========================================== -->
+<!-- 1. BAGIAN AI & PESERTA RAPAT               -->
+<!-- ========================================== -->
+<section class="bg-[#0f172a] border border-slate-800 rounded-2xl p-6 lg:p-7" data-purpose="ai-and-participants-section">
+<!-- AI Section Header -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+<div class="flex items-center space-x-2.5">
+<span class="text-xl">✨</span>
+<h2 class="text-lg font-bold text-white tracking-tight">AI</h2>
+</div>
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-sky-950/80 text-sky-400 border border-sky-800/60">
+              Fast Inference
+            </span>
+</div>
+<!-- Two Side-by-Side AI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8" data-purpose="ai-summary-cards">
+<!-- Card 1: Ringkasan Eksekutif Naratif -->
+<div class="bg-[#0b1120] border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700/80 transition shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-3.5">
+<h3 class="text-sm font-bold text-slate-100">Ringkasan Eksekutif Naratif</h3>
+<button class="px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition" onclick="navigator.clipboard.writeText(document.getElementById('text-ringkasan').innerText)">
+                    Salin
+                  </button>
+</div>
+<p class="text-sm text-slate-300 leading-relaxed font-normal text-justify" id="text-ringkasan">
+                  Adapun pokok pembahasan utama dalam pertemuan ini berfokus pada Alokasi Tabel Data Perangkat Daerah. Forum rapat melakukan koordinasi mendalam terkait pembagian dan pengelolaan alokasi tabel data untuk kebutuhan Organisasi Perangkat Daerah (OPD). Seluruh rangkaian diskusi mengenai alokasi data tersebut telah dicatat sebagai dokumen resmi hasil Rapat Koordinasi Bidang IPW.
+                </p>
+</div>
+</div>
+<!-- Card 2: Rekomendasi & Ide Baru Strategis -->
+<div class="bg-[#0b1120] border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700/80 transition shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-3.5">
+<h3 class="text-sm font-bold text-slate-100">Rekomendasi &amp; Ide Baru Strategis</h3>
+<button class="px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition">
+                    Salin
+                  </button>
+</div>
+<p class="text-sm text-slate-400 italic leading-relaxed pt-2">
+                  Belum ada rekomendasi. Klik tombol <span class="text-slate-300 font-semibold not-italic">Ide Strategis AI</span> untuk usulan kebijakan baru.
+                </p>
+</div>
+</div>
+</div>
+<!-- Section: Daftar Peserta Rapat -->
+<div class="pt-2 border-t border-slate-800/80" data-purpose="participants-block">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center space-x-2">
+<span class="text-base">👥</span>
+<h3 class="text-base font-bold text-slate-100">Daftar Peserta Rapat</h3>
+</div>
+<span class="text-xs font-medium bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700">
+                2 Peserta
+              </span>
+</div>
+<!-- Peserta Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Participant 1: Angga -->
+<div class="flex items-center space-x-3.5 p-3.5 bg-[#0b1120] border border-slate-800 rounded-xl hover:border-slate-700 transition">
+<div class="w-11 h-11 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-slate-200 text-sm">
+                  A
+                </div>
+<div>
+<h4 class="text-sm font-bold text-white">Angga</h4>
+<p class="text-xs text-slate-400">Pelaksana</p>
+<p class="text-[11px] font-semibold text-sky-400">BAPPEDA</p>
+</div>
+</div>
+<!-- Participant 2: Zaky -->
+<div class="flex items-center space-x-3.5 p-3.5 bg-[#0b1120] border border-slate-800 rounded-xl hover:border-slate-700 transition">
+<div class="w-11 h-11 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-slate-200 text-sm">
+                  Z
+                </div>
+<div>
+<h4 class="text-sm font-bold text-white">Zaky</h4>
+<p class="text-xs text-slate-400">Mahasiswa Magang</p>
+<p class="text-[11px] font-medium text-slate-400">-</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 2. BAGIAN DAFTAR NOTULENSI                 -->
+<!-- ========================================== -->
+<section class="bg-[#0f172a] border border-slate-800 rounded-2xl p-6 lg:p-7" data-purpose="notes-list-section">
+<div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
+<div class="flex items-center space-x-2.5">
+<span class="text-lg">📋</span>
+<h2 class="text-base font-bold text-white tracking-tight">Notulensi</h2>
+</div>
+<span class="text-xs font-semibold bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">
+              1 Notulensi
+            </span>
+</div>
+<!-- Note Item Card -->
+<div class="bg-[#0b1120] border border-slate-800 hover:border-slate-700 rounded-xl p-4 flex items-center space-x-4 transition">
+<span class="text-sm font-bold text-sky-400 font-mono bg-sky-950/60 border border-sky-800/60 px-2.5 py-1 rounded-lg">
+              01
+            </span>
+<span class="text-sm font-medium text-slate-200">
+              Alokasi Tabel Data Perangkat Daerah
+            </span>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 3. BAGIAN PRATINJAU DOKUMEN & LEMBAR KOP    -->
+<!-- ========================================== -->
+<section class="bg-[#0f172a] border border-slate-800 rounded-2xl p-6 lg:p-7" data-purpose="document-preview-section">
+<!-- Document Section Header -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-800/80">
+<div class="flex items-center space-x-3">
+<span class="text-lg">🖨️</span>
+<h2 class="text-base font-bold text-white tracking-tight">Pratinjau Dokumen</h2>
+<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/60">
+                KOP BAPPEDA
+              </span>
+</div>
+<button class="inline-flex items-center space-x-2 px-3.5 py-1.5 text-xs font-semibold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg shadow transition active:scale-95" onclick="window.print()">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6.72 13.829c-.24-1.077-.32-2.126-.32-3.129 0-3.866 3.582-7 8-7s8 3.134 8 7c0 1.003-.08 1.952-.32 3.129m-15.36 0A9.034 9.034 0 0 0 4.5 17c0 2.21 1.79 4 4 4h7c2.21 0 4-1.79 4-4 0-1.127-.417-2.164-1.12-2.971m-13.88 0h13.88" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Cetak Dokumen (Ctrl+P)</span>
+</button>
+</div>
+<!-- Document Outer Wrapper with Realistic Paper Styling -->
+<div class="mt-6 p-4 sm:p-8 bg-black rounded-xl border border-slate-800 flex justify-center overflow-x-auto">
+<!-- Formal Government Paper (Simulating A4 official document) -->
+<div class="w-full max-w-[800px] bg-white text-black p-8 sm:p-14 rounded shadow-2xl font-document text-sm leading-normal" id="printable-document">
+<!-- Kop Surat Resmi -->
+<div class="relative flex items-center justify-between pb-2" data-purpose="kop-surat">
+<!-- Emblem / Logo Daerah Provinsi Maluku Utara -->
+<div class="w-20 h-20 flex-shrink-0 flex items-center justify-center mr-4">
+<!-- Emulated Seal / Emblem Vector Logo -->
+<div class="w-16 h-16 border-2 border-slate-800 rounded-full flex flex-col items-center justify-center p-1 text-center bg-white shadow-xs">
+<span class="text-[9px] font-extrabold uppercase leading-none tracking-tight text-blue-900">BAPPEDA</span>
+<div class="w-6 h-0.5 bg-amber-500 my-0.5"></div>
+<span class="text-[7px] font-bold text-slate-800 leading-none">MALUKU UTARA</span>
+</div>
+</div>
+<!-- Teks Kop Surat -->
+<div class="flex-1 text-center">
+<h3 class="text-base sm:text-lg font-bold tracking-wide uppercase leading-tight font-serif text-slate-900">
+                    PEMERINTAH PROVINSI MALUKU UTARA
+                  </h3>
+<h2 class="text-lg sm:text-xl font-extrabold tracking-wide uppercase leading-tight font-serif text-black mt-0.5">
+                    BADAN PERENCANAAN PEMBANGUNAN DAERAH
+                  </h2>
+<p class="text-[11px] sm:text-xs text-slate-800 mt-1 leading-snug">
+                    Jalan Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827
+                  </p>
+<p class="text-[11px] sm:text-xs text-slate-700 leading-snug">
+                    Laman: bappeda.malutprov.go.id &nbsp;|&nbsp; Pos-el: bappeda@malutprov.go.id
+                  </p>
+</div>
+</div>
+<!-- Garis Pembatas Ganda Kop Surat -->
+<div class="kop-divider-double"></div>
+<!-- Judul Laporan -->
+<div class="text-center my-6">
+<h1 class="text-base sm:text-lg font-bold underline uppercase tracking-wider">
+                  LAPORAN HASIL RAPAT
+                </h1>
+<h2 class="text-sm sm:text-base font-bold uppercase tracking-wider mt-0.5">
+                  RAPAT KOORDINASI BIDANG IPW
+                </h2>
+</div>
+<!-- Data Pelaksanaan Rapat -->
+<div class="space-y-1.5 text-xs sm:text-sm my-6">
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Hari / tanggal</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="">Jumat / 11 September 2026</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Waktu</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="">-</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Tempat</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="">-</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Pemimpin rapat</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="font-bold">Asyraf</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Notulen</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="font-bold">Anugrah</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Peserta</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="">Terlampir</span>
+</div>
+</div>
+<div class="grid grid-cols-12">
+<div class="col-span-4 sm:col-span-3 font-medium">Hasil rapat</div>
+<div class="col-span-8 sm:col-span-9 flex">
+<span class="mr-2">:</span>
+<span class="">-</span>
+</div>
+</div>
+</div>
+<!-- Pembahasan Singkat -->
+<div class="my-6 text-xs sm:text-sm">
+<p class="leading-relaxed">Rapat dibuka oleh Asyraf yang menjelaskan mengenai :</p>
+<ol class="list-decimal list-inside ml-4 mt-2 font-medium">
+<li class="">Alokasi Tabel Data Perangkat Daerah</li>
+</ol>
+</div>
+<!-- Bagian Tanda Tangan (2 Kolom) -->
+<div class="grid grid-cols-2 gap-8 my-10 text-center text-xs sm:text-sm">
+<div>
+<p class="">Pemimpin rapat,</p>
+<div class="h-20 sm:h-24"></div>
+<p class="font-bold underline uppercase">Asyraf</p>
+</div>
+<div>
+<p class="">Notulen,</p>
+<div class="h-20 sm:h-24"></div>
+<p class="font-bold underline uppercase">Anugrah</p>
+</div>
+</div>
+<!-- Garis Pembatas Lampiran -->
+<div class="border-t border-dashed border-slate-400 my-8"></div>
+<!-- Lampiran: Daftar Hadir Peserta Rapat -->
+<div class="my-6">
+<h3 class="text-center font-bold uppercase text-xs sm:text-sm tracking-wider mb-4">
+                  LAMPIRAN: DAFTAR HADIR PESERTA RAPAT
+                </h3>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse border border-black text-xs sm:text-sm">
+<thead>
+<tr class="bg-slate-100">
+<th class="border border-black px-3 py-2 text-center w-12 font-bold">No</th>
+<th class="border border-black px-4 py-2 text-left font-bold">Nama Peserta</th>
+<th class="border border-black px-4 py-2 text-left font-bold">Jabatan</th>
+<th class="border border-black px-4 py-2 text-left font-bold">Instansi / Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="border border-black px-3 py-2 text-center">1</td>
+<td class="border border-black px-4 py-2 font-medium">Angga</td>
+<td class="border border-black px-4 py-2">Pelaksana</td>
+<td class="border border-black px-4 py-2">BAPPEDA</td>
+</tr>
+<tr>
+<td class="border border-black px-3 py-2 text-center">2</td>
+<td class="border border-black px-4 py-2 font-medium">Zaky</td>
+<td class="border border-black px-4 py-2">Mahasiswa Magang</td>
+<td class="border border-black px-4 py-2">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bagian Ringkasan Dokumen -->
+<div class="mt-8 pt-4">
+<h4 class="font-bold text-xs sm:text-sm mb-2">Ringkasan</h4>
+<p class="text-xs sm:text-sm leading-relaxed text-justify text-slate-800">
+                  Adapun pokok pembahasan utama dalam pertemuan ini berfokus pada Alokasi Tabel Data Perangkat Daerah. Forum rapat melakukan koordinasi mendalam terkait pembagian dan pengelolaan alokasi tabel data untuk kebutuhan Organisasi Perangkat Daerah (OPD). Seluruh rangkaian diskusi mengenai alokasi data tersebut telah dicatat sebagai dokumen resmi hasil Rapat Koordinasi Bidang IPW.
+                </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- END: ScrollableDetailPageContent -->
+</div>
+<!-- END: MainContentWrapper -->
+<!-- Simple Keyboard Shortcut Listener -->
+<script data-purpose="shortcuts-and-actions">
+    document.addEventListener('keydown', function(event) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
+        // Normal Ctrl+P action allows default print dialog
+      }
+    });
+  </script>
+</body></html>

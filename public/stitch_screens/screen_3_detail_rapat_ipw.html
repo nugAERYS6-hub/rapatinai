@@ -1,0 +1,371 @@
+<!-- Notulensi - Detail Rapat Koordinasi Bidang IPW -->
+<!-- Screen ID: 2c62dbd392d54ec0ae97a7639856ff02 -->
+<!DOCTYPE html>
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notulensi - Buat Notulen Baru</title>
+<!-- Tailwind CSS CDN v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sidebarDark: '#080d1a',
+            sidebarSurface: '#0d172e',
+            sidebarBorder: '#162244',
+            mainDark: '#030712',
+            cardDark: '#0b132b',
+            cardBorder: '#1c294d',
+            accentBlue: '#2563eb',
+            accentCyan: '#38bdf8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom CSS -->
+<style data-purpose="custom-scrollbars-and-glow">
+    /* Custom sleek scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    /* Smooth focus rings */
+    .input-focus-glow:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 16px -2px rgba(56, 189, 248, 0.35);
+    }
+  </style>
+<!-- END: Custom CSS -->
+<meta content="web_dashboard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head>
+<body class="bg-[#030712] text-slate-100 min-h-screen flex antialiased selection:bg-cyan-500 selection:text-black">
+<!-- BEGIN: LeftSidebar -->
+<!-- Sidebar navigasi biru gelap/navy terinspirasi dari UI referensi -->
+<aside class="w-80 flex-shrink-0 bg-[#070e20] border-r border-[#142142] flex flex-col justify-between h-screen sticky top-0 overflow-y-auto">
+<div class="p-5 flex flex-col gap-5">
+<!-- Brand Logo -->
+<!-- Search Bar -->
+<div class="relative w-full">
+<svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<input class="w-full bg-[#0d1833] border border-[#1d2d56] rounded-xl pl-10 pr-3.5 py-2 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-400 transition" placeholder="Cari notulen..." type="text"/>
+</div>
+<!-- Filter Quick Tabs -->
+<div class="grid grid-cols-3 gap-1.5 p-1 bg-[#0b1429] rounded-xl border border-[#162547]">
+<button class="py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm transition">
+          Semua
+        </button>
+<button class="py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-[#152347] transition">
+          Bulan Ini
+        </button>
+<button class="py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-[#152347] transition flex items-center justify-center gap-1">
+<span class="">Ada AI</span>
+</button>
+</div>
+<!-- Metrics Counter Grid -->
+<div class="grid grid-cols-3 gap-2 bg-[#0d1936] p-3 rounded-2xl border border-[#192b57] text-center shadow-inner">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-slate-400">Total Rapat</span>
+<span class="text-xl font-bold text-white mt-0.5">3</span>
+</div>
+<div class="flex flex-col border-x border-[#1c2e5b]">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-slate-400">Bulan Ini</span>
+<span class="text-xl font-bold text-white mt-0.5">0</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-cyan-400">AI Ready</span>
+<span class="text-xl font-bold text-cyan-400 mt-0.5">3</span>
+</div>
+</div>
+<!-- Riwayat Notulen Section -->
+<div class="flex flex-col gap-2 mt-2">
+<div class="flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">
+<span class="">Riwayat Notulen</span>
+<span class="bg-[#1b2b52] text-cyan-300 text-[10px] px-2 py-0.5 rounded-full font-bold">3</span>
+</div>
+<nav class="flex flex-col gap-2 mt-1">
+<!-- Active / Recent Item -->
+<a class="group block p-3 rounded-xl bg-gradient-to-r from-[#142347] to-[#0f1d3d] border border-blue-500/40 hover:border-cyan-400 transition shadow-sm" href="#">
+<h4 class="text-sm font-semibold text-white group-hover:text-cyan-300 transition line-clamp-1">
+              Rapat Koordinasi Bidang IPW
+            </h4>
+<div class="flex items-center justify-between mt-1.5 text-xs text-slate-400">
+<span class="font-mono text-[11px] text-cyan-400/80">2026-09-11</span>
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+</div>
+</a>
+<!-- History Item 2 -->
+<a class="group block p-3 rounded-xl bg-[#0c162f]/60 hover:bg-[#121f3f] border border-[#16264d] hover:border-slate-600 transition" href="#">
+<h4 class="text-sm font-medium text-slate-200 group-hover:text-white transition line-clamp-1">
+              Rapat P-Renja
+            </h4>
+<div class="flex items-center justify-between mt-1.5 text-xs text-slate-400">
+<span class="font-mono text-[11px]">2026-09-01</span>
+</div>
+</a>
+<!-- History Item 3 -->
+<a class="group block p-3 rounded-xl bg-[#0c162f]/60 hover:bg-[#121f3f] border border-[#16264d] hover:border-slate-600 transition" href="#">
+<h4 class="text-sm font-medium text-slate-200 group-hover:text-white transition line-clamp-1">
+              Rapat Anggaran 2027
+            </h4>
+<div class="flex items-center justify-between mt-1.5 text-xs text-slate-400">
+<span class="font-mono text-[11px]">2026-09-01</span>
+</div>
+</a>
+</nav>
+</div>
+</div>
+<!-- Sidebar Bottom / Footer Pagination & Status -->
+<div class="p-4 border-t border-[#13203f] bg-[#060c1c] flex flex-col gap-3">
+<!-- Pagination Controls -->
+<div class="flex items-center justify-between px-2 text-xs text-slate-400">
+<button class="w-7 h-7 rounded-lg border border-[#1e2f57] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#13203f] transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<span class="font-medium tracking-wide">Hal 1 / 1</span>
+<button class="w-7 h-7 rounded-lg border border-[#1e2f57] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#13203f] transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<!-- Engine Status -->
+<div class="flex items-center gap-2 px-2 text-xs text-slate-400 pt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-medium">SQLite Enterprise Engine</span>
+</div>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex-1 flex flex-col min-w-0 bg-[#030712] overflow-y-auto"><div class="flex flex-col w-full">
+<!-- Top Navigation Bar / Breadcrumb Header -->
+<header class="w-full flex items-center justify-between px-8 py-5 border-b border-[#142142] bg-[#070e20]/80 backdrop-blur-md sticky top-0 z-20">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2">
+<a class="font-body-md text-slate-400 hover:text-cyan-400 transition-colors" href="#">Notulensi</a>
+<span class="text-slate-600 font-label-sm">/</span>
+<span class="font-headline-sm text-slate-100 tracking-tight">Rapat Koordinasi Bidang IPW</span>
+</nav>
+<div class="flex items-center">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-headline-sm text-sm font-semibold shadow-lg shadow-cyan-900/30 active:scale-95 transition-all">
+<span class="text-base leading-none font-bold">+</span>
+<span>Rapat Baru</span>
+</button>
+</div>
+</header>
+<!-- Main Content Body -->
+<div class="w-full px-8 py-8 flex flex-col gap-8 max-w-7xl mx-auto">
+<!-- Primary Meeting Dossier Card -->
+<article class="relative rounded-3xl bg-gradient-to-b from-[#0e1a38] via-[#091124] to-[#070d1e] border border-[#1b2b54] p-8 md:p-10 shadow-2xl shadow-black/60 overflow-hidden">
+<!-- Glow Accent Line -->
+<div class="absolute -top-px left-12 right-12 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80"></div>
+<div class="absolute -right-24 -top-24 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Status Row -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          SELESAI
+        </span>
+<div class="flex items-center gap-2 font-label-md text-slate-400 text-xs">
+<span class="text-base">📅</span>
+<span>Jumat</span>
+<span class="text-slate-600">/</span>
+<span class="text-slate-200">11 September 2026</span>
+</div>
+</div>
+<!-- Meeting Subject -->
+<h1 class="font-headline-xl text-3xl md:text-4xl font-bold tracking-tight text-white mb-8">
+        Rapat Koordinasi Bidang IPW
+      </h1>
+<!-- Key Attendees & Metrics Deck -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+<!-- Lead Organiser -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-[#0e1a38]/80 border border-[#192b52] shadow-inner">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center font-headline-md font-bold text-white shadow-md shadow-blue-900/40">
+            A
+          </div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Pimpinan Rapat</span>
+<span class="font-headline-sm text-base text-white font-medium">Asyraf</span>
+</div>
+</div>
+<!-- Note-taker -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-[#0e1a38]/80 border border-[#192b52] shadow-inner">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center font-headline-md font-bold text-white shadow-md shadow-blue-900/40">
+            A
+          </div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Notulis</span>
+<span class="font-headline-sm text-base text-white font-medium">Anugrah</span>
+</div>
+</div>
+<!-- Attendance Pool -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-[#0e1a38]/80 border border-[#192b52] shadow-inner">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-800 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-900/40">
+<svg class="w-5 h-5 text-cyan-300" fill="currentColor" viewbox="0 0 20 20">
+<path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Total Peserta</span>
+<span class="font-headline-sm text-base text-white font-medium">2 Orang Hadir</span>
+</div>
+</div>
+</div>
+<!-- Action Panel & Export Tools -->
+<div class="pt-6 border-t border-[#16254a] flex flex-wrap items-center justify-between gap-4">
+<!-- AI Trigger Badges -->
+<div class="flex flex-wrap items-center gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#17254d] to-[#121c3b] hover:from-[#1e3063] hover:to-[#17244a] border border-cyan-500/40 text-cyan-300 font-headline-sm text-xs font-semibold tracking-wide transition shadow-sm active:scale-95">
+<span>✨</span>
+<span>Ringkasan AI</span>
+</button>
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0e1834] hover:bg-[#152349] border border-[#1e305e] text-amber-300 font-headline-sm text-xs font-semibold tracking-wide transition shadow-sm active:scale-95">
+<span>💡</span>
+<span>Ide Strategis AI</span>
+</button>
+</div>
+<!-- Utilities & Mutation Actions -->
+<div class="flex flex-wrap items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0c1630] hover:bg-[#132247] border border-[#1a2d59] text-xs font-medium text-slate-300 hover:text-white transition">
+<span>📄</span>
+<span>Unduh PDF</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0c1630] hover:bg-[#132247] border border-[#1a2d59] text-xs font-medium text-slate-300 hover:text-white transition">
+<span>📝</span>
+<span>Unduh Word</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0c1630] hover:bg-[#132247] border border-[#1a2d59] text-xs font-medium text-slate-300 hover:text-white transition">
+<span>📋</span>
+<span>Salin</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-semibold text-amber-300 transition">
+<span>✏️</span>
+<span>Edit</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-400 transition">
+<span>🗑️</span>
+<span>Hapus</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Deep Intelligence & Executive Synthesis Section -->
+<section class="rounded-3xl bg-[#081024] border border-[#162547] p-8 md:p-10 shadow-xl relative overflow-hidden">
+<!-- Section Header -->
+<div class="flex items-center justify-between pb-6 border-b border-[#142345]">
+<div class="flex items-center gap-3">
+<span class="text-xl">✨</span>
+<h2 class="font-headline-lg text-xl md:text-2xl font-bold text-white tracking-tight">
+            AI Executive Intelligence
+          </h2>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-cyan-400 border border-cyan-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          Fast Inference
+        </span>
+</div>
+<!-- Synthesis Grid Layout -->
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Core Outcomes & Strategic Points -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="p-6 rounded-2xl bg-[#0d1836]/60 border border-[#182952]">
+<h3 class="font-headline-sm text-sm uppercase tracking-wider text-cyan-400 font-semibold mb-3 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              Ringkasan Pembahasan &amp; Prioritas
+            </h3>
+<p class="font-body-md text-slate-300 leading-relaxed text-sm mb-4">
+              Rapat koordinasi berfokus pada penyelarasan timeline program infrastruktur IPW triwulan akhir 2026. Evaluasi alokasi anggaran menunjukkan efisiensi operasional sebesar 14% dari proyeksi awal, dengan kebutuhan realokasi menuju penguatan sistem mitigasi resiko data.
+            </p>
+<ul class="space-y-2.5 text-sm text-slate-300">
+<li class="flex items-start gap-2.5">
+<span class="text-cyan-400 mt-1">▸</span>
+<span>Penyelarasan target percepatan dokumen kerja P-Renja sebelum siklus verifikasi fiskal.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-cyan-400 mt-1">▸</span>
+<span>Audit konektivitas integrasi lintas sub-bidang guna meminimalkan bottleneck pelaporan berkala.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-cyan-400 mt-1">▸</span>
+<span>Persetujuan adopsi format notulensi berbasis otomasi inferensi untuk seluruh koordinasi mendatang.</span>
+</li>
+</ul>
+</div>
+<!-- Strategic Insights Box -->
+<div class="p-6 rounded-2xl bg-gradient-to-r from-[#121f42]/50 to-[#0e1834]/50 border border-amber-500/20">
+<h3 class="font-headline-sm text-sm uppercase tracking-wider text-amber-300 font-semibold mb-2 flex items-center gap-2">
+<span>💡</span>
+              Rekomendasi AI Terapan
+            </h3>
+<p class="font-body-md text-xs text-slate-300 leading-relaxed">
+              Disarankan untuk membagi sesi evaluasi menjadi dua sprint berkala. Pimpinan rapat disarankan menjadwalkan review teknis 5 hari sebelum batas pengajuan P-Renja guna memastikan seluruh dokumen pendukung terindeks otomatis.
+            </p>
+</div>
+</div>
+<!-- Right Column: Action Tracker & Responsibility Checklist -->
+<div class="lg:col-span-5 flex flex-col gap-4">
+<div class="p-6 rounded-2xl bg-[#0d1836]/60 border border-[#182952] flex flex-col h-full">
+<h3 class="font-headline-sm text-sm uppercase tracking-wider text-slate-300 font-semibold mb-4 flex items-center justify-between">
+<span>Tindak Lanjut &amp; PIC</span>
+<span class="font-mono text-xs text-cyan-400 bg-[#16274f] px-2 py-0.5 rounded-md">2 Penugasan</span>
+</h3>
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="p-3.5 rounded-xl bg-[#091229] border border-[#1a2c57] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-xs font-semibold text-slate-200">Finalisasi Draf Renja IPW</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">In Progress</span>
+</div>
+<div class="flex items-center justify-between text-xs text-slate-400">
+<span class="flex items-center gap-1 font-medium text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    PIC: Anugrah
+                  </span>
+<span class="font-mono text-[11px] text-slate-500">Tenggat: 18 Sep</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-3.5 rounded-xl bg-[#091229] border border-[#1a2c57] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-xs font-semibold text-slate-200">Penyusunan Nota Dinas Koordinasi</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Siap Kirim</span>
+</div>
+<div class="flex items-center justify-between text-xs text-slate-400">
+<span class="flex items-center gap-1 font-medium text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    PIC: Asyraf
+                  </span>
+<span class="font-mono text-[11px] text-slate-500">Tenggat: 15 Sep</span>
+</div>
+</div>
+</div>
+<!-- Health Metric Indicator -->
+<div class="mt-6 pt-5 border-t border-[#17274f] flex items-center justify-between text-xs">
+<span class="text-slate-400">Akurasi Ekstraksi AI</span>
+<span class="font-mono font-semibold text-emerald-400">99.4% (Enterprise High-Precision)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div></main>
+<!-- END: MainContentArea -->
+</body></html>

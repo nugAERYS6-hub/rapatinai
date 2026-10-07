@@ -1,0 +1,266 @@
+<!-- Notulensi - Buat Notulen Baru (Dark & Navy Theme) -->
+<!-- Screen ID: 59b2189bef104290a9739e52ff2d1d01 -->
+<!DOCTYPE html><html class="dark" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Notulensi - Buat Notulen Baru</title>
+<!-- Tailwind CSS CDN v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sidebarDark: '#080d1a',
+            sidebarSurface: '#0d172e',
+            sidebarBorder: '#162244',
+            mainDark: '#030712',
+            cardDark: '#0b132b',
+            cardBorder: '#1c294d',
+            accentBlue: '#2563eb',
+            accentCyan: '#38bdf8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom CSS -->
+<style data-purpose="custom-scrollbars-and-glow">
+    /* Custom sleek scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    /* Smooth focus rings */
+    .input-focus-glow:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 16px -2px rgba(56, 189, 248, 0.35);
+    }
+  </style>
+<!-- END: Custom CSS -->
+</head>
+<body class="bg-black text-slate-100 min-h-screen flex antialiased">
+<!-- BEGIN: LeftSidebar -->
+<!-- Sidebar navigasi biru gelap/navy terinspirasi dari UI referensi -->
+<aside class="w-80 flex-shrink-0 bg-black border-r border-[#1e293b] flex flex-col justify-between h-screen sticky top-0 overflow-y-auto">
+<div class="p-5 flex flex-col gap-5">
+<!-- Brand Logo -->
+
+<!-- Search Bar -->
+<div class="relative w-full">
+<svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<input class="w-full bg-[#0d1833] border border-[#1d2d56] rounded-xl pl-10 pr-3.5 py-2 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-400 transition" placeholder="Cari notulen..." type="text">
+</div>
+<!-- Filter Quick Tabs -->
+<div class="grid grid-cols-3 gap-1.5 p-1 bg-[#0b1429] rounded-xl border border-[#162547]">
+<button class="py-1.5 text-xs font-semibold rounded-lg bg-[#0f172a] text-white shadow-sm transition border border-[#1e293b]">
+          Semua
+        </button>
+<button class="py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-[#152347] transition">
+          Bulan Ini
+        </button>
+<button class="py-1.5 text-xs font-medium rounded-lg text-slate-300 hover:text-white hover:bg-[#152347] transition flex items-center justify-center gap-1">
+<span class="">Ada AI</span>
+</button>
+</div>
+<!-- Metrics Counter Grid -->
+<div class="grid grid-cols-3 gap-2 bg-[#0d1936] p-3 rounded-2xl border border-[#192b57] text-center shadow-inner">
+<div class="flex flex-col">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-slate-400">Total Rapat</span>
+<span class="text-xl font-bold text-white mt-0.5">3</span>
+</div>
+<div class="flex flex-col border-x border-[#1c2e5b]">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-slate-400">Bulan Ini</span>
+<span class="text-xl font-bold text-white mt-0.5">0</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] uppercase tracking-wider font-semibold text-cyan-400">AI Ready</span>
+<span class="text-xl font-bold text-cyan-400 mt-0.5">3</span>
+</div>
+</div>
+<!-- Riwayat Notulen Section -->
+<div class="flex flex-col gap-2 mt-2">
+<div class="flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">
+<span class="">Riwayat Notulen</span>
+<span class="bg-[#1b2b52] text-cyan-300 text-[10px] px-2 py-0.5 rounded-full font-bold">3</span>
+</div>
+<nav class="flex flex-col gap-2 mt-1"><a class="group block p-3 rounded-xl bg-black border border-[#1e293b] hover:bg-[#0f172a] active:bg-[#0f172a] transition shadow-sm" href="#"><h4 class="text-sm font-semibold text-white group-hover:text-cyan-400 transition line-clamp-1">Rapat Koordinasi Bidang IPW</h4><div class="flex items-center justify-between mt-1.5 text-xs text-slate-400"><span class="font-mono text-[11px] text-slate-300">2026-09-11</span><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span></div></a><a class="group block p-3 rounded-xl bg-black border border-[#1e293b] hover:bg-[#0f172a] active:bg-[#0f172a] transition shadow-sm" href="#"><h4 class="text-sm font-medium text-slate-200 group-hover:text-white transition line-clamp-1">Rapat P-Renja</h4><div class="flex items-center justify-between mt-1.5 text-xs text-slate-400"><span class="font-mono text-[11px]">2026-09-01</span></div></a><a class="group block p-3 rounded-xl bg-black border border-[#1e293b] hover:bg-[#0f172a] active:bg-[#0f172a] transition shadow-sm" href="#"><h4 class="text-sm font-medium text-slate-200 group-hover:text-white transition line-clamp-1">Rapat Anggaran 2027</h4><div class="flex items-center justify-between mt-1.5 text-xs text-slate-400"><span class="font-mono text-[11px]">2026-09-01</span></div></a></nav>
+</div>
+</div>
+<!-- Sidebar Bottom / Footer Pagination & Status -->
+<div class="p-4 border-t border-[#13203f] bg-[#060c1c] flex flex-col gap-3">
+<!-- Pagination Controls -->
+<div class="flex items-center justify-between px-2 text-xs text-slate-400">
+<button class="w-7 h-7 rounded-lg border border-[#1e2f57] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#13203f] transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<span class="font-medium tracking-wide">Hal 1 / 1</span>
+<button class="w-7 h-7 rounded-lg border border-[#1e2f57] flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#13203f] transition">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<!-- Engine Status -->
+<div class="flex items-center gap-2 px-2 text-xs text-slate-400 pt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-medium">SQLite Enterprise Engine</span>
+</div>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex-1 flex flex-col min-w-0 bg-black overflow-y-auto">
+<!-- Topbar Navigation Header -->
+<header class="h-20 border-b border-[#1e293b] bg-black px-8 flex items-center justify-between sticky top-0 z-30">
+<!-- Breadcrumb Link -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-sm font-medium">
+<a class="text-slate-400 hover:text-cyan-400 transition" href="#">Notulensi</a>
+<span class="text-slate-600">/</span>
+<span class="text-slate-200">Buat Notulen Baru</span>
+</nav>
+<!-- Right Header Actions (New Meeting, Mode Badge, Avatar) -->
+<div class="flex items-center gap-4">
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0f172a] hover:bg-black border border-[#1e293b] text-white font-semibold text-sm shadow-sm active:scale-95 transition-all">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="">Rapat Baru</span>
+</button>
+<!-- Notification Bell -->
+
+<!-- Profile Avatar Placeholder -->
+
+</div>
+</header>
+<!-- Page Content Container -->
+<div class="p-8 max-w-6xl w-full mx-auto flex flex-col gap-8">
+<!-- Section Title & Subtitle + Badge Mode Input -->
+<section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<h1 class="text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+            Notulen Rapat Baru
+          </h1>
+<p class="text-slate-400 mt-1.5 text-base">
+            Susun catatan rapat.
+          </p>
+</div>
+<!-- Mode Input Baru Badge/Pill Button -->
+<div class="self-start md:self-auto">
+<span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide bg-blue-500/10 border border-blue-400/30 text-cyan-300 backdrop-blur-sm shadow-inner">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            Mode Input Baru
+          </span>
+</div>
+</section>
+<!-- BEGIN: MeetingFormCard -->
+<!-- Kontainer formulir mewah bergaya Dark Glassmorphism Modern terinspirasi dari Image 4 -->
+<section class="bg-[#0f172a] border border-[#1e293b] rounded-3xl p-7 lg:p-9 shadow-xl relative overflow-hidden">
+<!-- Ambient subtle glow decoration -->
+
+
+<!-- Form Card Header Tag -->
+<div class="mb-7 pb-4 border-b border-[#142244]">
+<span class="text-xs font-black tracking-widest uppercase text-cyan-400 block mb-1">
+            BAGIAN 1
+          </span>
+<h2 class="text-xl font-bold text-white tracking-tight">
+            Informasi Dasar Rapat
+          </h2>
+</div>
+<!-- Form Fields Grid -->
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Baris 1: Tanggal Pelaksanaan & Topik Agenda -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Tanggal Pelaksanaan -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200 flex items-center gap-1">
+                Tanggal Pelaksanaan <span class="text-rose-500 font-bold">*</span>
+</label>
+<div class="relative">
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" type="text" value="10/07/2026">
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Topik / Agenda Rapat -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200 flex items-center gap-1">
+                Topik / Agenda Rapat <span class="text-rose-500 font-bold">*</span>
+</label>
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" placeholder="Contoh: Rapat Koordinasi RKPD TA 2027" type="text">
+</div>
+</div>
+<!-- Baris 2: Pimpinan Rapat & Notulis Rapat -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Pimpinan Rapat -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200 flex items-center gap-1">
+                Pimpinan Rapat <span class="text-rose-500 font-bold">*</span>
+</label>
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" placeholder="Nama dan gelar pimpinan" type="text">
+</div>
+<!-- Notulis Rapat -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200 flex items-center gap-1">
+                Notulis Rapat <span class="text-rose-500 font-bold">*</span>
+</label>
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" placeholder="Nama notulis yang mencatat" type="text">
+</div>
+</div>
+<!-- Baris 3: Waktu Pelaksanaan & Tempat Pelaksanaan -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Waktu Pelaksanaan -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200">
+                Waktu Pelaksanaan
+              </label>
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" placeholder="Contoh: Pukul 08:00 s/d 09:00" type="text">
+</div>
+<!-- Tempat Pelaksanaan -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-200">
+                Tempat Pelaksanaan
+              </label>
+<input class="w-full bg-[#050b18] border border-[#1c2d54] rounded-2xl px-4 py-3.5 text-sm text-slate-100 placeholder-slate-500 input-focus-glow transition font-medium" placeholder="Contoh: Ruang Komite Medik RS Urip Sumoharjo" type="text">
+</div>
+</div>
+<!-- Form Action Footer -->
+<div class="pt-6 mt-6 border-t border-[#142244] flex flex-col sm:flex-row items-center justify-between gap-4">
+<button class="w-full sm:w-auto px-6 py-3 rounded-xl border border-[#1e2f57] text-slate-300 hover:text-white hover:bg-[#121f3f] text-sm font-medium transition" type="button">
+              Simpan Draf
+            </button>
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-[#0f172a] hover:bg-black border border-[#1e293b] text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-sm" type="button">
+<span class="">Lanjut ke Bagian 2</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</form>
+</section>
+<!-- END: MeetingFormCard -->
+</div>
+</main>
+<!-- END: MainContentArea -->
+</body></html>

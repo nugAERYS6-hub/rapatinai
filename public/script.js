@@ -26,8 +26,9 @@ const el = {
   sidebarOverlay: document.getElementById("sidebar-overlay"),
   btnBukaMobile: document.getElementById("tombol-buka-sidebar-mobile"),
   btnTutupMobile: document.getElementById("tombol-tutup-sidebar-mobile"),
-  btnRapatBaru: document.getElementById("tombol-rapat-baru"),
-  btnHeaderNew: document.getElementById("btn-header-new"),
+  menuRapatBaru: document.getElementById("menu-rapat-baru"),
+  menuRiwayatRapat: document.getElementById("menu-riwayat-rapat"),
+  sidebarRiwayatContent: document.getElementById("sidebar-riwayat-content"),
   inputCari: document.getElementById("input-cari-rapat"),
   btnClearCari: document.getElementById("tombol-clear-cari"),
   filterPills: document.getElementById("filter-pills"),
@@ -729,17 +730,132 @@ function bukaEditRapat() {
 }
 
 el.btnEditRapat.addEventListener("click", bukaEditRapat);
-if (el.btnRapatBaru) {
-  el.btnRapatBaru.addEventListener("click", () => {
+if (el.menuRapatBaru) {
+  el.menuRapatBaru.addEventListener("click", () => {
     tutupSidebarMobile();
+    
+    // Set aktif state
+    el.menuRapatBaru.classList.add("aktif");
+    if (el.menuRiwayatRapat) el.menuRiwayatRapat.classList.remove("aktif");
+    
+    // Hide riwayat content
+    if (el.sidebarRiwayatContent) {
+      el.sidebarRiwayatContent.classList.add("tersembunyi");
+    }
+    
     tampilkanFormBaru();
   });
 }
-if (el.btnHeaderNew) {
-  el.btnHeaderNew.addEventListener("click", () => {
-    tutupSidebarMobile();
-    tampilkanFormBaru();
+
+if (el.menuRiwayatRapat) {
+  el.menuRiwayatRapat.addEventListener("click", () => {
+    // Set aktif state
+    el.menuRiwayatRapat.classList.add("aktif");
+    if (el.menuRapatBaru) el.menuRapatBaru.classList.remove("aktif");
+    
+    // Show riwayat content
+    if (el.sidebarRiwayatContent) {
+      el.sidebarRiwayatContent.classList.remove("tersembunyi");
+    }
+    
+    batalForm();
   });
+}
+
+// ==========================================================================
+// PENGATURAN: Navigasi, Backup & Theme Toggle
+// ==========================================================================
+const elPengaturan = {
+  viewPengaturan: document.getElementById("tampilan-pengaturan"),
+  menuPengaturan: document.getElementById("menu-pengaturan"),
+  btnBackupDb: document.getElementById("btn-backup-db"),
+  btnTemaGelap: document.getElementById("btn-tema-gelap"),
+  btnTemaTerang: document.getElementById("btn-tema-terang"),
+  checkGelap: document.getElementById("check-gelap"),
+  checkTerang: document.getElementById("check-terang"),
+};
+
+function tutupSemuaView() {
+  if (el.viewDetail) el.viewDetail.classList.add("tersembunyi");
+  if (el.viewForm) el.viewForm.classList.add("tersembunyi");
+  if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.add("tersembunyi");
+}
+
+function resetSemuaMenuAktif() {
+  [el.menuRapatBaru, el.menuRiwayatRapat, elPengaturan.menuPengaturan].forEach(m => {
+    if (m) m.classList.remove("aktif");
+  });
+}
+
+if (elPengaturan.menuPengaturan) {
+  elPengaturan.menuPengaturan.addEventListener("click", () => {
+    tutupSidebarMobile();
+    resetSemuaMenuAktif();
+    elPengaturan.menuPengaturan.classList.add("aktif");
+    if (el.sidebarRiwayatContent) el.sidebarRiwayatContent.classList.add("tersembunyi");
+    tutupSemuaView();
+    if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
+  });
+}
+
+// BACKUP DATABASE
+if (elPengaturan.btnBackupDb) {
+  elPengaturan.btnBackupDb.addEventListener("click", async () => {
+    try {
+      elPengaturan.btnBackupDb.disabled = true;
+      elPengaturan.btnBackupDb.innerHTML = `<span class="spinner-inline"></span><span>Memproses...</span>`;
+      const res = await fetch("/api/rapat?page=1&limit=9999");
+      const json = await res.json();
+      if (!json.success) throw new Error("Gagal mengambil data");
+      const dataBackup = {
+        tanggal_backup: new Date().toISOString(),
+        versi: "1.0",
+        total: json.data.length,
+        data: json.data,
+      };
+      const blob = new Blob([JSON.stringify(dataBackup, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `backup_notulensi_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      tampilkanToast("Backup berhasil diunduh!", "sukses");
+    } catch (err) {
+      tampilkanToast("Gagal membuat backup: " + err.message, "error");
+    } finally {
+      elPengaturan.btnBackupDb.disabled = false;
+      elPengaturan.btnBackupDb.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg><span>Unduh Backup (JSON)</span>`;
+    }
+  });
+}
+
+// THEME TOGGLE
+function terapkanTema(tema) {
+  if (tema === "terang") {
+    document.body.classList.add("tema-terang");
+    if (elPengaturan.btnTemaGelap) elPengaturan.btnTemaGelap.classList.remove("aktif");
+    if (elPengaturan.btnTemaTerang) elPengaturan.btnTemaTerang.classList.add("aktif");
+    if (elPengaturan.checkGelap) elPengaturan.checkGelap.classList.add("tersembunyi");
+    if (elPengaturan.checkTerang) elPengaturan.checkTerang.classList.remove("tersembunyi");
+  } else {
+    document.body.classList.remove("tema-terang");
+    if (elPengaturan.btnTemaGelap) elPengaturan.btnTemaGelap.classList.add("aktif");
+    if (elPengaturan.btnTemaTerang) elPengaturan.btnTemaTerang.classList.remove("aktif");
+    if (elPengaturan.checkGelap) elPengaturan.checkGelap.classList.remove("tersembunyi");
+    if (elPengaturan.checkTerang) elPengaturan.checkTerang.classList.add("tersembunyi");
+  }
+  localStorage.setItem("rapatinai_tema", tema);
+}
+
+const temaTersimpan = localStorage.getItem("rapatinai_tema") || "gelap";
+terapkanTema(temaTersimpan);
+
+if (elPengaturan.btnTemaGelap) {
+  elPengaturan.btnTemaGelap.addEventListener("click", () => terapkanTema("gelap"));
+}
+if (elPengaturan.btnTemaTerang) {
+  elPengaturan.btnTemaTerang.addEventListener("click", () => terapkanTema("terang"));
 }
 
 el.btnBatalForm.addEventListener("click", () => {

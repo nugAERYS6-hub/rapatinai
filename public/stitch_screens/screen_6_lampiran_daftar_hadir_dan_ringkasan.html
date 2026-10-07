@@ -1,0 +1,211 @@
+<!-- Notulensi - Lampiran Daftar Hadir & Ringkasan Resmi -->
+<!-- Screen ID: 29a56e156e404b409965fad42eb1804b -->
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notulensi - Rapat Koordinasi Bidang IPW</title>
+<!-- Load Tailwind CSS v3 with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#000000',
+              sidebarCard: '#090a0f',
+              blueDark: '#0f172a',
+              blueHover: '#1e293b',
+              accentCyan: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            serifDoc: ['"Times New Roman"', 'Times', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Document & UI Styles -->
+<style data-purpose="custom-styling">
+    /* Custom scrollbar styling for authentic desktop app feel */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+<!-- END: Custom Document & UI Styles -->
+</head>
+<body class="bg-[#f0f4f8] text-slate-800 antialiased font-sans flex h-screen overflow-hidden">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-80 bg-brand-black flex flex-col h-full border-r border-[#1a1f2c] shrink-0 text-white select-none" data-purpose="sidebar-container">
+<!-- Sidebar Header / Brand Title -->
+<div class="px-6 pt-6 pb-4">
+<h1 class="text-2xl font-bold tracking-tight text-white">Notulensi</h1>
+</div>
+<!-- Search Bar -->
+<div class="px-5 pb-3">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full bg-white text-slate-900 placeholder-slate-400 pl-10 pr-3 py-2 text-sm rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="Cari notulensi..." type="text"/>
+</div>
+</div>
+<!-- Filter Buttons (Solid flat style) -->
+<div class="px-5 pb-4 flex gap-1.5 text-xs font-semibold">
+<button class="flex-1 py-1.5 rounded-md bg-[#38bdf8] text-slate-950 font-bold hover:bg-[#0284c7] transition-colors" type="button">
+        Semua
+      </button>
+<button class="flex-1 py-1.5 rounded-md bg-[#0f172a] text-slate-300 hover:bg-[#1e293b] border border-slate-800 transition-colors" type="button">
+        Bulan Ini
+      </button>
+<button class="flex-1 py-1.5 rounded-md bg-[#0f172a] text-slate-300 hover:bg-[#1e293b] border border-slate-800 transition-colors" type="button">
+        Ada AI
+      </button>
+</div>
+<!-- Metric Counter Box -->
+<div class="px-5 pb-5">
+<div class="bg-brand-sidebarCard border border-[#1e293b] rounded-lg p-3 flex divide-x divide-slate-800 text-center">
+<div class="flex-1 px-1">
+<div class="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">TOTAL RAPAT</div>
+<div class="text-xl font-bold text-white mt-0.5">3</div>
+</div>
+<div class="flex-1 px-1">
+<div class="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">BULAN INI</div>
+<div class="text-xl font-bold text-white mt-0.5">0</div>
+</div>
+<div class="flex-1 px-1">
+<div class="text-[10px] tracking-wider text-sky-400 uppercase font-semibold">AI READY</div>
+<div class="text-xl font-bold text-sky-400 mt-0.5">3</div>
+</div>
+</div>
+</div>
+<!-- Section Heading: Riwayat Notulen -->
+<div class="px-5 pb-2 flex items-center justify-between">
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">RIWAYAT NOTULEN</span>
+<span class="w-5 h-5 flex items-center justify-center text-xs font-bold text-slate-300 bg-slate-800 rounded-full">3</span>
+</div>
+<!-- Scrollable Meeting History List -->
+<!-- Default background: solid black/dark card (#090a0f). Active/Hover: solid dark blue (#0f172a / #1e293b) -->
+<div class="flex-1 overflow-y-auto px-5 space-y-2.5">
+<!-- Card Item 1 (Aktif) -->
+<article class="relative block rounded-lg border border-sky-600 bg-brand-blueDark hover:bg-brand-blueHover p-3.5 cursor-pointer transition-colors shadow-sm" data-purpose="history-item-active">
+<span class="absolute left-0 top-3 bottom-3 w-1 bg-[#38bdf8] rounded-r"></span>
+<h2 class="text-sm font-semibold text-sky-300 pl-1 leading-snug">Rapat Koordinasi Bidang IPW</h2>
+<p class="text-xs text-slate-400 pl-1 mt-1 font-mono">2026-09-11</p>
+</article>
+<!-- Card Item 2 (Inaktif, hover dark blue) -->
+<article class="relative block rounded-lg border border-[#1e293b] bg-brand-sidebarCard hover:bg-brand-blueHover p-3.5 cursor-pointer transition-colors" data-purpose="history-item">
+<h2 class="text-sm font-semibold text-slate-200 leading-snug">Rapat P-Renja</h2>
+<p class="text-xs text-slate-400 mt-1 font-mono">2026-09-01</p>
+</article>
+<!-- Card Item 3 (Inaktif, hover dark blue) -->
+<article class="relative block rounded-lg border border-[#1e293b] bg-brand-sidebarCard hover:bg-brand-blueHover p-3.5 cursor-pointer transition-colors" data-purpose="history-item">
+<h2 class="text-sm font-semibold text-slate-200 leading-snug">Rapat Anggaran 2027</h2>
+<p class="text-xs text-slate-400 mt-1 font-mono">2026-09-01</p>
+</article>
+</div>
+<!-- Pagination Footer -->
+<div class="px-5 py-3 border-t border-[#1a1f2c] flex items-center justify-between text-xs text-slate-400">
+<button aria-label="Halaman Sebelumnya" class="w-7 h-7 flex items-center justify-center rounded bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300" type="button">
+        ‹
+      </button>
+<span class="font-medium text-slate-300">Hal 1 / 1</span>
+<button aria-label="Halaman Selanjutnya" class="w-7 h-7 flex items-center justify-center rounded bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300" type="button">
+        ›
+      </button>
+</div>
+<!-- SQLite Engine Status Indicator -->
+<footer class="px-5 py-3 border-t border-[#1a1f2c] flex items-center gap-2 text-xs text-slate-400 font-mono" data-purpose="database-engine-status">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
+<span>SQLite Enterprise Engine</span>
+</footer>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-[#eef3f8]" data-purpose="main-layout">
+<!-- Top Bar Navigation (Clean flat bar: breadcrumb + new meeting button only) -->
+<header class="h-16 px-8 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 shadow-sm" data-purpose="top-navigation">
+<!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-sm">
+<span class="text-slate-500 font-medium hover:text-slate-700 cursor-pointer">Notulensi</span>
+<span class="text-slate-400 font-semibold">/</span>
+<span class="font-semibold text-slate-900">Rapat Koordinasi Bidang IPW</span>
+</nav>
+<!-- Action Button (Hanya tombol + Rapat Baru, warna biru gelap solid) -->
+<div>
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-blueDark hover:bg-brand-blueHover text-white text-sm font-semibold transition-all border border-slate-700 active:scale-95" type="button">
+<svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Rapat Baru</span>
+</button>
+</div>
+</header>
+<!-- Document Preview Viewport -->
+<section class="flex-1 overflow-y-auto p-6 md:p-10 flex justify-center items-start" data-purpose="document-viewer">
+<!-- Official White Document Container -->
+<div class="w-full max-w-4xl bg-white rounded shadow-md border border-slate-300 p-10 md:p-14 text-slate-900 font-serifDoc">
+<!-- Dashed Divider / Header separator -->
+<div class="border-t border-dashed border-slate-300 mb-8"></div>
+<!-- Document Main Header -->
+<div class="text-center mb-8">
+<h2 class="text-lg md:text-xl font-bold uppercase tracking-wide text-slate-900 font-serifDoc">
+            LAMPIRAN: DAFTAR HADIR PESERTA RAPAT
+          </h2>
+</div>
+<!-- Attendance Table -->
+<div class="overflow-x-auto mb-10">
+<table class="w-full border-collapse border border-slate-300 text-sm font-serifDoc">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-300 text-left">
+<th class="border border-slate-300 px-4 py-2.5 w-16 text-center font-bold text-slate-900" scope="col">No</th>
+<th class="border border-slate-300 px-4 py-2.5 font-bold text-slate-900" scope="col">Nama Peserta</th>
+<th class="border border-slate-300 px-4 py-2.5 font-bold text-slate-900" scope="col">Jabatan</th>
+<th class="border border-slate-300 px-4 py-2.5 font-bold text-slate-900" scope="col">Instansi / Unit</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-300">
+<tr>
+<td class="border border-slate-300 px-4 py-3 text-center text-slate-800">1</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-900 font-medium">Angga</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-800">Pelaksana</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-800">BAPPEDA</td>
+</tr>
+<tr>
+<td class="border border-slate-300 px-4 py-3 text-center text-slate-800">2</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-900 font-medium">Zaky</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-800">Mahasiswa Magang</td>
+<td class="border border-slate-300 px-4 py-3 text-slate-800">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Dashed Divider -->
+<div class="border-t border-dashed border-slate-300 mb-8"></div>
+<!-- Summary Section / Ringkasan -->
+<article class="space-y-3 font-serifDoc">
+<h3 class="text-base font-bold text-slate-900">Ringkasan</h3>
+<p class="text-sm md:text-base leading-relaxed text-slate-800 text-justify indent-10">
+            Adapun pokok pembahasan utama dalam pertemuan ini berfokus pada Alokasi Tabel Data Perangkat Daerah. Forum rapat melakukan koordinasi mendalam terkait pembagian dan pengelolaan alokasi tabel data untuk kebutuhan Organisasi Perangkat Daerah (OPD). Seluruh rangkaian diskusi mengenai alokasi data tersebut telah dicatat sebagai dokumen resmi hasil Rapat Koordinasi Bidang IPW.
+          </p>
+</article>
+</div>
+</section>
+</main>
+<!-- END: MainContentArea -->
+</body></html>
