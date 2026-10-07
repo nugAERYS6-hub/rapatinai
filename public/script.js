@@ -45,6 +45,8 @@ const el = {
 
   // Views & Breadcrumb
   breadcrumbCurrent: document.getElementById("breadcrumb-current"),
+  breadcrumbMiddle: document.getElementById("breadcrumb-middle"),
+  breadcrumbSepMiddle: document.getElementById("breadcrumb-sep-middle"),
   drafAutoSavePill: document.getElementById("draf-auto-save-pill"),
   viewRiwayat: document.getElementById("tampilan-riwayat"),
   viewDetail: document.getElementById("tampilan-detail"),
@@ -269,6 +271,8 @@ async function tampilkanDetailRapat(id) {
       elItem.classList.toggle("aktif", elItem.dataset.id === String(id));
     });
 
+    el.breadcrumbMiddle?.classList.remove("tersembunyi");
+    el.breadcrumbSepMiddle?.classList.remove("tersembunyi");
     el.breadcrumbCurrent.textContent = rapat.topik;
 
     el.detailTopik.textContent = rapat.topik;
@@ -672,6 +676,8 @@ function tampilkanFormBaru() {
   el.judulForm.textContent = "Notulen Rapat Baru";
   el.formModeTag.textContent = "Mode Input Baru";
   el.labelSimpanSubmit.textContent = "Simpan Notulen Rapat";
+  el.breadcrumbMiddle?.classList.add("tersembunyi");
+  el.breadcrumbSepMiddle?.classList.add("tersembunyi");
   el.breadcrumbCurrent.textContent = "Buat Notulen Baru";
 
   el.formRapat.reset();
@@ -703,6 +709,8 @@ function bukaEditRapat() {
   el.judulForm.textContent = `Edit: ${r.topik}`;
   el.formModeTag.textContent = "Mode Edit";
   el.labelSimpanSubmit.textContent = "Perbarui Notulen Rapat";
+  el.breadcrumbMiddle?.classList.add("tersembunyi");
+  el.breadcrumbSepMiddle?.classList.add("tersembunyi");
   el.breadcrumbCurrent.textContent = `Edit — ${r.topik}`;
 
   el.editIdRapat.value = r.id;
@@ -731,6 +739,12 @@ function bukaEditRapat() {
 }
 
 el.btnEditRapat.addEventListener("click", bukaEditRapat);
+
+if (el.breadcrumbMiddle) {
+  el.breadcrumbMiddle.addEventListener("click", () => {
+    if (el.menuRiwayatRapat) el.menuRiwayatRapat.click();
+  });
+}
 
 // ==========================================================================
 // NAVIGASI MENU SIDEBAR
@@ -763,6 +777,8 @@ if (el.menuRapatBaru) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     el.menuRapatBaru.classList.add("aktif");
+    el.breadcrumbMiddle?.classList.add("tersembunyi");
+    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
     el.breadcrumbCurrent.textContent = "Rapat Baru";
     tutupSemuaView();
     tampilkanFormBaru();
@@ -774,6 +790,8 @@ if (el.menuRiwayatRapat) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     el.menuRiwayatRapat.classList.add("aktif");
+    el.breadcrumbMiddle?.classList.add("tersembunyi");
+    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
     el.breadcrumbCurrent.textContent = "Riwayat Rapat";
     tutupSemuaView();
     if (el.viewRiwayat) el.viewRiwayat.classList.remove("tersembunyi");
@@ -785,6 +803,8 @@ if (elPengaturan.menuPengaturan) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     elPengaturan.menuPengaturan.classList.add("aktif");
+    el.breadcrumbMiddle?.classList.add("tersembunyi");
+    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
     el.breadcrumbCurrent.textContent = "Pengaturan";
     tutupSemuaView();
     if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
