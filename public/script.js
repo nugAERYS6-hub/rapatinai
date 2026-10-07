@@ -46,6 +46,7 @@ const el = {
   // Views & Breadcrumb
   breadcrumbCurrent: document.getElementById("breadcrumb-current"),
   drafAutoSavePill: document.getElementById("draf-auto-save-pill"),
+  viewRiwayat: document.getElementById("tampilan-riwayat"),
   viewDetail: document.getElementById("tampilan-detail"),
   viewForm: document.getElementById("tampilan-form"),
 
@@ -304,7 +305,7 @@ async function tampilkanDetailRapat(id) {
     renderPoinList(rapat.poinPembahasan);
     renderPaperPreview(rapat);
 
-    el.viewForm.classList.add("tersembunyi");
+    tutupSemuaView();
     el.viewDetail.classList.remove("tersembunyi");
   } catch (err) {
     tampilkanToast(err.message, "error");
@@ -689,7 +690,7 @@ function tampilkanFormBaru() {
 
   document.querySelectorAll(".item-rapat-sidebar").forEach((i) => i.classList.remove("aktif"));
 
-  el.viewDetail.classList.add("tersembunyi");
+  tutupSemuaView();
   el.viewForm.classList.remove("tersembunyi");
 }
 
@@ -745,6 +746,7 @@ const elPengaturan = {
 };
 
 function tutupSemuaView() {
+  if (el.viewRiwayat) el.viewRiwayat.classList.add("tersembunyi");
   if (el.viewDetail) el.viewDetail.classList.add("tersembunyi");
   if (el.viewForm) el.viewForm.classList.add("tersembunyi");
   if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.add("tersembunyi");
@@ -761,11 +763,7 @@ if (el.menuRapatBaru) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     el.menuRapatBaru.classList.add("aktif");
-
-    // Sembunyikan konten riwayat di sidebar
-    if (el.sidebarRiwayatContent) el.sidebarRiwayatContent.classList.add("tersembunyi");
-
-    // Tutup semua view, lalu tampilkan form baru
+    el.breadcrumbCurrent.textContent = "Rapat Baru";
     tutupSemuaView();
     tampilkanFormBaru();
   });
@@ -776,15 +774,9 @@ if (el.menuRiwayatRapat) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     el.menuRiwayatRapat.classList.add("aktif");
-
-    // Tampilkan kembali konten riwayat di sidebar
-    if (el.sidebarRiwayatContent) el.sidebarRiwayatContent.classList.remove("tersembunyi");
-
-    // Tutup semua view, lalu tampilkan detail jika ada rapat aktif
+    el.breadcrumbCurrent.textContent = "Riwayat Rapat";
     tutupSemuaView();
-    if (STATE.rapatAktif) {
-      el.viewDetail.classList.remove("tersembunyi");
-    }
+    if (el.viewRiwayat) el.viewRiwayat.classList.remove("tersembunyi");
   });
 }
 
@@ -793,11 +785,7 @@ if (elPengaturan.menuPengaturan) {
     tutupSidebarMobile();
     resetSemuaMenuAktif();
     elPengaturan.menuPengaturan.classList.add("aktif");
-
-    // Sembunyikan konten riwayat di sidebar
-    if (el.sidebarRiwayatContent) el.sidebarRiwayatContent.classList.add("tersembunyi");
-
-    // Tutup semua view, lalu tampilkan pengaturan
+    el.breadcrumbCurrent.textContent = "Pengaturan";
     tutupSemuaView();
     if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
   });

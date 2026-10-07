@@ -48,69 +48,7 @@
         </button>
       </div>
 
-      <!-- KONTEN RIWAYAT RAPAT (Search, Filter, List) -->
-      <div id="sidebar-riwayat-content" class="sidebar-riwayat-content">
-        <!-- SEARCH & FILTER CEPAT -->
-        <div class="sidebar-search-box">
-          <div class="search-input-wrap">
-            <span class="search-icon" aria-hidden="true">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </span>
-            <input type="text" id="input-cari-rapat" placeholder="Cari topik, nama, poin..." autocomplete="off" />
-            <button type="button" id="tombol-clear-cari" class="tombol-clear tersembunyi"
-              title="Hapus pencarian">×</button>
-          </div>
 
-          <div class="filter-pills" id="filter-pills">
-            <button type="button" class="pill aktif" data-filter="all">Semua</button>
-            <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
-            <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
-          </div>
-        </div>
-
-        <!-- WIDGET STATISTIK CEPAT -->
-        <div class="stats-card">
-          <div class="stat-item">
-            <span class="stat-label">Total Rapat</span>
-            <span class="stat-val" id="stat-total-rapat">-</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-label">Bulan Ini</span>
-            <span class="stat-val" id="stat-bulan-ini">-</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-label">AI Ready</span>
-            <span class="stat-val stat-val-ai" id="stat-ai-ready">-</span>
-          </div>
-        </div>
-
-        <!-- DAFTAR RAPAT -->
-        <div class="sidebar-section-title">
-          <span>Riwayat Notulen</span>
-          <span class="counter-badge" id="counter-daftar">0</span>
-        </div>
-
-        <div id="daftar-rapat-sidebar" class="daftar-rapat-sidebar">
-          <div class="sidebar-skeleton-wrap">
-            <div class="skeleton skeleton-item"></div>
-            <div class="skeleton skeleton-item"></div>
-            <div class="skeleton skeleton-item"></div>
-          </div>
-        </div>
-
-        <!-- PAGINATION BAR -->
-        <div class="sidebar-pagination" id="sidebar-pagination">
-          <button type="button" id="btn-prev-page" class="btn-page" disabled>‹</button>
-          <span id="label-page-info" class="label-page">Hal 1 / 1</span>
-          <button type="button" id="btn-next-page" class="btn-page" disabled>›</button>
-        </div>
-      </div> <!-- END KONTEN RIWAYAT RAPAT -->
 
 
     </aside>
@@ -129,7 +67,7 @@
           <div class="breadcrumb" id="breadcrumb-area">
             <span class="breadcrumb-root">Notulensi</span>
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
+            <span class="breadcrumb-current" id="breadcrumb-current">Riwayat Rapat</span>
           </div>
         </div>
 
@@ -142,6 +80,73 @@
       </header>
 
       <div class="main-scrollable-content">
+        <!-- ============================================== -->
+        <!-- VIEW 0: TAMPILAN RIWAYAT RAPAT (MAIN PANEL)    -->
+        <!-- ============================================== -->
+        <section id="tampilan-riwayat" class="view-section">
+          <div class="riwayat-panel-container">
+
+            <!-- SEARCH & FILTER BAR -->
+            <div class="riwayat-search-bar">
+              <div class="riwayat-search-wrap">
+                <span class="search-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input type="text" id="input-cari-rapat" placeholder="Cari topik, nama, poin..." autocomplete="off" />
+                <button type="button" id="tombol-clear-cari" class="tombol-clear tersembunyi" title="Hapus pencarian">×</button>
+              </div>
+              <div class="filter-pills" id="filter-pills">
+                <button type="button" class="pill aktif" data-filter="all">Semua</button>
+                <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
+                <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
+              </div>
+            </div>
+
+            <!-- STATS ROW -->
+            <div class="riwayat-stats-row">
+              <div class="riwayat-stat-card">
+                <span class="riwayat-stat-label">Total Rapat</span>
+                <span class="riwayat-stat-val" id="stat-total-rapat">-</span>
+              </div>
+              <div class="riwayat-stat-card">
+                <span class="riwayat-stat-label">Bulan Ini</span>
+                <span class="riwayat-stat-val" id="stat-bulan-ini">-</span>
+              </div>
+              <div class="riwayat-stat-card">
+                <span class="riwayat-stat-label">AI Ready</span>
+                <span class="riwayat-stat-val riwayat-stat-ai" id="stat-ai-ready">-</span>
+              </div>
+            </div>
+
+            <!-- JUDUL DAFTAR -->
+            <div class="riwayat-list-header">
+              <span class="riwayat-list-title">Riwayat Notulen</span>
+              <span class="counter-badge" id="counter-daftar">0</span>
+            </div>
+
+            <!-- DAFTAR RAPAT GRID -->
+            <div id="daftar-rapat-sidebar" class="daftar-rapat-grid">
+              <div class="sidebar-skeleton-wrap">
+                <div class="skeleton skeleton-item"></div>
+                <div class="skeleton skeleton-item"></div>
+                <div class="skeleton skeleton-item"></div>
+              </div>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="riwayat-pagination" id="sidebar-pagination">
+              <button type="button" id="btn-prev-page" class="btn-page" disabled>‹</button>
+              <span id="label-page-info" class="label-page">Hal 1 / 1</span>
+              <button type="button" id="btn-next-page" class="btn-page" disabled>›</button>
+            </div>
+
+          </div>
+        </section>
+
         <!-- ============================================== -->
         <!-- VIEW 1: TAMPILAN DETAIL RAPAT EKSEKUTIF        -->
         <!-- ============================================== -->

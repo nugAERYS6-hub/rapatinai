@@ -938,6 +938,121 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
   animation: fadeInSlide 0.35s var(--ease-smooth);
 }
 
+/* ==========================================================================
+   RIWAYAT RAPAT - MAIN PANEL VIEW
+   ========================================================================== */
+.riwayat-panel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.riwayat-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.riwayat-search-wrap {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-input, #0b132b);
+  border: 1.5px solid var(--border-sidebar, #1c294d);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  transition: border-color var(--trans-speed) var(--ease-smooth);
+}
+
+.riwayat-search-wrap:focus-within {
+  border-color: var(--accent-cyan, #38bdf8);
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
+}
+
+.riwayat-search-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: var(--text-main, #e2e8f0);
+  padding: 0;
+}
+
+.riwayat-search-wrap input::placeholder { color: var(--text-subtle, #475569); }
+
+/* Stats Row */
+.riwayat-stats-row {
+  display: flex;
+  gap: 16px;
+}
+
+.riwayat-stat-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 20px;
+  background: var(--bg-card, #0b132b);
+  border: 1px solid var(--border-sidebar, #1c294d);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.riwayat-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-subtle, #475569);
+}
+
+.riwayat-stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main, #e2e8f0);
+  line-height: 1;
+}
+
+.riwayat-stat-ai { color: var(--accent-cyan, #38bdf8); }
+
+/* List header */
+.riwayat-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-sidebar, #1c294d);
+}
+
+.riwayat-list-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-subtle, #475569);
+}
+
+/* Daftar rapat grid (in main panel) */
+.daftar-rapat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+/* Riwayat pagination */
+.riwayat-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
 @keyframes fadeInSlide {
   from {
     opacity: 0;
