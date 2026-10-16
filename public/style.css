@@ -822,6 +822,12 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
 .breadcrumb-current {
   font-weight: 600;
   color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 450px;
+  display: inline-block;
+  vertical-align: bottom;
 }
 
 .command-bar-right {
@@ -2296,25 +2302,41 @@ textarea:focus {
   .card-header,
   .btn-print-action,
   .sidebar-overlay,
-  #tampilan-form {
+  #tampilan-form,
+  #tampilan-riwayat,
+  #tampilan-pengaturan {
     display: none !important;
   }
 
+  /* Sembunyikan pseudo-element yang mungkin masih memakan ruang */
+  .detail-hero-card::before,
+  .detail-hero-card::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Reset semua container layout agar tidak ada ruang kosong */
+  html, body,
   .app-layout,
   .main-panel,
   .main-scrollable-content,
+  #tampilan-detail,
   .view-section,
   .detail-cards-container,
   .document-preview-card {
     display: block !important;
     overflow: visible !important;
     height: auto !important;
+    min-height: unset !important;
+    max-width: unset !important;
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     box-shadow: none !important;
     background: transparent !important;
+    gap: 0 !important;
+    animation: none !important;
   }
 
   .paper-preview {
@@ -2334,6 +2356,21 @@ textarea:focus {
   .kop-garis-tipis {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  p, div {
+    orphans: 3;
+    widows: 3;
   }
 
   @page {

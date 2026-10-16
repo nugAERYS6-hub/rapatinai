@@ -1072,6 +1072,107 @@ app.get("/api/rapat/:id/export-word", async (req, res) => {
   }
 });
 
+// ==========================================
+// BACKUP DATABASE (FORMAT MySQL .sql)
+// ==========================================
+app.get("/api/backup/mysql", (req, res) => {
+  try {
+    const rows = db.prepare("SELECT * FROM rapat ORDER BY created_at DESC").all();
+    const tanggalBackup = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const namaFile = `backup_rapatinai_${new Date().toISOString().slice(0, 10)}.sql`;
+
+    // Helper: escape string untuk MySQL
+    function escapeMySQL(val) {
+      if (val === null || val === undefined) return "NULL";
+      const str = String(val);
+      return "'" + str
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "\\r")
+        .replace(/\t/g, "\\t")
+        .replace(/\x00/g, "\\0") + "'";
+    }
+
+    let sql = "";
+    sql += "-- ============================================\n";
+    sql += "-- RapatinAI - Backup Database MySQL\n";
+    sql += `-- Tanggal Backup: ${tanggalBackup}\n`;
+    sql += `-- Total Data: ${rows.length} rapat\n`;
+    sql += "-- ============================================\n\n";
+
+    sql += "SET NAMES utf8mb4;\n";
+    sql += "SET FOREIGN_KEY_CHECKS = 0;\n\n";
+
+    // DROP & CREATE TABLE
+    sql += "-- -------------------------------------------\n";
+    sql += "-- Struktur Tabel: rapat\n";
+    sql += "-- -------------------------------------------\n";
+    sql += "DROP TABLE IF EXISTS `rapat`;\n";
+    sql += "CREATE TABLE `rapat` (\n";
+    sql += "  `id` VARCHAR(255) NOT NULL,\n";
+    sql += "  `tanggal` VARCHAR(255) NOT NULL,\n";
+    sql += "  `topik` TEXT NOT NULL,\n";
+    sql += "  `pimpinanRapat` TEXT NOT NULL,\n";
+    sql += "  `notulis` TEXT NOT NULL,\n";
+    sql += "  `waktu` VARCHAR(255) DEFAULT NULL,\n";
+    sql += "  `tempat` TEXT DEFAULT NULL,\n";
+    sql += "  `anggota` LONGTEXT DEFAULT NULL,\n";
+    sql += "  `poinPembahasan` LONGTEXT DEFAULT NULL,\n";
+    sql += "  `tindakLanjut` LONGTEXT DEFAULT NULL,\n";
+    sql += "  `ringkasanAI` LONGTEXT DEFAULT NULL,\n";
+    sql += "  `ideBaruAI` LONGTEXT DEFAULT NULL,\n";
+    sql += "  `status` VARCHAR(50) DEFAULT 'Selesai',\n";
+    sql += "  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,\n";
+    sql += "  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n";
+    sql += "  PRIMARY KEY (`id`)\n";
+    sql += ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n\n";
+
+    // INSERT DATA
+    if (rows.length > 0) {
+      sql += "-- -------------------------------------------\n";
+      sql += `-- Data Tabel: rapat (${rows.length} baris)\n`;
+      sql += "-- -------------------------------------------\n";
+      sql += "LOCK TABLES `rapat` WRITE;\n";
+
+      rows.forEach((row, index) => {
+        sql += "INSERT INTO `rapat` (`id`, `tanggal`, `topik`, `pimpinanRapat`, `notulis`, `waktu`, `tempat`, `anggota`, `poinPembahasan`, `tindakLanjut`, `ringkasanAI`, `ideBaruAI`, `status`, `created_at`, `updated_at`) VALUES (";
+        sql += [
+          escapeMySQL(row.id),
+          escapeMySQL(row.tanggal),
+          escapeMySQL(row.topik),
+          escapeMySQL(row.pimpinanRapat),
+          escapeMySQL(row.notulis),
+          escapeMySQL(row.waktu),
+          escapeMySQL(row.tempat),
+          escapeMySQL(row.anggota),
+          escapeMySQL(row.poinPembahasan),
+          escapeMySQL(row.tindakLanjut),
+          escapeMySQL(row.ringkasanAI),
+          escapeMySQL(row.ideBaruAI),
+          escapeMySQL(row.status),
+          escapeMySQL(row.created_at),
+          escapeMySQL(row.updated_at),
+        ].join(", ");
+        sql += ");\n";
+      });
+
+      sql += "UNLOCK TABLES;\n\n";
+    }
+
+    sql += "SET FOREIGN_KEY_CHECKS = 1;\n";
+    sql += `-- Backup selesai. ${rows.length} data berhasil diekspor.\n`;
+
+    res.setHeader("Content-Type", "application/sql; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${namaFile}"`);
+    res.send(sql);
+  } catch (err) {
+    console.error("Error backup MySQL:", err);
+    res.status(500).json({ success: false, message: "Gagal membuat backup: " + err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`RapatinAI Server aktif di http://localhost:${PORT}`);
 });

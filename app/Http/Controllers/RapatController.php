@@ -297,4 +297,87 @@ class RapatController extends Controller
             return response()->make("Gagal mengunduh Word: " . $e->getMessage(), 500);
         }
     }
+
+    public function backupMysql()
+    {
+        try {
+            $rows = Rapat::orderBy('created_at', 'desc')->get();
+            $tanggalBackup = now()->format('Y-m-d H:i:s');
+            $namaFile = 'backup_rapatinai_' . now()->format('Y-m-d') . '.sql';
+
+            $sql = "-- ============================================\n";
+            $sql .= "-- RapatinAI - Backup Database MySQL\n";
+            $sql .= "-- Tanggal Backup: {$tanggalBackup}\n";
+            $sql .= "-- Total Data: {$rows->count()} rapat\n";
+            $sql .= "-- ============================================\n\n";
+
+            $sql .= "SET NAMES utf8mb4;\n";
+            $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
+
+            // DROP & CREATE TABLE
+            $sql .= "-- -------------------------------------------\n";
+            $sql .= "-- Struktur Tabel: rapat\n";
+            $sql .= "-- -------------------------------------------\n";
+            $sql .= "DROP TABLE IF EXISTS `rapat`;\n";
+            $sql .= "CREATE TABLE `rapat` (\n";
+            $sql .= "  `id` VARCHAR(255) NOT NULL,\n";
+            $sql .= "  `tanggal` VARCHAR(255) NOT NULL,\n";
+            $sql .= "  `topik` TEXT NOT NULL,\n";
+            $sql .= "  `pimpinanRapat` TEXT NOT NULL,\n";
+            $sql .= "  `notulis` TEXT NOT NULL,\n";
+            $sql .= "  `waktu` VARCHAR(255) DEFAULT NULL,\n";
+            $sql .= "  `tempat` TEXT DEFAULT NULL,\n";
+            $sql .= "  `anggota` LONGTEXT DEFAULT NULL,\n";
+            $sql .= "  `poinPembahasan` LONGTEXT DEFAULT NULL,\n";
+            $sql .= "  `tindakLanjut` LONGTEXT DEFAULT NULL,\n";
+            $sql .= "  `ringkasanAI` LONGTEXT DEFAULT NULL,\n";
+            $sql .= "  `ideBaruAI` LONGTEXT DEFAULT NULL,\n";
+            $sql .= "  `status` VARCHAR(50) DEFAULT 'Selesai',\n";
+            $sql .= "  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,\n";
+            $sql .= "  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n";
+            $sql .= "  PRIMARY KEY (`id`)\n";
+            $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n\n";
+
+            // INSERT DATA
+            if ($rows->count() > 0) {
+                $sql .= "-- -------------------------------------------\n";
+                $sql .= "-- Data Tabel: rapat ({$rows->count()} baris)\n";
+                $sql .= "-- -------------------------------------------\n";
+                $sql .= "LOCK TABLES `rapat` WRITE;\n";
+
+                $columns = ['id', 'tanggal', 'topik', 'pimpinanRapat', 'notulis', 'waktu', 'tempat', 'anggota', 'poinPembahasan', 'tindakLanjut', 'ringkasanAI', 'ideBaruAI', 'status', 'created_at', 'updated_at'];
+
+                foreach ($rows as $row) {
+                    $values = [];
+                    foreach ($columns as $col) {
+                        $val = $row->{$col};
+                        if ($val === null) {
+                            $values[] = 'NULL';
+                        } else {
+                            // Escape untuk MySQL
+                            $escaped = addslashes((string)$val);
+                            $escaped = str_replace("\n", "\\n", $escaped);
+                            $escaped = str_replace("\r", "\\r", $escaped);
+                            $escaped = str_replace("\t", "\\t", $escaped);
+                            $values[] = "'" . $escaped . "'";
+                        }
+                    }
+                    $sql .= "INSERT INTO `rapat` (`" . implode('`, `', $columns) . "`) VALUES (" . implode(', ', $values) . ");\n";
+                }
+
+                $sql .= "UNLOCK TABLES;\n\n";
+            }
+
+            $sql .= "SET FOREIGN_KEY_CHECKS = 1;\n";
+            $sql .= "-- Backup selesai. {$rows->count()} data berhasil diekspor.\n";
+
+            return response($sql, 200, [
+                'Content-Type' => 'application/sql; charset=utf-8',
+                'Content-Disposition' => "attachment; filename=\"{$namaFile}\"",
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error backup MySQL: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal membuat backup: ' . $e->getMessage()], 500);
+        }
+    }
 }

@@ -276,10 +276,10 @@ async function tampilkanDetailRapat(id) {
     el.breadcrumbCurrent.textContent = rapat.topik;
 
     el.detailTopik.textContent = rapat.topik;
-    el.detailTanggal.innerHTML = `📅 <span>${formatHariTanggal(rapat.tanggal)}</span>`;
+    el.detailTanggal.innerHTML = `<span>${formatHariTanggal(rapat.tanggal)}</span>`;
     if (el.detailWaktu) {
       if (rapat.waktu) {
-        el.detailWaktu.innerHTML = `⏰ <span>${rapat.waktu}</span>`;
+        el.detailWaktu.innerHTML = `<span>${rapat.waktu}</span>`;
         el.detailWaktu.classList.remove("tersembunyi");
       } else {
         el.detailWaktu.classList.add("tersembunyi");
@@ -287,13 +287,13 @@ async function tampilkanDetailRapat(id) {
     }
     if (el.detailTempat) {
       if (rapat.tempat) {
-        el.detailTempat.innerHTML = `📍 <span>${rapat.tempat}</span>`;
+        el.detailTempat.innerHTML = `<span>${rapat.tempat}</span>`;
         el.detailTempat.classList.remove("tersembunyi");
       } else {
         el.detailTempat.classList.add("tersembunyi");
       }
     }
-    el.detailStatus.textContent = rapat.status || "Selesai";
+    if (el.detailStatus) el.detailStatus.textContent = rapat.status || "Selesai";
     el.detailPimpinan.textContent = rapat.pimpinanRapat || "-";
     el.detailNotulis.textContent = rapat.notulis || "-";
     el.detailTotalPeserta.textContent = `${rapat.anggota.length} Orang Hadir`;
@@ -452,7 +452,7 @@ function renderPaperPreview(rapat) {
 
       <div style="text-align: center; margin-bottom: 20px;">
         <div style="font-size: 13.5pt; font-weight: bold; letter-spacing: 0.5px;">LAPORAN HASIL RAPAT</div>
-        <div style="font-size: 12.5pt; font-weight: bold; margin-top: 2px;">${(rapat.topik || "").toUpperCase()}</div>
+        <div style="font-size: 12.5pt; font-weight: bold; margin-top: 2px;">${(rapat.topik || "").toUpperCase().replace(/^RAPAT\s+/, "")}</div>
       </div>
 
       <table style="width: 100%; font-size: 11pt; border-collapse: collapse; margin-bottom: 12px; line-height: 1.2;">
@@ -809,34 +809,30 @@ if (elPengaturan.menuPengaturan) {
   });
 }
 
-// BACKUP DATABASE
+// BACKUP DATABASE (MySQL .sql)
 if (elPengaturan.btnBackupDb) {
   elPengaturan.btnBackupDb.addEventListener("click", async () => {
     try {
       elPengaturan.btnBackupDb.disabled = true;
       elPengaturan.btnBackupDb.innerHTML = `<span class="spinner-inline"></span><span>Memproses...</span>`;
-      const res = await fetch("/api/rapat?page=1&limit=9999");
-      const json = await res.json();
-      if (!json.success) throw new Error("Gagal mengambil data");
-      const dataBackup = {
-        tanggal_backup: new Date().toISOString(),
-        versi: "1.0",
-        total: json.data.length,
-        data: json.data,
-      };
-      const blob = new Blob([JSON.stringify(dataBackup, null, 2)], { type: "application/json" });
+      const res = await fetch("/api/backup/mysql");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || "Gagal mengunduh backup");
+      }
+      const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `backup_notulensi_${new Date().toISOString().slice(0,10)}.json`;
+      a.download = `backup_rapatinai_${new Date().toISOString().slice(0,10)}.sql`;
       a.click();
       URL.revokeObjectURL(url);
-      tampilkanToast("Backup berhasil diunduh!", "sukses");
+      tampilkanToast("Backup MySQL berhasil diunduh!", "sukses");
     } catch (err) {
       tampilkanToast("Gagal membuat backup: " + err.message, "error");
     } finally {
       elPengaturan.btnBackupDb.disabled = false;
-      elPengaturan.btnBackupDb.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg><span>Unduh Backup (JSON)</span>`;
+      elPengaturan.btnBackupDb.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg><span>Unduh Backup (MySQL)</span>`;
     }
   });
 }
