@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRapatRequest;
+use App\Http\Requests\UpdateRapatRequest;
 use App\Models\Rapat;
 use App\Services\ExportService;
 use App\Services\GeminiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class RapatController extends Controller
 {
@@ -113,41 +117,30 @@ class RapatController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(StoreRapatRequest $request)
     {
         try {
-            $tanggal = $request->input('tanggal');
-            $topik = $request->input('topik');
-            $pimpinan = $request->input('pimpinanRapat');
-            $notulis = $request->input('notulis');
-
-            if (!$tanggal || !$topik || !$pimpinan || !$notulis) {
-                return response()->json([
-                    'success' => false,
-                    'pesan' => 'Kolom tanggal, topik, pimpinan, dan notulis wajib diisi.',
-                ], 400);
-            }
-
-            $newId = (string)round(microtime(true) * 1000);
+            // Gunakan ULID sebagai ID unik yang aman dari collision
+            $newId = (string) Str::ulid();
 
             $anggota = $request->input('anggota', []);
             $poinPembahasan = $request->input('poinPembahasan', []);
             $tindakLanjut = $request->input('tindakLanjut', []);
 
             $rapat = Rapat::create([
-                'id' => $newId,
-                'tanggal' => $tanggal,
-                'topik' => $topik,
-                'pimpinanRapat' => $pimpinan,
-                'notulis' => $notulis,
-                'waktu' => $request->input('waktu', ''),
-                'tempat' => $request->input('tempat', ''),
-                'anggota' => is_string($anggota) ? $anggota : json_encode($anggota, JSON_UNESCAPED_UNICODE),
+                'id'             => $newId,
+                'tanggal'        => $request->input('tanggal'),
+                'topik'          => $request->input('topik'),
+                'pimpinanRapat'  => $request->input('pimpinanRapat'),
+                'notulis'        => $request->input('notulis'),
+                'waktu'          => $request->input('waktu', ''),
+                'tempat'         => $request->input('tempat', ''),
+                'anggota'        => is_string($anggota) ? $anggota : json_encode($anggota, JSON_UNESCAPED_UNICODE),
                 'poinPembahasan' => is_string($poinPembahasan) ? $poinPembahasan : json_encode($poinPembahasan, JSON_UNESCAPED_UNICODE),
-                'tindakLanjut' => is_string($tindakLanjut) ? $tindakLanjut : json_encode($tindakLanjut, JSON_UNESCAPED_UNICODE),
-                'ringkasanAI' => null,
-                'ideBaruAI' => null,
-                'status' => $request->input('status', 'Selesai'),
+                'tindakLanjut'   => is_string($tindakLanjut) ? $tindakLanjut : json_encode($tindakLanjut, JSON_UNESCAPED_UNICODE),
+                'ringkasanAI'    => null,
+                'ideBaruAI'      => null,
+                'status'         => $request->input('status', 'Selesai'),
             ]);
 
             return response()->json([
@@ -160,7 +153,7 @@ class RapatController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRapatRequest $request, $id)
     {
         try {
             $rapat = Rapat::find($id);
@@ -354,7 +347,6 @@ class RapatController extends Controller
                         if ($val === null) {
                             $values[] = 'NULL';
                         } else {
-                            // Escape untuk MySQL
                             $escaped = addslashes((string)$val);
                             $escaped = str_replace("\n", "\\n", $escaped);
                             $escaped = str_replace("\r", "\\r", $escaped);
@@ -378,6 +370,94 @@ class RapatController extends Controller
         } catch (\Throwable $e) {
             Log::error("Error backup MySQL: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Gagal membuat backup: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Restore database dari file .sql yang diunggah.
+     * Hanya menerima pernyataan INSERT untuk keamanan ekstra.
+     */
+    public function restoreBackup(Request $request)
+    {
+        // Validasi file upload
+        $request->validate([
+            'file_sql' => ['required', 'file', 'mimes:sql,txt', 'max:51200'], // max 50MB
+        ], [
+            'file_sql.required' => 'File SQL wajib dipilih.',
+            'file_sql.mimes'    => 'File harus berekstensi .sql atau .txt.',
+            'file_sql.max'      => 'Ukuran file maksimal 50 MB.',
+        ]);
+
+        try {
+            $file = $request->file('file_sql');
+            $konten = file_get_contents($file->getRealPath());
+
+            if (empty(trim($konten))) {
+                return response()->json(['success' => false, 'pesan' => 'File SQL kosong, tidak ada yang dipulihkan.'], 400);
+            }
+
+            // Keamanan: hanya izinkan pernyataan yang diketahui aman
+            $barisBaris = array_filter(
+                preg_split('/\r?\n/', $konten),
+                fn($b) => !empty(trim($b)) && !str_starts_with(ltrim($b), '--')
+            );
+
+            // Gabungkan kembali dan bagi berdasarkan titik-koma
+            $sqlGabung = implode("\n", $barisBaris);
+            $pernyataan = array_filter(
+                explode(';', $sqlGabung),
+                fn($s) => !empty(trim($s))
+            );
+
+            // Whitelist: pernyataan yang diizinkan
+            $izinkan = ['SET', 'DROP TABLE', 'CREATE TABLE', 'LOCK TABLES', 'UNLOCK TABLES', 'INSERT INTO'];
+            $jumlahInsert = 0;
+            $jumlahTotal = 0;
+
+            DB::beginTransaction();
+
+            foreach ($pernyataan as $sql) {
+                $bersih = strtoupper(ltrim(trim($sql)));
+                $diizinkan = false;
+                foreach ($izinkan as $prefix) {
+                    if (str_starts_with($bersih, $prefix)) {
+                        $diizinkan = true;
+                        break;
+                    }
+                }
+
+                if (!$diizinkan) {
+                    // Lewati pernyataan yang tidak ada di whitelist
+                    continue;
+                }
+
+                DB::statement(trim($sql));
+                $jumlahTotal++;
+
+                if (str_starts_with($bersih, 'INSERT INTO')) {
+                    $jumlahInsert++;
+                }
+            }
+
+            DB::commit();
+
+            Log::info("Restore database berhasil: {$jumlahInsert} baris INSERT dari {$jumlahTotal} pernyataan.");
+
+            return response()->json([
+                'success' => true,
+                'pesan'   => "Database berhasil dipulihkan! {$jumlahInsert} baris data telah diimpor.",
+                'detail'  => [
+                    'total_pernyataan' => $jumlahTotal,
+                    'total_insert'     => $jumlahInsert,
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error("Error restore backup: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'pesan'   => 'Gagal memulihkan database: ' . $e->getMessage(),
+            ], 500);
         }
     }
 }

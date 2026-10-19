@@ -326,15 +326,22 @@
               <div class="form-header-banner" style="margin-bottom: 20px;">
                 <div>
                   <div class="section-badge">Data</div>
-                  <h2 class="section-title">Backup Database</h2>
+                  <h2 class="section-title">Backup & Restore Database</h2>
                   <p style="font-size:13.5px; color:#94a3b8; line-height:1.6; margin: 0; max-width: 600px;">
-                    Unduh salinan lengkap seluruh data notulen dalam format MySQL (.sql). Buat cadangan baru atau pantau riwayat unduhan cadangan Anda di bawah ini.
+                    Unduh salinan lengkap data notulen sebagai cadangan, atau pulihkan data dari file backup <b>.sql</b> yang pernah dibuat sebelumnya.
                   </p>
                 </div>
-                <button type="button" id="btn-backup-db" class="btn-simpan-besar" style="width:auto; flex-shrink:0;">
-                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                  <span id="label-btn-backup">Buat Backup Sekarang</span>
-                </button>
+                <div class="backup-action-group">
+                  <button type="button" id="btn-backup-db" class="btn-simpan-besar" style="width:auto; flex-shrink:0;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <span id="label-btn-backup">Buat Backup</span>
+                  </button>
+                  <label class="btn-restore-trigger" id="label-restore-trigger" for="input-file-restore" title="Pulihkan database dari file .sql">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l4 4m0 0l4-4m-4 4V4"/></svg>
+                    <span id="label-restore-teks">Pulihkan (.sql)</span>
+                  </label>
+                  <input type="file" id="input-file-restore" accept=".sql,.txt" style="display:none;">
+                </div>
               </div>
 
               <!-- STATS BACKUP -->
@@ -434,7 +441,7 @@
             <!-- INFO PANEL -->
             <div class="form-card-section backup-info-panel">
               <div class="section-badge">Info</div>
-              <h2 class="section-title">Tentang Backup Database</h2>
+              <h2 class="section-title">Tentang Backup & Restore</h2>
               <ul class="backup-info-list">
                 <li>
                   <span class="backup-info-icon">🔐</span>
@@ -447,6 +454,10 @@
                 <li>
                   <span class="backup-info-icon">🔄</span>
                   <span>Disarankan membuat backup secara rutin minimal seminggu sekali, terutama setelah input data baru.</span>
+                </li>
+                <li>
+                  <span class="backup-info-icon">⬆️</span>
+                  <span><b>Restore</b>: Klik tombol <b>Pulihkan (.sql)</b> dan pilih file backup untuk mengembalikan seluruh data notulen. <b>Perhatian: data yang ada akan digantikan oleh data dari file backup!</b></span>
                 </li>
                 <li>
                   <span class="backup-info-icon">⚠️</span>

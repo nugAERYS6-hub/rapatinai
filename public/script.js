@@ -984,6 +984,101 @@ if (btnHapusSemua) {
   });
 }
 
+// ==========================================================================
+// RESTORE DATABASE
+// ==========================================================================
+const inputFileRestore = document.getElementById("input-file-restore");
+
+if (inputFileRestore) {
+  inputFileRestore.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Reset agar bisa memilih file yang sama lagi nanti
+    inputFileRestore.value = "";
+
+    // Validasi ekstensi di sisi klien
+    const ekstensiDiizinkan = [".sql", ".txt"];
+    const ekstensiFile = "." + file.name.split(".").pop().toLowerCase();
+    if (!ekstensiDiizinkan.includes(ekstensiFile)) {
+      tampilkanToast("File tidak valid. Hanya file .sql yang didukung.", "error");
+      return;
+    }
+
+    // Validasi ukuran (max 50 MB)
+    if (file.size > 50 * 1024 * 1024) {
+      tampilkanToast("File terlalu besar. Maksimal 50 MB.", "error");
+      return;
+    }
+
+    // Tampilkan dialog konfirmasi sebelum eksekusi
+    const ukuranFormatted = formatUkuranFile(file.size);
+    const konfirmasi = confirm(
+      `⚠️ PERHATIAN — RESTORE DATABASE\n\n` +
+      `File yang dipilih:\n  ${file.name} (${ukuranFormatted})\n\n` +
+      `Proses restore akan menimpa seluruh data rapat yang saat ini ada di database.\n` +
+      `Pastikan Anda telah membuat backup terbaru sebelum melanjutkan!\n\n` +
+      `Apakah Anda yakin ingin memulihkan database dari file ini?`
+    );
+
+    if (!konfirmasi) {
+      tampilkanToast("Restore dibatalkan.", "info");
+      return;
+    }
+
+    // Mulai proses restore
+    const labelTrigger = document.getElementById("label-restore-trigger");
+    const labelRestoreTeks = document.getElementById("label-restore-teks");
+
+    if (labelTrigger) {
+      labelTrigger.style.pointerEvents = "none";
+      labelTrigger.style.opacity = "0.65";
+    }
+    if (labelRestoreTeks) {
+      labelRestoreTeks.textContent = "Memulihkan...";
+    }
+
+    tampilkanToast("Sedang memulihkan database, harap tunggu...", "info");
+
+    try {
+      const formData = new FormData();
+      formData.append("file_sql", file);
+
+      const res = await fetch("/api/backup/restore", {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content ?? "",
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.pesan || data.message || `HTTP ${res.status}`);
+      }
+
+      tampilkanToast(`✅ ${data.pesan}`, "sukses");
+
+      // Reload data rapat setelah restore berhasil
+      await muatStats();
+      await muatDaftarRapat(1);
+      renderRiwayatBackup();
+
+    } catch (err) {
+      tampilkanToast("❌ Gagal memulihkan: " + err.message, "error");
+    } finally {
+      if (labelTrigger) {
+        labelTrigger.style.pointerEvents = "";
+        labelTrigger.style.opacity = "";
+      }
+      if (labelRestoreTeks) {
+        labelRestoreTeks.textContent = "Pulihkan (.sql)";
+      }
+    }
+  });
+}
+
 // THEME TOGGLE
 
 function terapkanTema(tema) {
@@ -1196,7 +1291,13 @@ el.formRapat.addEventListener("submit", async (e) => {
     }
 
     const json = await res.json();
-    if (!json.success) throw new Error(json.pesan || json.error || "Gagal menyimpan");
+    if (!json.success) {
+      if (json.errors) {
+        const detailError = Object.values(json.errors).flat().join(" ");
+        throw new Error(detailError || json.pesan || "Validasi gagal");
+      }
+      throw new Error(json.pesan || json.error || "Gagal menyimpan");
+    }
 
     hapusDrafOtomatis();
     tampilkanToast(STATE.isEditing ? "Notulen berhasil diperbarui!" : "Notulen baru berhasil disimpan!");

@@ -2511,6 +2511,42 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   flex-wrap: wrap;
 }
 
+.backup-action-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-restore-trigger {
+  padding: 12px 22px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.12);
+  transition: all var(--trans-speed) var(--ease-smooth);
+  user-select: none;
+}
+
+.btn-restore-trigger:hover {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(16, 185, 129, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+}
+
+.btn-restore-trigger:active {
+  transform: translateY(0) scale(0.98);
+}
+
 /* ── Stats Row ── */
 .backup-stats-row {
   display: grid;

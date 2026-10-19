@@ -18,3 +18,4 @@ Route::get('/rapat/{id}/export-pdf', [RapatController::class, 'exportPdf']);
 Route::get('/rapat/{id}/export-word', [RapatController::class, 'exportWord']);
 
 Route::get('/backup/mysql', [RapatController::class, 'backupMysql']);
+Route::post('/backup/restore', [RapatController::class, 'restoreBackup']);
