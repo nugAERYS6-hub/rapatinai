@@ -811,38 +811,181 @@ if (elPengaturan.menuPengaturan) {
     el.breadcrumbCurrent.textContent = "Pengaturan";
     tutupSemuaView();
     if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
+    renderRiwayatBackup();
   });
 }
 
-// BACKUP DATABASE (MySQL .sql)
-if (elPengaturan.btnBackupDb) {
-  elPengaturan.btnBackupDb.addEventListener("click", async () => {
-    try {
-      elPengaturan.btnBackupDb.disabled = true;
-      elPengaturan.btnBackupDb.innerHTML = `<span class="spinner-inline"></span><span>Memproses...</span>`;
-      const res = await fetch("/api/backup/mysql");
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || "Gagal mengunduh backup");
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+
+const BACKUP_STORAGE_KEY = "rapatinai_backup_log_v1";
+
+function muatLogBackup() {
+  try {
+    const raw = localStorage.getItem(BACKUP_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function simpanLogBackup(log) {
+  try {
+    localStorage.setItem(BACKUP_STORAGE_KEY, JSON.stringify(log));
+  } catch(e) {}
+}
+
+function formatUkuranFile(bytes) {
+  if (!bytes || bytes === 0) return "—";
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function formatWaktuBackup(isoStr) {
+  if (!isoStr) return "—";
+  try {
+    const d = new Date(isoStr);
+    const tgl = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+    const jam = d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    return `${tgl}, ${jam}`;
+  } catch { return isoStr; }
+}
+
+function renderRiwayatBackup() {
+  const log = muatLogBackup();
+  const tbody = document.getElementById("tbody-riwayat-backup");
+  const rowKosong = document.getElementById("backup-row-kosong");
+  const statTotal = document.getElementById("backup-stat-total");
+  const statSukses = document.getElementById("backup-stat-sukses");
+  const statTerakhir = document.getElementById("backup-stat-terakhir");
+
+  if (!tbody) return;
+
+  // Update stats
+  const totalSukses = log.filter(l => l.status === "sukses").length;
+  if (statTotal) statTotal.textContent = log.length;
+  if (statSukses) statSukses.textContent = totalSukses;
+  if (statTerakhir) {
+    statTerakhir.textContent = log.length > 0 ? formatWaktuBackup(log[0].waktu) : "—";
+  }
+
+  if (log.length === 0) {
+    if (rowKosong) rowKosong.style.display = "";
+    // Remove all rows except kosong
+    Array.from(tbody.querySelectorAll("tr:not(#backup-row-kosong)")).forEach(r => r.remove());
+    return;
+  }
+
+  if (rowKosong) rowKosong.style.display = "none";
+
+  // Remove existing data rows
+  Array.from(tbody.querySelectorAll("tr:not(#backup-row-kosong)")).forEach(r => r.remove());
+
+  log.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+    tr.style.animationDelay = `${idx * 40}ms`;
+
+    const badgeClass = item.status === "sukses" ? "backup-badge--sukses" : "backup-badge--gagal";
+    const badgeLabel = item.status === "sukses" ? "✓ Berhasil" : "✕ Gagal";
+
+    const aksiHtml = item.status === "sukses" && item.url
+      ? `<button class="btn-unduh-ulang" title="Unduh ulang file ini" data-url="${item.url}" data-nama="${item.nama}">
+           <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+         </button>`
+      : `<span style="color:#475569;font-size:12px;">—</span>`;
+
+    tr.innerHTML = `
+      <td>${log.length - idx}</td>
+      <td><span class="backup-td-filename">${item.nama || "—"}</span></td>
+      <td><span class="backup-td-waktu">${formatWaktuBackup(item.waktu)}</span></td>
+      <td><span class="backup-td-ukuran">${formatUkuranFile(item.ukuranBytes)}</span></td>
+      <td><span class="backup-badge ${badgeClass}">${badgeLabel}</span></td>
+      <td style="text-align:center;">${aksiHtml}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  // Wire unduh-ulang buttons
+  tbody.querySelectorAll(".btn-unduh-ulang").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const url = btn.dataset.url;
+      const nama = btn.dataset.nama;
+      if (!url || !nama) return;
       const a = document.createElement("a");
       a.href = url;
-      a.download = `backup_rapatinai_${new Date().toISOString().slice(0,10)}.sql`;
+      a.download = nama;
       a.click();
-      URL.revokeObjectURL(url);
-      tampilkanToast("Backup MySQL berhasil diunduh!", "sukses");
-    } catch (err) {
-      tampilkanToast("Gagal membuat backup: " + err.message, "error");
-    } finally {
-      elPengaturan.btnBackupDb.disabled = false;
-      elPengaturan.btnBackupDb.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg><span>Unduh Backup (MySQL)</span>`;
+      tampilkanToast("Mengunduh ulang file backup...", "info");
+    });
+  });
+}
+
+async function jalankanBackup(labelEl, btnEl) {
+  if (btnEl) { btnEl.disabled = true; }
+  if (labelEl) { labelEl.textContent = "Memproses..."; }
+
+  const waktu = new Date().toISOString();
+  const nama = `backup_rapatinai_${waktu.slice(0,10).replace(/-/g,'')}_${waktu.slice(11,19).replace(/:/g,'')}.sql`;
+
+  try {
+    const res = await fetch("/api/backup/mysql");
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || "Server error: " + res.status);
     }
+
+    const blob = await res.blob();
+    const ukuranBytes = blob.size;
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = nama;
+    a.click();
+
+    // Log ke localStorage
+    const log = muatLogBackup();
+    log.unshift({ nama, waktu, ukuranBytes, status: "sukses", url: null }); // blob URL akan expired, simpan null
+    if (log.length > 100) log.splice(100);
+    simpanLogBackup(log);
+
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+    tampilkanToast("Backup MySQL berhasil diunduh!", "sukses");
+    renderRiwayatBackup();
+  } catch (err) {
+    // Log gagal
+    const log = muatLogBackup();
+    log.unshift({ nama, waktu, ukuranBytes: 0, status: "gagal", url: null });
+    if (log.length > 100) log.splice(100);
+    simpanLogBackup(log);
+
+    tampilkanToast("Gagal membuat backup: " + err.message, "error");
+    renderRiwayatBackup();
+  } finally {
+    if (btnEl) { btnEl.disabled = false; }
+    if (labelEl) { labelEl.textContent = "Buat Backup Sekarang"; }
+  }
+}
+
+// Wire: Backup Database tunggal (di dalam halaman Pengaturan)
+const btnBackupDb = document.getElementById("btn-backup-db");
+const labelBtnBackup = document.getElementById("label-btn-backup");
+if (btnBackupDb) {
+  btnBackupDb.addEventListener("click", () => jalankanBackup(labelBtnBackup, btnBackupDb));
+}
+
+// Wire: Hapus semua log backup
+const btnHapusSemua = document.getElementById("btn-hapus-semua-backup");
+if (btnHapusSemua) {
+  btnHapusSemua.addEventListener("click", () => {
+    if (!confirm("Yakin ingin menghapus semua riwayat log backup? Tindakan ini tidak dapat dibatalkan.")) return;
+    simpanLogBackup([]);
+    renderRiwayatBackup();
+    tampilkanToast("Semua riwayat backup telah dihapus.", "info");
   });
 }
 
 // THEME TOGGLE
+
 function terapkanTema(tema) {
   if (tema === "terang") {
     document.body.classList.add("tema-terang");
@@ -1253,6 +1396,7 @@ document.addEventListener("keydown", (e) => {
 async function inisialisasiApp() {
   await muatStats();
   await muatDaftarRapat(1);
+  renderRiwayatBackup();
 
   if (window.location.hash === "#riwayat" && STATE.daftarRapat.length > 0) {
     tampilkanDetailRapat(STATE.daftarRapat[0].id);

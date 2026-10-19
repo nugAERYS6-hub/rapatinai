@@ -265,8 +265,8 @@ async function panggilGemini(prompt, temperature = 0.3) {
     throw new Error("GEMINI_API_KEY belum dikonfigurasi di file .env");
   }
 
-  // Coba model gemini-3.6-flash utama, lalu fallback ke gemini-flash-latest
-  const modelList = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"];
+  // Coba model gemini-flash-latest utama, lalu fallback ke model flash lainnya
+  const modelList = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-3.7-flash", "gemini-3.8-flash"];
   let lastError = null;
 
   for (const model of modelList) {
@@ -280,7 +280,7 @@ async function panggilGemini(prompt, temperature = 0.3) {
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
               temperature,
-              maxOutputTokens: 2048,
+              maxOutputTokens: 4096,
             },
           }),
         },
@@ -346,7 +346,8 @@ ATURAN KETAT:
 - JANGAN memasukkan tempat pelaksanaan rapat pada pembuka ringkasan, karena tempat sudah ada di formulir informasi rapat.
 - Susun secara naratif mengalir dan profesional (Executive Summary standard).
 - Tekankan apa yang dibahas serta keputusan/hasil yang disepakati bersama.
-- JANGAN menggunakan formatting markdown tebal ganda (**) untuk memberi label/judul baru.`;
+- JANGAN menggunakan formatting markdown tebal ganda (**) untuk memberi label/judul baru.
+- PENTING DAN WAJIB: Tuliskan narasi secara utuh dan tuntas. Pastikan seluruh kalimat dan paragraf terselesaikan sempurna hingga tanda titik penutup. JANGAN berhenti atau menggantung di tengah kalimat.`;
 
   return panggilGemini(prompt, 0.2);
 }

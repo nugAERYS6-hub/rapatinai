@@ -317,21 +317,97 @@
             <div class="form-header-banner">
               <div>
                 <h1 class="form-title">Pengaturan</h1>
-                <p class="form-subtitle">Kelola data dan tampilan aplikasi.</p>
+                <p class="form-subtitle">Kelola data, pencadangan database, dan tampilan aplikasi.</p>
               </div>
             </div>
 
-            <!-- SUBMENU: BACKUP DATABASE -->
+            <!-- SEKSI: BACKUP & RIWAYAT DATABASE -->
             <div class="form-card-section">
-              <div class="section-badge">Data</div>
-              <h2 class="section-title">Backup Database</h2>
-              <p style="font-size:13.5px; color:#94a3b8; margin-bottom:20px; line-height:1.6;">
-                Unduh salinan lengkap seluruh data notulen dalam format MySQL (.sql). Simpan sebagai cadangan aman di perangkat Anda.
-              </p>
-              <button type="button" id="btn-backup-db" class="btn-simpan-besar" style="width:auto;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                <span>Unduh Backup (MySQL)</span>
-              </button>
+              <div class="form-header-banner" style="margin-bottom: 20px;">
+                <div>
+                  <div class="section-badge">Data</div>
+                  <h2 class="section-title">Backup Database</h2>
+                  <p style="font-size:13.5px; color:#94a3b8; line-height:1.6; margin: 0; max-width: 600px;">
+                    Unduh salinan lengkap seluruh data notulen dalam format MySQL (.sql). Buat cadangan baru atau pantau riwayat unduhan cadangan Anda di bawah ini.
+                  </p>
+                </div>
+                <button type="button" id="btn-backup-db" class="btn-simpan-besar" style="width:auto; flex-shrink:0;">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  <span id="label-btn-backup">Buat Backup Sekarang</span>
+                </button>
+              </div>
+
+              <!-- STATS BACKUP -->
+              <div class="backup-stats-row">
+                <div class="backup-stat-card">
+                  <div class="backup-stat-icon backup-stat-icon--total">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                  </div>
+                  <div class="backup-stat-info">
+                    <span class="backup-stat-label">Total Backup</span>
+                    <span class="backup-stat-val" id="backup-stat-total">0</span>
+                  </div>
+                </div>
+                <div class="backup-stat-card">
+                  <div class="backup-stat-icon backup-stat-icon--sukses">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                  <div class="backup-stat-info">
+                    <span class="backup-stat-label">Berhasil</span>
+                    <span class="backup-stat-val backup-stat-val--sukses" id="backup-stat-sukses">0</span>
+                  </div>
+                </div>
+                <div class="backup-stat-card">
+                  <div class="backup-stat-icon backup-stat-icon--ukuran">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
+                  <div class="backup-stat-info">
+                    <span class="backup-stat-label">Backup Terakhir</span>
+                    <span class="backup-stat-val backup-stat-val--muted" id="backup-stat-terakhir">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LOG TABLE -->
+              <div class="backup-log-section" style="margin-top: 10px;">
+                <div class="backup-log-header">
+                  <div>
+                    <div class="section-badge">Log</div>
+                    <h3 class="section-title" style="font-size: 16px;">Riwayat Unduhan</h3>
+                  </div>
+                  <button type="button" id="btn-hapus-semua-backup" class="btn-hapus-log" title="Hapus semua riwayat log lokal">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Hapus Log
+                  </button>
+                </div>
+
+                <!-- TABLE HEAD -->
+                <div class="backup-table-wrap">
+                  <table class="backup-table" id="tabel-riwayat-backup">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Nama File</th>
+                        <th>Waktu Backup</th>
+                        <th>Ukuran</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-riwayat-backup">
+                      <tr class="backup-row-empty" id="backup-row-kosong">
+                        <td colspan="6">
+                          <div class="backup-empty-state">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                            <p>Belum ada riwayat backup.</p>
+                            <p style="font-size:12px;color:#475569;">Klik <b>Buat Backup Sekarang</b> untuk memulai salinan cadangan pertama Anda.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
             <!-- SUBMENU: OPSI TAMPILAN -->
@@ -354,11 +430,34 @@
                 </button>
               </div>
             </div>
+
+            <!-- INFO PANEL -->
+            <div class="form-card-section backup-info-panel">
+              <div class="section-badge">Info</div>
+              <h2 class="section-title">Tentang Backup Database</h2>
+              <ul class="backup-info-list">
+                <li>
+                  <span class="backup-info-icon">🔐</span>
+                  <span>File backup berformat <b>.sql</b> — salinan lengkap seluruh tabel dan data notulen Anda.</span>
+                </li>
+                <li>
+                  <span class="backup-info-icon">💾</span>
+                  <span>Simpan file backup di tempat yang aman, seperti Google Drive, USB, atau server cadangan.</span>
+                </li>
+                <li>
+                  <span class="backup-info-icon">🔄</span>
+                  <span>Disarankan membuat backup secara rutin minimal seminggu sekali, terutama setelah input data baru.</span>
+                </li>
+                <li>
+                  <span class="backup-info-icon">⚠️</span>
+                  <span>Riwayat backup hanya tersimpan di browser ini (localStorage). Bersihkan cache akan menghapus log riwayat.</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
-        <!-- ============================================== -->
-        <!-- VIEW 2: TAMPILAN SMART FORM (CREATE / EDIT)    -->
+
         <!-- ============================================== -->
         <section id="tampilan-form" class="view-section tersembunyi">
           <div class="form-luxury-container">

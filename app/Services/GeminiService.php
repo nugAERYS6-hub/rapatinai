@@ -49,12 +49,12 @@ class GeminiService
             throw new \Exception("GEMINI_API_KEY belum dikonfigurasi di file .env");
         }
 
-        $modelList = ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-flash-latest"];
+        $modelList = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-3.7-flash", "gemini-3.8-flash"];
         $lastError = null;
 
         foreach ($modelList as $model) {
             try {
-                $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
+                $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
                     'contents' => [
                         [
                             'parts' => [
@@ -64,7 +64,7 @@ class GeminiService
                     ],
                     'generationConfig' => [
                         'temperature' => $temperature,
-                        'maxOutputTokens' => 2048,
+                        'maxOutputTokens' => 4096,
                     ]
                 ]);
 
@@ -126,7 +126,8 @@ ATURAN KETAT:
 - JANGAN memasukkan tempat pelaksanaan rapat pada pembuka ringkasan, karena tempat sudah ada di formulir informasi rapat.
 - Susun secara naratif mengalir dan profesional (Executive Summary standard).
 - Tekankan apa yang dibahas serta keputusan/hasil yang disepakati bersama.
-- JANGAN menggunakan formatting markdown tebal ganda (**) untuk memberi label/judul baru.";
+- JANGAN menggunakan formatting markdown tebal ganda (**) untuk memberi label/judul baru.
+- PENTING DAN WAJIB: Tuliskan narasi secara utuh dan tuntas. Pastikan seluruh kalimat dan paragraf terselesaikan sempurna hingga tanda titik penutup. JANGAN berhenti atau menggantung di tengah kalimat.";
 
         $raw = self::panggilGemini($prompt, 0.2);
         return self::bersihkanRingkasan($raw);
