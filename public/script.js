@@ -24,6 +24,8 @@ const el = {
   // Sidebar
   sidebar: document.getElementById("sidebar"),
   sidebarOverlay: document.getElementById("sidebar-overlay"),
+  btnToggleSidebar: document.getElementById("tombol-toggle-sidebar"),
+  btnBukaSidebar: document.getElementById("tombol-buka-sidebar"),
   btnBukaMobile: document.getElementById("tombol-buka-sidebar-mobile"),
   btnTutupMobile: document.getElementById("tombol-tutup-sidebar-mobile"),
   menuRapatBaru: document.getElementById("menu-rapat-baru"),
@@ -679,6 +681,9 @@ function tampilkanFormBaru() {
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
   el.breadcrumbCurrent.textContent = "Buat Notulen Baru";
 
+  resetSemuaMenuAktif();
+  if (el.menuRapatBaru) el.menuRapatBaru.classList.add("aktif");
+
   el.formRapat.reset();
   el.editIdRapat.value = "";
   if (el.inputWaktu) el.inputWaktu.value = "";
@@ -777,7 +782,7 @@ if (el.menuRapatBaru) {
     el.menuRapatBaru.classList.add("aktif");
     el.breadcrumbMiddle?.classList.add("tersembunyi");
     el.breadcrumbSepMiddle?.classList.add("tersembunyi");
-    el.breadcrumbCurrent.textContent = "Rapat Baru";
+    el.breadcrumbCurrent.textContent = "Buat Notulen Baru";
     tutupSemuaView();
     tampilkanFormBaru();
   });
@@ -1170,33 +1175,75 @@ el.btnNextPage.addEventListener("click", () => {
 });
 
 // ==========================================
-// MOBILE DRAWER NAVIGATION
+// SIDEBAR COLLAPSE & EXPAND (DESKTOP & MOBILE)
 // ==========================================
+function toggleSidebar(forceState) {
+  const isMobile = window.innerWidth <= 960;
+
+  if (isMobile) {
+    const isBuka = el.sidebar.classList.contains("buka");
+    const targetState = typeof forceState === "boolean" ? !forceState : !isBuka;
+    if (targetState) {
+      el.sidebar.classList.add("buka");
+      el.sidebarOverlay.classList.remove("tersembunyi");
+    } else {
+      el.sidebar.classList.remove("buka");
+      el.sidebarOverlay.classList.add("tersembunyi");
+    }
+  } else {
+    const isCollapsed = document.body.classList.contains("sidebar-collapsed");
+    const targetCollapsed = typeof forceState === "boolean" ? forceState : !isCollapsed;
+
+    document.body.classList.toggle("sidebar-collapsed", targetCollapsed);
+    try {
+      localStorage.setItem("rapatinai_sidebar_collapsed", targetCollapsed ? "true" : "false");
+    } catch (e) {}
+  }
+}
+
 function bukaSidebarMobile() {
-  el.sidebar.classList.add("buka");
-  el.sidebarOverlay.classList.remove("tersembunyi");
+  toggleSidebar(false);
 }
 
 function tutupSidebarMobile() {
-  el.sidebar.classList.remove("buka");
-  el.sidebarOverlay.classList.add("tersembunyi");
+  toggleSidebar(true);
 }
 
-el.btnBukaMobile.addEventListener("click", bukaSidebarMobile);
-el.btnTutupMobile.addEventListener("click", tutupSidebarMobile);
-el.sidebarOverlay.addEventListener("click", tutupSidebarMobile);
+// Restore saved desktop state
+try {
+  const savedState = localStorage.getItem("rapatinai_sidebar_collapsed");
+  if (savedState === "true" && window.innerWidth > 960) {
+    document.body.classList.add("sidebar-collapsed");
+  }
+} catch (e) {}
+
+// Event listeners for hamburger buttons
+[el.btnToggleSidebar, el.btnBukaSidebar, el.btnBukaMobile, el.btnTutupMobile].filter(Boolean).forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleSidebar();
+  });
+});
+
+if (el.sidebarOverlay) {
+  el.sidebarOverlay.addEventListener("click", () => toggleSidebar(true));
+}
 
 // ==========================================
 // KEYBOARD SHORTCUTS
 // ==========================================
 document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+    e.preventDefault();
+    toggleSidebar();
+  }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
     e.preventDefault();
     tampilkanFormBaru();
   }
   if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
     e.preventDefault();
-    el.inputCari.focus();
+    el.inputCari?.focus();
   }
 });
 
@@ -1207,7 +1254,7 @@ async function inisialisasiApp() {
   await muatStats();
   await muatDaftarRapat(1);
 
-  if (STATE.daftarRapat.length > 0) {
+  if (window.location.hash === "#riwayat" && STATE.daftarRapat.length > 0) {
     tampilkanDetailRapat(STATE.daftarRapat[0].id);
   } else {
     tampilkanFormBaru();
