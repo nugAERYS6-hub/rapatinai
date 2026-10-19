@@ -120,6 +120,19 @@ const el = {
   kontainerToast: document.getElementById("kontainer-toast"),
 };
 
+// ==========================================================================
+// SECURITY: HELPER ESCAPE HTML UNTUK MENCEGAH XSS
+// ==========================================================================
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // Helper Format Hari / Tanggal Indonesia ("Senin / 28 April 2014")
 function formatHariTanggal(tglStr) {
   if (!tglStr) return "-";
@@ -148,7 +161,7 @@ function tampilkanToast(pesan, tipe = "sukses") {
   if (tipe === "error") ikon = "✕";
   if (tipe === "info") ikon = "ℹ";
 
-  toast.innerHTML = `<span>${ikon}</span> <span>${pesan}</span>`;
+  toast.innerHTML = `<span>${ikon}</span> <span>${escapeHtml(pesan)}</span>`;
   el.kontainerToast.appendChild(toast);
 
   requestAnimationFrame(() => toast.classList.add("toast-tampil"));
@@ -213,7 +226,7 @@ async function muatDaftarRapat(page = 1) {
   } catch (err) {
     el.daftarRapatSidebar.innerHTML = `
       <div style="padding: 16px; color: #f87171; font-size: 12px;">
-        Gagal memuat data: ${err.message}
+        Gagal memuat data: ${escapeHtml(err.message)}
       </div>
     `;
   }
@@ -242,16 +255,16 @@ function renderSidebarList() {
 
     item.innerHTML = `
       <div class="item-row-top">
-        <span class="item-topik" title="${rapat.topik}">${rapat.topik}</span>
+        <span class="item-topik" title="${escapeHtml(rapat.topik)}">${escapeHtml(rapat.topik)}</span>
       </div>
       <div class="item-row-meta">
-        <span class="item-tanggal">${rapat.tanggal || "-"}</span>
+        <span class="item-tanggal">${escapeHtml(rapat.tanggal || "-")}</span>
       </div>
     `;
 
     item.addEventListener("click", () => {
       tutupSidebarMobile();
-      tampilkanDetailRapat(rapat.id);
+      window.location.hash = `#/detail/${rapat.id}`;
     });
 
     el.daftarRapatSidebar.appendChild(item);
@@ -261,13 +274,20 @@ function renderSidebarList() {
 // ==========================================================================
 // TAMPILKAN DETAIL 1 RAPAT
 // ==========================================================================
-async function tampilkanDetailRapat(id) {
+async function tampilkanDetailRapat(id, syncHash = true) {
+  if (syncHash && window.location.hash !== `#/detail/${id}`) {
+    window.location.hash = `#/detail/${id}`;
+    return;
+  }
+
   try {
     const res = await fetch(`/api/rapat/${id}`);
     if (!res.ok) throw new Error("Notulen rapat tidak ditemukan");
     const rapat = await res.json();
 
     STATE.rapatAktif = rapat;
+
+    resetSemuaMenuAktif();
 
     document.querySelectorAll(".item-rapat-sidebar").forEach((elItem) => {
       elItem.classList.toggle("aktif", elItem.dataset.id === String(id));
@@ -278,10 +298,10 @@ async function tampilkanDetailRapat(id) {
     el.breadcrumbCurrent.textContent = rapat.topik;
 
     el.detailTopik.textContent = rapat.topik;
-    el.detailTanggal.innerHTML = `<span>${formatHariTanggal(rapat.tanggal)}</span>`;
+    el.detailTanggal.innerHTML = `<span>${escapeHtml(formatHariTanggal(rapat.tanggal))}</span>`;
     if (el.detailWaktu) {
       if (rapat.waktu) {
-        el.detailWaktu.innerHTML = `<span>${rapat.waktu}</span>`;
+        el.detailWaktu.innerHTML = `<span>${escapeHtml(rapat.waktu)}</span>`;
         el.detailWaktu.classList.remove("tersembunyi");
       } else {
         el.detailWaktu.classList.add("tersembunyi");
@@ -289,7 +309,7 @@ async function tampilkanDetailRapat(id) {
     }
     if (el.detailTempat) {
       if (rapat.tempat) {
-        el.detailTempat.innerHTML = `<span>${rapat.tempat}</span>`;
+        el.detailTempat.innerHTML = `<span>${escapeHtml(rapat.tempat)}</span>`;
         el.detailTempat.classList.remove("tersembunyi");
       } else {
         el.detailTempat.classList.add("tersembunyi");
@@ -315,6 +335,9 @@ async function tampilkanDetailRapat(id) {
     el.viewDetail.classList.remove("tersembunyi");
   } catch (err) {
     tampilkanToast(err.message, "error");
+    if (window.location.hash.startsWith("#/detail/")) {
+      bukaRiwayat();
+    }
   }
 }
 
@@ -339,7 +362,11 @@ function formatRingkasanHTML(text, indent = false) {
     .split(/\n\s*\n/)
     .map((p) => p.trim())
     .filter(Boolean)
-    .map((p) => `<p style="margin-bottom: 8px; ${indent ? "text-indent: 28px;" : ""}">${p.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")}</p>`)
+    .map((p) => {
+      const aman = escapeHtml(p);
+      const denganBold = aman.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+      return `<p style="margin-bottom: 8px; ${indent ? "text-indent: 28px;" : ""}">${denganBold}</p>`;
+    })
     .join("");
 }
 
@@ -353,7 +380,7 @@ function renderAiContent(rapat) {
   }
 
   if (rapat.ideBaruAI) {
-    el.kontenIdeAi.innerHTML = `<p>${rapat.ideBaruAI}</p>`;
+    el.kontenIdeAi.innerHTML = `<p>${escapeHtml(rapat.ideBaruAI)}</p>`;
   } else {
     el.kontenIdeAi.innerHTML = `
       <p class="placeholder-ai">Belum ada rekomendasi. Klik tombol <b>Ide Strategis AI</b> untuk usulan kebijakan baru.</p>
@@ -375,14 +402,17 @@ function renderPesertaGrid(anggota) {
 
   el.kontenPesertaGrid.innerHTML = anggota
     .map((a) => {
-      const inisial = (a.nama || "P").charAt(0).toUpperCase();
+      const inisial = escapeHtml((a.nama || "P").charAt(0).toUpperCase());
+      const nama = escapeHtml(a.nama || "-");
+      const jabatan = escapeHtml(a.jabatan || "-");
+      const instansi = escapeHtml(a.asalInstansi || "-");
       return `
         <div class="peserta-item-card">
           <div class="peserta-avatar-badge">${inisial}</div>
           <div class="peserta-details">
-            <span class="peserta-nama" title="${a.nama}">${a.nama}</span>
-            <span class="peserta-jabatan">${a.jabatan || "-"}</span>
-            <span class="peserta-instansi">${a.asalInstansi || "-"}</span>
+            <span class="peserta-nama" title="${nama}">${nama}</span>
+            <span class="peserta-jabatan">${jabatan}</span>
+            <span class="peserta-instansi">${instansi}</span>
           </div>
         </div>
       `;
@@ -405,11 +435,12 @@ function renderPoinList(poinList) {
   el.kontenPoinList.innerHTML = poinList
     .map((p, idx) => {
       const teks = typeof p === "string" ? p : (p.isi || "");
+      const amanTeks = escapeHtml(teks);
       return `
         <div class="poin-row-item">
           <span class="poin-number">${String(idx + 1).padStart(2, "0")}</span>
           <div class="poin-content">
-            <p class="poin-text">${teks}</p>
+            <p class="poin-text">${amanTeks}</p>
           </div>
         </div>
       `;
@@ -425,14 +456,19 @@ function renderPaperPreview(rapat) {
         return `
             <div style="display: flex; margin-bottom: 7px; text-align: justify; line-height: 1.6;">
               <span style="width: 26px; flex-shrink: 0;">${i + 1}.</span>
-              <span style="flex: 1;">${teks}</span>
+              <span style="flex: 1;">${escapeHtml(teks)}</span>
             </div>
           `;
       })
       .join("")
     : `<div style="font-style: italic; color: #64748b; padding-left: 26px;">- Tidak ada catatan hasil rapat -</div>`;
 
-  const hariTanggalStr = formatHariTanggal(rapat.tanggal);
+  const hariTanggalStr = escapeHtml(formatHariTanggal(rapat.tanggal));
+  const judulTopik = escapeHtml((rapat.topik || "").toUpperCase().replace(/^RAPAT\s+/, ""));
+  const waktuStr = escapeHtml(rapat.waktu || "-");
+  const tempatStr = escapeHtml(rapat.tempat || "-");
+  const pimpinanStr = escapeHtml(rapat.pimpinanRapat || "-");
+  const notulisStr = escapeHtml(rapat.notulis || "-");
 
   el.paperPreviewContent.innerHTML = `
     <div style="max-width: 720px; margin: 0 auto; color: #000000; font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.6;">
@@ -454,7 +490,7 @@ function renderPaperPreview(rapat) {
 
       <div style="text-align: center; margin-bottom: 20px;">
         <div style="font-size: 13.5pt; font-weight: bold; letter-spacing: 0.5px;">LAPORAN HASIL RAPAT</div>
-        <div style="font-size: 12.5pt; font-weight: bold; margin-top: 2px;">${(rapat.topik || "").toUpperCase().replace(/^RAPAT\s+/, "")}</div>
+        <div style="font-size: 12.5pt; font-weight: bold; margin-top: 2px;">${judulTopik}</div>
       </div>
 
       <table style="width: 100%; font-size: 11pt; border-collapse: collapse; margin-bottom: 12px; line-height: 1.2;">
@@ -466,22 +502,22 @@ function renderPaperPreview(rapat) {
         <tr>
           <td style="padding: 1px 0; vertical-align: top;">Waktu</td>
           <td style="padding: 1px 0; vertical-align: top;">:</td>
-          <td style="padding: 1px 0; vertical-align: top;">${rapat.waktu || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">${waktuStr}</td>
         </tr>
         <tr>
           <td style="padding: 1px 0; vertical-align: top;">Tempat</td>
           <td style="padding: 1px 0; vertical-align: top;">:</td>
-          <td style="padding: 1px 0; vertical-align: top;">${rapat.tempat || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">${tempatStr}</td>
         </tr>
         <tr>
           <td style="padding: 1px 0; vertical-align: top;">Pemimpin rapat</td>
           <td style="padding: 1px 0; vertical-align: top;">:</td>
-          <td style="padding: 1px 0; vertical-align: top;">${rapat.pimpinanRapat || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">${pimpinanStr}</td>
         </tr>
         <tr>
           <td style="padding: 1px 0; vertical-align: top;">Notulen</td>
           <td style="padding: 1px 0; vertical-align: top;">:</td>
-          <td style="padding: 1px 0; vertical-align: top;">${rapat.notulis || "-"}</td>
+          <td style="padding: 1px 0; vertical-align: top;">${notulisStr}</td>
         </tr>
         <tr>
           <td style="padding: 1px 0; vertical-align: top;">Peserta</td>
@@ -496,7 +532,7 @@ function renderPaperPreview(rapat) {
       </table>
 
       <div style="margin-bottom: 12px; text-align: justify; line-height: 1.6;">
-        Rapat dibuka oleh ${rapat.pimpinanRapat || "Pimpinan Rapat"} yang menjelaskan mengenai :
+        Rapat dibuka oleh ${pimpinanStr} yang menjelaskan mengenai :
       </div>
 
       <div style="margin-bottom: 36px; padding-left: 10px;">
@@ -506,11 +542,11 @@ function renderPaperPreview(rapat) {
       <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11pt;">
         <div style="text-align: center; width: 220px;">
           Pemimpin rapat,<br><br><br><br><br>
-          <b>${rapat.pimpinanRapat || "-"}</b>
+          <b>${pimpinanStr}</b>
         </div>
         <div style="text-align: center; width: 220px;">
           Notulen,<br><br><br><br><br>
-          <b>${rapat.notulis || "-"}</b>
+          <b>${notulisStr}</b>
         </div>
       </div>
 
@@ -532,9 +568,9 @@ function renderPaperPreview(rapat) {
               ${rapat.anggota.map((a, idx) => `
                 <tr>
                   <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center;">${idx + 1}</td>
-                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-weight: 500;">${a.nama}</td>
-                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${a.jabatan || "-"}</td>
-                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${a.asalInstansi || "-"}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px; font-weight: 500;">${escapeHtml(a.nama)}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${escapeHtml(a.jabatan || "-")}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${escapeHtml(a.asalInstansi || "-")}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -576,7 +612,7 @@ el.btnAiRingkasan.addEventListener("click", async () => {
     muatStats();
     renderPaperPreview(STATE.rapatAktif);
   } catch (err) {
-    el.kontenRingkasanAi.innerHTML = `<p style="color: #ef4444;">Error: ${err.message}</p>`;
+    el.kontenRingkasanAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
     tampilkanToast(err.message, "error");
   } finally {
     el.btnAiRingkasan.disabled = false;
@@ -599,10 +635,10 @@ el.btnAiIde.addEventListener("click", async () => {
     if (!json.success) throw new Error(json.pesan || "Gagal membuat ide baru");
 
     STATE.rapatAktif.ideBaruAI = json.ideBaruAI;
-    el.kontenIdeAi.innerHTML = `<p class="item-muncul">${json.ideBaruAI}</p>`;
+    el.kontenIdeAi.innerHTML = `<p class="item-muncul">${escapeHtml(json.ideBaruAI)}</p>`;
     tampilkanToast("Ide strategis AI berhasil disusun!");
   } catch (err) {
-    el.kontenIdeAi.innerHTML = `<p style="color: #ef4444;">Error: ${err.message}</p>`;
+    el.kontenIdeAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
     tampilkanToast(err.message, "error");
   } finally {
     el.btnAiIde.disabled = false;
@@ -672,7 +708,12 @@ el.btnPrintDoc.addEventListener("click", () => {
 // ==========================================
 // SMART FORM: CREATE & EDIT RAPAT
 // ==========================================
-function tampilkanFormBaru() {
+function tampilkanFormBaru(syncHash = true) {
+  if (syncHash && window.location.hash !== "#/baru") {
+    window.location.hash = "#/baru";
+    return;
+  }
+
   STATE.isEditing = false;
   STATE.editId = null;
   el.judulForm.textContent = "Notulen Rapat Baru";
@@ -745,12 +786,12 @@ el.btnEditRapat.addEventListener("click", bukaEditRapat);
 
 if (el.breadcrumbMiddle) {
   el.breadcrumbMiddle.addEventListener("click", () => {
-    if (el.menuRiwayatRapat) el.menuRiwayatRapat.click();
+    window.location.hash = "#/riwayat";
   });
 }
 
 // ==========================================================================
-// NAVIGASI MENU SIDEBAR
+// NAVIGASI MENU SIDEBAR & VIEWS
 // ==========================================================================
 const elPengaturan = {
   viewPengaturan: document.getElementById("tampilan-pengaturan"),
@@ -775,43 +816,55 @@ function resetSemuaMenuAktif() {
   });
 }
 
+function bukaRiwayat(syncHash = true) {
+  if (syncHash && window.location.hash !== "#/riwayat") {
+    window.location.hash = "#/riwayat";
+    return;
+  }
+  tutupSidebarMobile();
+  resetSemuaMenuAktif();
+  if (el.menuRiwayatRapat) el.menuRiwayatRapat.classList.add("aktif");
+  el.breadcrumbMiddle?.classList.add("tersembunyi");
+  el.breadcrumbSepMiddle?.classList.add("tersembunyi");
+  el.breadcrumbCurrent.textContent = "Riwayat Rapat";
+  tutupSemuaView();
+  if (el.viewRiwayat) el.viewRiwayat.classList.remove("tersembunyi");
+}
+
+function bukaPengaturan(syncHash = true) {
+  if (syncHash && window.location.hash !== "#/pengaturan") {
+    window.location.hash = "#/pengaturan";
+    return;
+  }
+  tutupSidebarMobile();
+  resetSemuaMenuAktif();
+  if (elPengaturan.menuPengaturan) elPengaturan.menuPengaturan.classList.add("aktif");
+  el.breadcrumbMiddle?.classList.add("tersembunyi");
+  el.breadcrumbSepMiddle?.classList.add("tersembunyi");
+  el.breadcrumbCurrent.textContent = "Pengaturan";
+  tutupSemuaView();
+  if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
+  renderRiwayatBackup();
+}
+
 if (el.menuRapatBaru) {
   el.menuRapatBaru.addEventListener("click", () => {
     tutupSidebarMobile();
-    resetSemuaMenuAktif();
-    el.menuRapatBaru.classList.add("aktif");
-    el.breadcrumbMiddle?.classList.add("tersembunyi");
-    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
-    el.breadcrumbCurrent.textContent = "Buat Notulen Baru";
-    tutupSemuaView();
-    tampilkanFormBaru();
+    window.location.hash = "#/baru";
   });
 }
 
 if (el.menuRiwayatRapat) {
   el.menuRiwayatRapat.addEventListener("click", () => {
     tutupSidebarMobile();
-    resetSemuaMenuAktif();
-    el.menuRiwayatRapat.classList.add("aktif");
-    el.breadcrumbMiddle?.classList.add("tersembunyi");
-    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
-    el.breadcrumbCurrent.textContent = "Riwayat Rapat";
-    tutupSemuaView();
-    if (el.viewRiwayat) el.viewRiwayat.classList.remove("tersembunyi");
+    window.location.hash = "#/riwayat";
   });
 }
 
 if (elPengaturan.menuPengaturan) {
   elPengaturan.menuPengaturan.addEventListener("click", () => {
     tutupSidebarMobile();
-    resetSemuaMenuAktif();
-    elPengaturan.menuPengaturan.classList.add("aktif");
-    el.breadcrumbMiddle?.classList.add("tersembunyi");
-    el.breadcrumbSepMiddle?.classList.add("tersembunyi");
-    el.breadcrumbCurrent.textContent = "Pengaturan";
-    tutupSemuaView();
-    if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.remove("tersembunyi");
-    renderRiwayatBackup();
+    window.location.hash = "#/pengaturan";
   });
 }
 
@@ -885,17 +938,19 @@ function renderRiwayatBackup() {
     const badgeClass = item.status === "sukses" ? "backup-badge--sukses" : "backup-badge--gagal";
     const badgeLabel = item.status === "sukses" ? "✓ Berhasil" : "✕ Gagal";
 
+    const namaAman = escapeHtml(item.nama || "—");
+    const urlAman = escapeHtml(item.url || "");
     const aksiHtml = item.status === "sukses" && item.url
-      ? `<button class="btn-unduh-ulang" title="Unduh ulang file ini" data-url="${item.url}" data-nama="${item.nama}">
+      ? `<button class="btn-unduh-ulang" title="Unduh ulang file ini" data-url="${urlAman}" data-nama="${namaAman}">
            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
          </button>`
       : `<span style="color:#475569;font-size:12px;">—</span>`;
 
     tr.innerHTML = `
       <td>${log.length - idx}</td>
-      <td><span class="backup-td-filename">${item.nama || "—"}</span></td>
-      <td><span class="backup-td-waktu">${formatWaktuBackup(item.waktu)}</span></td>
-      <td><span class="backup-td-ukuran">${formatUkuranFile(item.ukuranBytes)}</span></td>
+      <td><span class="backup-td-filename">${namaAman}</span></td>
+      <td><span class="backup-td-waktu">${escapeHtml(formatWaktuBackup(item.waktu))}</span></td>
+      <td><span class="backup-td-ukuran">${escapeHtml(formatUkuranFile(item.ukuranBytes))}</span></td>
       <td><span class="backup-badge ${badgeClass}">${badgeLabel}</span></td>
       <td style="text-align:center;">${aksiHtml}</td>
     `;
@@ -1135,7 +1190,7 @@ el.btnHapusRapat.addEventListener("click", async () => {
     STATE.rapatAktif = null;
     await muatStats();
     await muatDaftarRapat(1);
-    tampilkanFormBaru();
+    window.location.hash = "#/riwayat";
   } catch (err) {
     tampilkanToast(err.message, "error");
   }
@@ -1155,7 +1210,7 @@ function renderAnggotaChips() {
   el.daftarAnggotaChips.innerHTML = STATE.anggotaForm
     .map((a, idx) => `
       <div class="chip-attendee">
-        <span><b>${a.nama}</b> — ${a.jabatan || "-"} (${a.asalInstansi || "-"})</span>
+        <span><b>${escapeHtml(a.nama)}</b> — ${escapeHtml(a.jabatan || "-")} (${escapeHtml(a.asalInstansi || "-")})</span>
         <button type="button" class="chip-remove-btn" data-index="${idx}" aria-label="Hapus">×</button>
       </div>
     `)
@@ -1213,7 +1268,7 @@ function tambahBarisPoin(isi = "") {
   const row = document.createElement("div");
   row.className = "dynamic-row";
   row.innerHTML = `
-    <input type="text" class="input-poin-teks" placeholder="Catatan notulensi / hasil rapat" value="${isi.replace(/"/g, "&quot;")}" required />
+    <input type="text" class="input-poin-teks" placeholder="Catatan notulensi / hasil rapat" value="${escapeHtml(isi)}" required />
     <button type="button" class="btn-row-del" title="Hapus baris">×</button>
   `;
 
@@ -1474,6 +1529,41 @@ if (el.sidebarOverlay) {
 }
 
 // ==========================================
+// CLIENT-SIDE HASH ROUTER
+// ==========================================
+async function handleRoute() {
+  const hash = window.location.hash || "";
+
+  if (hash.startsWith("#/detail/")) {
+    const id = hash.replace("#/detail/", "").trim();
+    if (id) {
+      await tampilkanDetailRapat(id, false);
+      return;
+    }
+  }
+
+  if (hash === "#/pengaturan" || hash === "#pengaturan") {
+    bukaPengaturan(false);
+    return;
+  }
+
+  if (hash === "#/riwayat" || hash === "#riwayat") {
+    bukaRiwayat(false);
+    return;
+  }
+
+  if (hash === "#/baru" || hash === "#baru") {
+    tampilkanFormBaru(false);
+    return;
+  }
+
+  // Jika hash tidak dikenali atau kosong
+  tampilkanFormBaru(false);
+}
+
+window.addEventListener("hashchange", handleRoute);
+
+// ==========================================
 // KEYBOARD SHORTCUTS
 // ==========================================
 document.addEventListener("keydown", (e) => {
@@ -1483,7 +1573,7 @@ document.addEventListener("keydown", (e) => {
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
     e.preventDefault();
-    tampilkanFormBaru();
+    window.location.hash = "#/baru";
   }
   if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
     e.preventDefault();
@@ -1499,10 +1589,12 @@ async function inisialisasiApp() {
   await muatDaftarRapat(1);
   renderRiwayatBackup();
 
-  if (window.location.hash === "#riwayat" && STATE.daftarRapat.length > 0) {
-    tampilkanDetailRapat(STATE.daftarRapat[0].id);
+  // Tangani rute hash di URL saat pertama kali halaman dimuat / direfresh
+  if (window.location.hash) {
+    await handleRoute();
   } else {
-    tampilkanFormBaru();
+    // Default jika belum ada hash: Notulen Baru
+    window.location.hash = "#/baru";
   }
 }
 
