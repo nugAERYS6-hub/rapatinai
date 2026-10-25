@@ -21,13 +21,13 @@
         <div class="brand">
           <span class="brand-title-notulensi">Notulensi</span>
         </div>
-        <button type="button" id="tombol-toggle-sidebar" class="tombol-hamburger-sidebar" aria-label="Tutup sidebar" title="Tutup sidebar (Ctrl+B)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="6" x2="20" y2="6"></line>
-            <line x1="4" y1="12" x2="20" y2="12"></line>
-            <line x1="4" y1="18" x2="20" y2="18"></line>
-          </svg>
-        </button>
+        <!-- From Uiverse.io by Creatlydev -->
+        <input hidden class="check-icon" id="check-icon-sidebar" name="check-icon-sidebar" type="checkbox" checked>
+        <label class="icon-menu tombol-hamburger-sidebar" id="tombol-toggle-sidebar" for="check-icon-sidebar" aria-label="Tutup sidebar" title="Tutup sidebar (Ctrl+B)">
+          <div class="bar bar--1"></div>
+          <div class="bar bar--2"></div>
+          <div class="bar bar--3"></div>
+        </label>
       </div>
 
       <!-- SIDEBAR MENU UTAMA -->
@@ -65,13 +65,13 @@
       <!-- TOP COMMAND BAR -->
       <header class="top-command-bar">
         <div class="command-bar-left">
-          <button type="button" id="tombol-buka-sidebar" class="tombol-hamburger-top" aria-label="Buka sidebar" title="Buka sidebar (Ctrl+B)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" y1="6" x2="20" y2="6"></line>
-              <line x1="4" y1="12" x2="20" y2="12"></line>
-              <line x1="4" y1="18" x2="20" y2="18"></line>
-            </svg>
-          </button>
+          <!-- From Uiverse.io by Creatlydev -->
+          <input hidden class="check-icon" id="check-icon-top" name="check-icon-top" type="checkbox">
+          <label class="icon-menu tombol-hamburger-top" id="tombol-buka-sidebar" for="check-icon-top" aria-label="Toggle sidebar" title="Toggle sidebar (Ctrl+B)">
+            <div class="bar bar--1"></div>
+            <div class="bar bar--2"></div>
+            <div class="bar bar--3"></div>
+          </label>
           <div class="breadcrumb" id="breadcrumb-area">
             <span class="breadcrumb-root">Notulensi</span>
             <span class="breadcrumb-separator">/</span>

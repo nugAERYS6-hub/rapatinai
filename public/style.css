@@ -167,25 +167,93 @@ body.sidebar-collapsed .sidebar {
   align-items: center;
 }
 
-/* TOMBOL HAMBURGER TOGGLE SIDEBAR */
+/* ==========================================================================
+   TOMBOL HAMBURGER TOGGLE SIDEBAR (From Uiverse.io by Creatlydev)
+   ========================================================================== */
+.icon-menu {
+  --gap: 5px;
+  --height-bar: 2.5px;
+  --pos-y-bar-one: 0;
+  --pos-y-bar-three: 0;
+  --scale-bar: 1;
+  --rotate-bar-one: 0;
+  --rotate-bar-three: 0;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.bar {
+  position: relative;
+  height: var(--height-bar);
+  width: 100%;
+  border-radius: .5rem;
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.tema-terang .bar {
+  background-color: var(--accent-blue);
+  box-shadow: none;
+}
+
+.bar--1 {
+  top: var(--pos-y-bar-one);
+  transform: rotate(var(--rotate-bar-one));
+  transition: top 200ms 100ms, transform 100ms;
+}
+
+.bar--2 {
+  transform: scaleX(var(--scale-bar));
+  transition: transform 150ms 100ms;
+}
+
+.bar--3 {
+  bottom: var(--pos-y-bar-three);
+  transform: rotate(var(--rotate-bar-three));
+  transition: bottom 200ms 100ms, transform 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--1 {
+  transition: top 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--3 {
+  transition: bottom 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu {
+  --pos-y-bar-one: calc(var(--gap) + var(--height-bar));
+  --pos-y-bar-three: calc(var(--gap) + var(--height-bar));
+  --scale-bar: 0;
+  --rotate-bar-one: 45deg;
+  --rotate-bar-three: -45deg;
+}
+
 .tombol-hamburger-sidebar {
   background: transparent;
   border: 1px solid transparent;
-  color: #94a3b8;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
+  padding: 6px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s var(--ease-smooth);
 }
 
 .tombol-hamburger-sidebar:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--accent-blue-light);
+  border-color: var(--accent-blue-border);
   transform: scale(1.05);
 }
 
@@ -197,21 +265,21 @@ body.sidebar-collapsed .sidebar {
   display: none;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
+  padding: 6px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s var(--ease-smooth);
+  margin-right: 12px;
 }
 
 .tombol-hamburger-top:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  border-color: rgba(56, 189, 248, 0.35);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+  background: var(--accent-blue-light);
+  border-color: var(--accent-blue-border);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
   transform: scale(1.05);
 }
 
@@ -222,6 +290,12 @@ body.sidebar-collapsed .sidebar {
 body.sidebar-collapsed .tombol-hamburger-top {
   display: flex;
   animation: fadeInPop 0.25s var(--ease-smooth);
+}
+
+@media (max-width: 960px) {
+  .tombol-hamburger-top {
+    display: flex !important;
+  }
 }
 
 @keyframes fadeInPop {

@@ -1701,18 +1701,35 @@ el.btnNextPage.addEventListener("click", () => {
 // ==========================================
 // SIDEBAR COLLAPSE & EXPAND (DESKTOP & MOBILE)
 // ==========================================
+function syncHamburgerMotion() {
+  const isMobile = window.innerWidth <= 960;
+  const isBuka = isMobile
+    ? Boolean(el.sidebar && el.sidebar.classList.contains("buka"))
+    : !document.body.classList.contains("sidebar-collapsed");
+
+  const checkTop = document.getElementById("check-icon-top");
+  const checkSidebar = document.getElementById("check-icon-sidebar");
+
+  if (checkSidebar) {
+    checkSidebar.checked = isBuka;
+  }
+  if (checkTop) {
+    checkTop.checked = isMobile ? isBuka : false;
+  }
+}
+
 function toggleSidebar(forceState) {
   const isMobile = window.innerWidth <= 960;
 
   if (isMobile) {
-    const isBuka = el.sidebar.classList.contains("buka");
+    const isBuka = el.sidebar && el.sidebar.classList.contains("buka");
     const targetState = typeof forceState === "boolean" ? !forceState : !isBuka;
     if (targetState) {
-      el.sidebar.classList.add("buka");
-      el.sidebarOverlay.classList.remove("tersembunyi");
+      if (el.sidebar) el.sidebar.classList.add("buka");
+      if (el.sidebarOverlay) el.sidebarOverlay.classList.remove("tersembunyi");
     } else {
-      el.sidebar.classList.remove("buka");
-      el.sidebarOverlay.classList.add("tersembunyi");
+      if (el.sidebar) el.sidebar.classList.remove("buka");
+      if (el.sidebarOverlay) el.sidebarOverlay.classList.add("tersembunyi");
     }
   } else {
     const isCollapsed = document.body.classList.contains("sidebar-collapsed");
@@ -1723,6 +1740,8 @@ function toggleSidebar(forceState) {
       localStorage.setItem("rapatinai_sidebar_collapsed", targetCollapsed ? "true" : "false");
     } catch (e) {}
   }
+
+  syncHamburgerMotion();
 }
 
 function bukaSidebarMobile() {
@@ -1741,17 +1760,36 @@ try {
   }
 } catch (e) {}
 
-// Event listeners for hamburger buttons
+// Event listeners for hamburger buttons (labels & inputs)
 [el.btnToggleSidebar, el.btnBukaSidebar, el.btnBukaMobile, el.btnTutupMobile].filter(Boolean).forEach((btn) => {
   btn.addEventListener("click", (e) => {
+    e.preventDefault();
     e.stopPropagation();
     toggleSidebar();
   });
 });
 
+const checkTopInput = document.getElementById("check-icon-top");
+const checkSidebarInput = document.getElementById("check-icon-sidebar");
+if (checkTopInput) {
+  checkTopInput.addEventListener("change", (e) => {
+    e.stopPropagation();
+    toggleSidebar();
+  });
+}
+if (checkSidebarInput) {
+  checkSidebarInput.addEventListener("change", (e) => {
+    e.stopPropagation();
+    toggleSidebar();
+  });
+}
+
 if (el.sidebarOverlay) {
   el.sidebarOverlay.addEventListener("click", () => toggleSidebar(true));
 }
+
+window.addEventListener("resize", syncHamburgerMotion);
+syncHamburgerMotion();
 
 // ==========================================
 // CLIENT-SIDE HASH ROUTER
@@ -1813,6 +1851,7 @@ async function inisialisasiApp() {
   await muatStats();
   await muatDaftarRapat(1);
   renderRiwayatBackup();
+  syncHamburgerMotion();
 
   // Tangani rute hash di URL saat pertama kali halaman dimuat / direfresh
   if (window.location.hash) {
