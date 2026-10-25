@@ -81,12 +81,7 @@
           </div>
         </div>
 
-        <div class="command-bar-right">
-          <div class="draft-status-pill tersembunyi" id="draf-auto-save-pill">
-            <span class="draf-icon">💾</span>
-            <span id="draf-auto-save-text">Draf otomatis tersimpan</span>
-          </div>
-        </div>
+        <div class="command-bar-right"></div>
       </header>
 
       <div class="main-scrollable-content">
@@ -164,15 +159,18 @@
           <!-- HERO HEADER RAPAT -->
           <div class="detail-hero-card">
             <div class="hero-top-row">
-              <span class="detail-tanggal-pill" id="detail-tanggal">
-                <span>-</span>
-              </span>
-              <span class="detail-tanggal-pill" id="detail-waktu">
-                <span>-</span>
-              </span>
-              <span class="detail-tanggal-pill" id="detail-tempat">
-                <span>-</span>
-              </span>
+              <div class="hero-pills-left">
+                <span class="detail-tanggal-pill" id="detail-tanggal">
+                  <span>-</span>
+                </span>
+                <span class="detail-tanggal-pill" id="detail-waktu">
+                  <span>-</span>
+                </span>
+                <span class="detail-tanggal-pill" id="detail-tempat">
+                  <span>-</span>
+                </span>
+              </div>
+              <span class="badge-status-rapat" id="detail-badge-status">Selesai</span>
             </div>
 
             <h1 class="detail-judul-topik" id="detail-topik">-</h1>
@@ -211,6 +209,9 @@
                 </button>
                 <button type="button" id="btn-ai-ide" class="btn-ai-action">
                   <span>Ide Strategis AI</span>
+                </button>
+                <button type="button" id="btn-ai-action-items" class="btn-ai-action">
+                  <span>Action Items AI</span>
                 </button>
               </div>
 
@@ -267,6 +268,17 @@
                   <div class="ai-box-content" id="konten-ide-ai">
                     <p class="placeholder-ai">Belum ada rekomendasi. Klik tombol <b>Ide Strategis AI</b> untuk
                       mendapatkan usulan kebijakan baru.</p>
+                  </div>
+                </div>
+
+                <!-- Panel Action Items -->
+                <div class="ai-box ai-box-full-width">
+                  <div class="ai-box-header">
+                    <span class="ai-box-title">Action Items &amp; Penugasan</span>
+                    <button type="button" id="btn-copy-action-items" class="btn-micro-copy" title="Salin action items">Salin</button>
+                  </div>
+                  <div class="ai-box-content" id="konten-action-items-ai">
+                    <p class="placeholder-ai">Belum ada action items. Klik tombol <b>Action Items AI</b> di atas untuk mengekstrak tugas konkret dari notulen rapat.</p>
                   </div>
                 </div>
               </div>
@@ -523,6 +535,17 @@
                     <input type="text" id="tempat" />
                   </div>
                 </div>
+
+                <div class="form-grid-2">
+                  <div class="input-field-group">
+                    <label for="status-rapat">Status Rapat</label>
+                    <select id="status-rapat">
+                      <option value="Selesai">Selesai</option>
+                      <option value="Berlangsung">Berlangsung</option>
+                      <option value="Dijadwalkan">Dijadwalkan</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <!-- SEKSI 2: DAFTAR PESERTA -->
@@ -557,6 +580,22 @@
                 </div>
 
                 <div id="daftar-poin-inputs" class="dynamic-inputs-container"></div>
+              </div>
+
+              <!-- SEKSI 4: TINDAK LANJUT -->
+              <div class="form-card-section">
+                <div class="section-badge">Bagian 4</div>
+                <div class="section-title-row">
+                  <div>
+                    <h3 class="section-title">Tindak Lanjut / Penugasan</h3>
+                    <p class="section-desc">Catat tugas, penanggung jawab (PIC), dan tenggat waktu tindak lanjut rapat.</p>
+                  </div>
+                  <button type="button" id="tambah-tindak-lanjut" class="btn-add-dashed">
+                    ＋ Tambah Tindak Lanjut
+                  </button>
+                </div>
+
+                <div id="daftar-tindak-lanjut-inputs" class="dynamic-inputs-container"></div>
               </div>
 
               <!-- ACTION FOOTER -->

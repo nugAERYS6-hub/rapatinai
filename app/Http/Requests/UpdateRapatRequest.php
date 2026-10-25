@@ -37,8 +37,12 @@ class UpdateRapatRequest extends FormRequest
             'poinPembahasan.*.isi'  => ['sometimes', 'nullable', 'string'],
 
             // tindak lanjut
-            'tindakLanjut'          => ['sometimes', 'nullable'],
-            'tindakLanjut.*.teks'   => ['sometimes', 'nullable', 'string'],
+            'tindakLanjut'            => ['sometimes', 'nullable'],
+            'tindakLanjut.*.tugas'    => ['sometimes', 'nullable', 'string'],
+            'tindakLanjut.*.pic'      => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tindakLanjut.*.deadline' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tindakLanjut.*.selesai'  => ['sometimes', 'nullable'],
+            'tindakLanjut.*.teks'     => ['sometimes', 'nullable', 'string'],
         ];
     }
 

@@ -1308,8 +1308,9 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
    VIEW 1: DETAIL RAPAT EKSEKUTIF
    ========================================================================== */
 .view-section {
-  max-width: 1060px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   animation: fadeInSlide 0.35s var(--ease-smooth);
 }
 
@@ -1513,7 +1514,16 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   margin-bottom: 14px;
+}
+
+.hero-pills-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .badge-status-rapat {
@@ -1526,6 +1536,36 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
   border: 1px solid rgba(16, 185, 129, 0.30);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-status-rapat::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge-status-rapat.badge-selesai {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.30);
+}
+
+.badge-status-rapat.badge-berlangsung {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.30);
+}
+
+.badge-status-rapat.badge-dijadwalkan {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.30);
 }
 
 .detail-tanggal-pill {
@@ -2170,7 +2210,8 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
    VIEW 2: SMART FORM BUILDER
    ========================================================================== */
 .form-luxury-container {
-  max-width: 960px;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
 }
 
@@ -2214,6 +2255,8 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
   padding: 32px 36px;
   box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
   margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section-badge {
@@ -2445,6 +2488,87 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: rgba(239, 68, 68, 0.15);
   border-color: rgba(239, 68, 68, 0.40);
   color: #f87171;
+}
+
+/* Multi-line Poin Pembahasan */
+.dynamic-row-poin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.dynamic-row-poin textarea.input-poin-teks {
+  flex: 1;
+  min-height: 52px;
+  line-height: 1.55;
+  padding: 10px 14px;
+  background: #060a14;
+  border: 1px solid #162035;
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-family: inherit;
+  font-size: 13.5px;
+  resize: vertical;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+body.tema-terang .dynamic-row-poin textarea.input-poin-teks {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.dynamic-row-poin textarea.input-poin-teks:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  background: #070d1a;
+}
+
+body.tema-terang .dynamic-row-poin textarea.input-poin-teks:focus {
+  background: #ffffff;
+}
+
+/* Dynamic Rows Tindak Lanjut */
+.dynamic-row-tl {
+  display: grid;
+  grid-template-columns: 1fr 200px 150px 36px;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInScale 0.2s ease;
+}
+
+@media (max-width: 860px) {
+  .dynamic-row-tl {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dynamic-row-tl .tl-field-tugas {
+    grid-column: 1 / -1;
+  }
+}
+
+.dynamic-row-tl input[type="text"] {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  background-color: #060a14;
+  border: 1px solid #162035;
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-family: inherit;
+  font-size: 13.5px;
+  box-sizing: border-box;
+}
+
+body.tema-terang .dynamic-row-tl input[type="text"] {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.dynamic-row-tl input[type="text"]:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
 /* ACTION FOOTER FORM */
@@ -3199,5 +3323,191 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .backup-table thead th:nth-child(4),
   .backup-table tbody td:nth-child(4) {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   AI SUITE: ACTION ITEMS & PENUGASAN CARDS
+   ========================================================================== */
+.ai-box-full-width {
+  grid-column: 1 / -1;
+}
+
+.action-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.action-item-card {
+  background: rgba(11, 19, 43, 0.7);
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.tema-terang .action-item-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.action-item-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.action-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-item-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: "JetBrains Mono", monospace;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.action-item-prio {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.action-item-prio.prio-tinggi {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.action-item-prio.prio-sedang {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.action-item-prio.prio-normal {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.action-item-text {
+  font-size: 13.5px;
+  color: var(--text-main);
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 500;
+}
+
+.action-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 10px;
+  margin-top: auto;
+  font-size: 11.5px;
+}
+
+body.tema-terang .action-item-footer {
+  border-top-color: #f1f5f9;
+}
+
+.action-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-item-meta .meta-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.action-item-meta .meta-val {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   PRINT STYLESHEET (@media print)
+   ========================================================================== */
+@media print {
+  /* Sembunyikan elemen UI chrome saat cetak */
+  .sidebar,
+  .sidebar-overlay,
+  .app-header,
+  .hero-top-row,
+  .detail-hero-card,
+  .card-action-bar,
+  .detail-officials-grid,
+  .tabs-nav-bar,
+  .ai-suite-wrapper,
+  .grid-peserta-cards,
+  .poin-pembahasan-list,
+  .toast,
+  .kontainer-toast,
+  #tampilan-riwayat,
+  #tampilan-form,
+  #tampilan-pengaturan,
+  #modal-anggota,
+  .btn-action-primary,
+  .export-group,
+  .btn-print-action,
+  .card-action-bar-top {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .app-layout {
+    display: block !important;
+  }
+
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .paper-sheet-document,
+  .document-preview-card,
+  #paper-preview-content {
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .kop-surat-wrapper,
+  .kop-garis-tebal,
+  .kop-garis-tipis {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

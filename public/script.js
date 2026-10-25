@@ -74,10 +74,13 @@ const el = {
   // AI Suite
   btnAiRingkasan: document.getElementById("btn-ai-ringkasan"),
   btnAiIde: document.getElementById("btn-ai-ide"),
+  btnAiActionItems: document.getElementById("btn-ai-action-items"),
   kontenRingkasanAi: document.getElementById("konten-ringkasan-ai"),
   kontenIdeAi: document.getElementById("konten-ide-ai"),
+  kontenActionItemsAi: document.getElementById("konten-action-items-ai"),
   btnCopyRingkasan: document.getElementById("btn-copy-ringkasan"),
   btnCopyIde: document.getElementById("btn-copy-ide"),
+  btnCopyActionItems: document.getElementById("btn-copy-action-items"),
 
   // Cards Content
   kontenPesertaGrid: document.getElementById("konten-peserta-grid"),
@@ -98,10 +101,13 @@ const el = {
   inputNotulis: document.getElementById("notulis"),
   inputWaktu: document.getElementById("waktu"),
   inputTempat: document.getElementById("tempat"),
+  inputStatus: document.getElementById("status-rapat"),
   daftarAnggotaChips: document.getElementById("daftar-anggota-chips"),
   btnBukaModalAnggota: document.getElementById("tombol-buka-modal-anggota"),
   daftarPoinInputs: document.getElementById("daftar-poin-inputs"),
   btnTambahPoin: document.getElementById("tambah-poin"),
+  daftarTindakLanjutInputs: document.getElementById("daftar-tindak-lanjut-inputs"),
+  btnTambahTindakLanjut: document.getElementById("tambah-tindak-lanjut"),
   btnBatalForm: document.getElementById("tombol-batal-form"),
   btnSimpanSubmit: document.getElementById("tombol-simpan-submit"),
   labelSimpanSubmit: document.getElementById("label-simpan-submit"),
@@ -315,7 +321,18 @@ async function tampilkanDetailRapat(id, syncHash = true) {
         el.detailTempat.classList.add("tersembunyi");
       }
     }
-    if (el.detailStatus) el.detailStatus.textContent = rapat.status || "Selesai";
+    if (el.detailStatus) {
+      const st = rapat.status || "Selesai";
+      el.detailStatus.textContent = st;
+      el.detailStatus.className = "badge-status-rapat";
+      if (st === "Berlangsung") {
+        el.detailStatus.classList.add("badge-berlangsung");
+      } else if (st === "Dijadwalkan") {
+        el.detailStatus.classList.add("badge-dijadwalkan");
+      } else {
+        el.detailStatus.classList.add("badge-selesai");
+      }
+    }
     el.detailPimpinan.textContent = rapat.pimpinanRapat || "-";
     el.detailNotulis.textContent = rapat.notulis || "-";
     el.detailTotalPeserta.textContent = `${rapat.anggota.length} Orang Hadir`;
@@ -370,6 +387,50 @@ function formatRingkasanHTML(text, indent = false) {
     .join("");
 }
 
+function renderActionItemsUI(items) {
+  if (!el.kontenActionItemsAi) return;
+  if (!items || items.length === 0) {
+    el.kontenActionItemsAi.innerHTML = `
+      <p class="placeholder-ai">Belum ada action items. Klik tombol <b>Action Items AI</b> di atas untuk mengekstrak tugas konkret dari notulen rapat.</p>
+    `;
+    return;
+  }
+
+  const itemsHtml = items.map((item, idx) => {
+    const tugas = escapeHtml(item.tugas || item.isi || "-");
+    const pic = escapeHtml(item.pic || "-");
+    const estimasi = escapeHtml(item.estimasi || item.deadline || "-");
+    const prioritas = escapeHtml(item.prioritas || "Normal");
+    let prioClass = "prio-normal";
+    if (prioritas.toLowerCase().includes("tinggi") || prioritas.toLowerCase().includes("high")) prioClass = "prio-tinggi";
+    else if (prioritas.toLowerCase().includes("sedang") || prioritas.toLowerCase().includes("medium")) prioClass = "prio-sedang";
+
+    return `
+      <div class="action-item-card">
+        <div class="action-item-header">
+          <span class="action-item-num">#${idx + 1}</span>
+          <span class="action-item-prio ${prioClass}">${prioritas}</span>
+        </div>
+        <div class="action-item-body">
+          <p class="action-item-text">${tugas}</p>
+        </div>
+        <div class="action-item-footer">
+          <div class="action-item-meta">
+            <span class="meta-label">PIC:</span>
+            <span class="meta-val">${pic}</span>
+          </div>
+          <div class="action-item-meta">
+            <span class="meta-label">Tenggat:</span>
+            <span class="meta-val">${estimasi}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  el.kontenActionItemsAi.innerHTML = `<div class="action-items-grid">${itemsHtml}</div>`;
+}
+
 function renderAiContent(rapat) {
   if (rapat.ringkasanAI) {
     el.kontenRingkasanAi.innerHTML = formatRingkasanHTML(rapat.ringkasanAI, false);
@@ -386,6 +447,9 @@ function renderAiContent(rapat) {
       <p class="placeholder-ai">Belum ada rekomendasi. Klik tombol <b>Ide Strategis AI</b> untuk usulan kebijakan baru.</p>
     `;
   }
+
+  const actionItemsData = rapat.actionItemsAI || (rapat.tindakLanjut && rapat.tindakLanjut.length > 0 ? rapat.tindakLanjut : null);
+  renderActionItemsUI(actionItemsData);
 }
 
 function renderPesertaGrid(anggota) {
@@ -578,6 +642,32 @@ function renderPaperPreview(rapat) {
         </div>
       ` : ""}
 
+      ${rapat.tindakLanjut && rapat.tindakLanjut.length > 0 ? `
+        <div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 20px;">
+          <div style="font-weight: bold; font-size: 11pt; margin-bottom: 8px;">TINDAK LANJUT &amp; PENUGASAN</div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+            <thead>
+              <tr style="background: #f8fafc; text-align: left;">
+                <th style="border: 1px solid #cbd5e1; padding: 6px 8px; width: 36px; text-align: center;">No</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px 8px;">Tugas / Tindak Lanjut</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px 8px; width: 140px;">PIC</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px 8px; width: 110px;">Tenggat</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rapat.tindakLanjut.map((tl, idx) => `
+                <tr>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: center;">${idx + 1}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${escapeHtml(tl.tugas || tl.isi || "-")}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${escapeHtml(tl.pic || "-")}</td>
+                  <td style="border: 1px solid #cbd5e1; padding: 6px 8px;">${escapeHtml(tl.deadline || "-")}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : ""}
+
       ${rapat.ringkasanAI ? `
         <div style="margin-top: 30px; border-top: 1px dashed #cbd5e1; padding-top: 18px;">
           <div style="font-weight: bold; font-size: 11pt; margin-bottom: 6px;">Ringkasan</div>
@@ -645,6 +735,35 @@ el.btnAiIde.addEventListener("click", async () => {
   }
 });
 
+if (el.btnAiActionItems) {
+  el.btnAiActionItems.addEventListener("click", async () => {
+    if (!STATE.rapatAktif) return;
+    el.btnAiActionItems.disabled = true;
+    el.kontenActionItemsAi.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px; color: #2563eb; font-weight: 600;">
+        <span class="spinner-inline" style="border-top-color: #2563eb;"></span>
+        Sedang mengekstrak Action Items & Penugasan dengan Gemini...
+      </div>
+    `;
+
+    try {
+      const res = await fetch(`/api/rapat/${STATE.rapatAktif.id}/action-items`, { method: "POST" });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.pesan || "Gagal membuat action items");
+
+      const items = json.actionItems || [];
+      STATE.rapatAktif.actionItemsAI = items;
+      renderActionItemsUI(items);
+      tampilkanToast("Action items AI berhasil diekstrak!");
+    } catch (err) {
+      el.kontenActionItemsAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
+      tampilkanToast(err.message, "error");
+    } finally {
+      el.btnAiActionItems.disabled = false;
+    }
+  });
+}
+
 // ==========================================
 // SALIN KE CLIPBOARD
 // ==========================================
@@ -664,6 +783,25 @@ el.btnCopyRingkasan.addEventListener("click", () => {
 el.btnCopyIde.addEventListener("click", () => {
   if (STATE.rapatAktif?.ideBaruAI) copyToClipboard(STATE.rapatAktif.ideBaruAI, "Ide rekomendasi disalin!");
 });
+
+if (el.btnCopyActionItems) {
+  el.btnCopyActionItems.addEventListener("click", () => {
+    const items = STATE.rapatAktif?.actionItemsAI || STATE.rapatAktif?.tindakLanjut;
+    if (!items || items.length === 0) {
+      tampilkanToast("Belum ada action items untuk disalin", "info");
+      return;
+    }
+    const text = items.map((it, idx) => {
+      const tugas = it.tugas || it.isi || "-";
+      const pic = it.pic || "-";
+      const estimasi = it.estimasi || it.deadline || "-";
+      const prioritas = it.prioritas ? ` [${it.prioritas}]` : "";
+      return `${idx + 1}. ${tugas}${prioritas}\n   PIC: ${pic} | Tenggat: ${estimasi}`;
+    }).join("\n\n");
+
+    copyToClipboard(`ACTION ITEMS & PENUGASAN RAPAT:\n\n${text}`, "Action items disalin!");
+  });
+}
 
 el.btnSalinNotulen.addEventListener("click", () => {
   if (!STATE.rapatAktif) return;
@@ -729,11 +867,16 @@ function tampilkanFormBaru(syncHash = true) {
   el.editIdRapat.value = "";
   if (el.inputWaktu) el.inputWaktu.value = "";
   if (el.inputTempat) el.inputTempat.value = "";
+  if (el.inputStatus) el.inputStatus.value = "Selesai";
   STATE.anggotaForm = [];
   renderAnggotaChips();
 
   el.daftarPoinInputs.innerHTML = "";
   tambahBarisPoin("");
+
+  if (el.daftarTindakLanjutInputs) {
+    el.daftarTindakLanjutInputs.innerHTML = "";
+  }
 
   el.inputTanggal.value = new Date().toISOString().slice(0, 10);
 
@@ -764,6 +907,7 @@ function bukaEditRapat() {
   el.inputNotulis.value = r.notulis || "";
   if (el.inputWaktu) el.inputWaktu.value = r.waktu || "";
   if (el.inputTempat) el.inputTempat.value = r.tempat || "";
+  if (el.inputStatus) el.inputStatus.value = r.status || "Selesai";
 
   STATE.anggotaForm = [...(r.anggota || [])];
   renderAnggotaChips();
@@ -776,6 +920,13 @@ function bukaEditRapat() {
     });
   } else {
     tambahBarisPoin("");
+  }
+
+  if (el.daftarTindakLanjutInputs) {
+    el.daftarTindakLanjutInputs.innerHTML = "";
+    if (r.tindakLanjut && r.tindakLanjut.length > 0) {
+      r.tindakLanjut.forEach((tl) => tambahBarisTindakLanjut(tl));
+    }
   }
 
   el.viewDetail.classList.add("tersembunyi");
@@ -939,9 +1090,8 @@ function renderRiwayatBackup() {
     const badgeLabel = item.status === "sukses" ? "✓ Berhasil" : "✕ Gagal";
 
     const namaAman = escapeHtml(item.nama || "—");
-    const urlAman = escapeHtml(item.url || "");
-    const aksiHtml = item.status === "sukses" && item.url
-      ? `<button class="btn-unduh-ulang" title="Unduh ulang file ini" data-url="${urlAman}" data-nama="${namaAman}">
+    const aksiHtml = item.status === "sukses"
+      ? `<button class="btn-unduh-ulang" title="Unduh file backup database" data-nama="${namaAman}">
            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
          </button>`
       : `<span style="color:#475569;font-size:12px;">—</span>`;
@@ -961,14 +1111,7 @@ function renderRiwayatBackup() {
   // Wire unduh-ulang buttons
   tbody.querySelectorAll(".btn-unduh-ulang").forEach(btn => {
     btn.addEventListener("click", () => {
-      const url = btn.dataset.url;
-      const nama = btn.dataset.nama;
-      if (!url || !nama) return;
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = nama;
-      a.click();
-      tampilkanToast("Mengunduh ulang file backup...", "info");
+      jalankanBackup(labelBtnBackup, btnBackupDb);
     });
   });
 }
@@ -1164,12 +1307,18 @@ if (elPengaturan.btnTemaTerang) {
 }
 
 el.btnBatalForm.addEventListener("click", () => {
-  if (STATE.rapatAktif) {
+  const sedangEdit = STATE.isEditing;
+  STATE.isEditing = false;
+  STATE.editId = null;
+
+  if (sedangEdit && STATE.rapatAktif) {
     el.viewForm.classList.add("tersembunyi");
     el.viewDetail.classList.remove("tersembunyi");
+    window.location.hash = `#/detail/${STATE.rapatAktif.id}`;
   } else {
     el.formRapat.reset();
     hapusDrafOtomatis();
+    bukaRiwayat();
   }
 });
 
@@ -1262,23 +1411,36 @@ el.formModalAnggota.addEventListener("submit", (e) => {
 });
 
 // ==========================================
-// DYNAMIC ROWS: POIN PEMBAHASAN & HASIL RAPAT
+// DYNAMIC ROWS: POIN PEMBAHASAN (EXPANDABLE TEXTAREA)
 // ==========================================
 function tambahBarisPoin(isi = "") {
   const row = document.createElement("div");
-  row.className = "dynamic-row";
+  row.className = "dynamic-row dynamic-row-poin";
   row.innerHTML = `
-    <input type="text" class="input-poin-teks" placeholder="Catatan notulensi / hasil rapat" value="${escapeHtml(isi)}" required />
+    <textarea class="input-poin-teks" rows="2" placeholder="Catatan notulensi / hasil pembahasan..." required>${escapeHtml(isi)}</textarea>
     <button type="button" class="btn-row-del" title="Hapus baris">×</button>
   `;
+
+  const textarea = row.querySelector("textarea");
+  textarea.addEventListener("input", () => {
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.max(48, textarea.scrollHeight)}px`;
+    simpanDrafOtomatis();
+  });
 
   row.querySelector(".btn-row-del").addEventListener("click", () => {
     row.remove();
     simpanDrafOtomatis();
   });
 
-  row.querySelector("input").addEventListener("input", simpanDrafOtomatis);
   el.daftarPoinInputs.appendChild(row);
+
+  if (isi) {
+    requestAnimationFrame(() => {
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.max(48, textarea.scrollHeight)}px`;
+    });
+  }
 }
 
 el.btnTambahPoin.addEventListener("click", () => tambahBarisPoin(""));
@@ -1287,8 +1449,60 @@ function ambilDataPoinForm() {
   const rows = el.daftarPoinInputs.querySelectorAll(".dynamic-row");
   const hasil = [];
   rows.forEach((r) => {
-    const isi = r.querySelector(".input-poin-teks").value.trim();
+    const textarea = r.querySelector(".input-poin-teks");
+    const isi = textarea ? textarea.value.trim() : "";
     if (isi) hasil.push({ isi });
+  });
+  return hasil;
+}
+
+// ==========================================
+// DYNAMIC ROWS: TINDAK LANJUT / PENUGASAN
+// ==========================================
+function tambahBarisTindakLanjut(data = {}) {
+  const row = document.createElement("div");
+  row.className = "dynamic-row-tl";
+  const tugas = typeof data === "string" ? data : (data.tugas || data.isi || "");
+  const pic = data.pic || "";
+  const deadline = data.deadline || data.estimasi || "";
+
+  row.innerHTML = `
+    <div class="tl-field-tugas">
+      <input type="text" class="input-tl-tugas" placeholder="Deskripsi tugas / tindak lanjut" value="${escapeHtml(tugas)}" required />
+    </div>
+    <div class="tl-field-pic">
+      <input type="text" class="input-tl-pic" placeholder="PIC / Penanggung Jawab" value="${escapeHtml(pic)}" />
+    </div>
+    <div class="tl-field-deadline">
+      <input type="text" class="input-tl-deadline" placeholder="Tenggat (e.g. 1 Minggu / 10 Nov)" value="${escapeHtml(deadline)}" />
+    </div>
+    <button type="button" class="btn-row-del" title="Hapus tindak lanjut">×</button>
+  `;
+
+  row.querySelectorAll("input").forEach((inp) => inp.addEventListener("input", simpanDrafOtomatis));
+  row.querySelector(".btn-row-del").addEventListener("click", () => {
+    row.remove();
+    simpanDrafOtomatis();
+  });
+
+  el.daftarTindakLanjutInputs?.appendChild(row);
+}
+
+if (el.btnTambahTindakLanjut) {
+  el.btnTambahTindakLanjut.addEventListener("click", () => tambahBarisTindakLanjut());
+}
+
+function ambilDataTindakLanjutForm() {
+  if (!el.daftarTindakLanjutInputs) return [];
+  const rows = el.daftarTindakLanjutInputs.querySelectorAll(".dynamic-row-tl");
+  const hasil = [];
+  rows.forEach((r) => {
+    const tugas = r.querySelector(".input-tl-tugas")?.value.trim();
+    const pic = r.querySelector(".input-tl-pic")?.value.trim() || "-";
+    const deadline = r.querySelector(".input-tl-deadline")?.value.trim() || "-";
+    if (tugas) {
+      hasil.push({ tugas, pic, deadline, selesai: false });
+    }
   });
   return hasil;
 }
@@ -1305,6 +1519,7 @@ el.formRapat.addEventListener("submit", async (e) => {
   const notulis = el.inputNotulis.value.trim();
   const waktu = el.inputWaktu ? el.inputWaktu.value.trim() : "";
   const tempat = el.inputTempat ? el.inputTempat.value.trim() : "";
+  const status = el.inputStatus ? el.inputStatus.value : "Selesai";
 
   if (!tanggal || !topik || !pimpinan || !notulis) {
     tampilkanToast("Mohon lengkapi tanggal, topik, pimpinan, dan notulis", "error");
@@ -1312,6 +1527,7 @@ el.formRapat.addEventListener("submit", async (e) => {
   }
 
   const poinPembahasan = ambilDataPoinForm();
+  const tindakLanjut = ambilDataTindakLanjutForm();
 
   const payload = {
     tanggal,
@@ -1322,8 +1538,8 @@ el.formRapat.addEventListener("submit", async (e) => {
     tempat,
     anggota: STATE.anggotaForm,
     poinPembahasan,
-    tindakLanjut: [],
-    status: "Selesai",
+    tindakLanjut,
+    status,
   };
 
   el.btnSimpanSubmit.disabled = true;
@@ -1384,14 +1600,16 @@ function simpanDrafOtomatis() {
     notulis: el.inputNotulis.value,
     waktu: el.inputWaktu ? el.inputWaktu.value : "",
     tempat: el.inputTempat ? el.inputTempat.value : "",
+    status: el.inputStatus ? el.inputStatus.value : "Selesai",
     anggota: STATE.anggotaForm,
     poin: ambilDataPoinForm(),
+    tindakLanjut: ambilDataTindakLanjutForm(),
     timestamp: Date.now(),
   };
 
   try {
     localStorage.setItem(STATE.draftStorageKey, JSON.stringify(draftData));
-    el.drafAutoSavePill.classList.remove("tersembunyi");
+    el.drafAutoSavePill?.classList.remove("tersembunyi");
   } catch (e) { }
 }
 
@@ -1408,6 +1626,7 @@ function pulihkanDrafOtomatis() {
     el.inputNotulis.value = d.notulis || "";
     if (el.inputWaktu) el.inputWaktu.value = d.waktu || "";
     if (el.inputTempat) el.inputTempat.value = d.tempat || "";
+    if (el.inputStatus && d.status) el.inputStatus.value = d.status;
 
     if (Array.isArray(d.anggota)) {
       STATE.anggotaForm = d.anggota;
@@ -1422,17 +1641,23 @@ function pulihkanDrafOtomatis() {
       });
     }
 
-    el.drafAutoSavePill.classList.remove("tersembunyi");
+    if (Array.isArray(d.tindakLanjut) && d.tindakLanjut.length > 0 && el.daftarTindakLanjutInputs) {
+      el.daftarTindakLanjutInputs.innerHTML = "";
+      d.tindakLanjut.forEach((tl) => tambahBarisTindakLanjut(tl));
+    }
+
+    el.drafAutoSavePill?.classList.remove("tersembunyi");
   } catch (e) { }
 }
 
 function hapusDrafOtomatis() {
   localStorage.removeItem(STATE.draftStorageKey);
-  el.drafAutoSavePill.classList.add("tersembunyi");
+  el.drafAutoSavePill?.classList.add("tersembunyi");
 }
 
-[el.inputTanggal, el.inputTopik, el.inputPimpinan, el.inputNotulis, el.inputWaktu, el.inputTempat].filter(Boolean).forEach((input) => {
+[el.inputTanggal, el.inputTopik, el.inputPimpinan, el.inputNotulis, el.inputWaktu, el.inputTempat, el.inputStatus].filter(Boolean).forEach((input) => {
   input.addEventListener("input", simpanDrafOtomatis);
+  input.addEventListener("change", simpanDrafOtomatis);
 });
 
 // ==========================================
