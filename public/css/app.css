@@ -1,0 +1,23 @@
+/* ==========================================================================
+   RAPATINAI - MASTER STYLESHEET
+   Struktur modular dipisahkan berdasarkan fungsi dan menu:
+   - shared: variables, layout, components
+   - rapat-baru: formulir pembuatan notulen baru
+   - riwayat: riwayat daftar rapat, tampilan detail eksekutif, dan modul AI
+   - pengaturan: pencadangan database dan tema aplikasi
+   ========================================================================== */
+
+@import './shared/variables.css';
+@import './shared/layout.css';
+@import './shared/components.css';
+
+/* Menu: Rapat Baru */
+@import './rapat-baru/form.css';
+
+/* Menu: Riwayat Rapat & Detail */
+@import './riwayat/riwayat.css';
+@import './riwayat/detail.css';
+@import './riwayat/ai.css';
+
+/* Menu: Pengaturan */
+@import './pengaturan/pengaturan.css';

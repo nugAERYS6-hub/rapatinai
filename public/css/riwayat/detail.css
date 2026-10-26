@@ -1,0 +1,645 @@
+/* ==========================================================================
+   VIEW 1: DETAIL RAPAT EKSEKUTIF
+   ========================================================================== */
+.view-section {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  animation: fadeInSlide 0.35s var(--ease-smooth);
+}
+
+
+/* ==========================================================================
+   CARDS CONTAINER & LUXURY CARDS
+   ========================================================================== */
+.detail-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card-luxury {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--trans-speed) ease;
+}
+
+.card-luxury:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1c294d;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header-icon {
+  font-size: 18px;
+}
+
+.card-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.badge-count {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  background: #1b2b52;
+  border: 1px solid #1c294d;
+  border-radius: 20px;
+  color: #38bdf8;
+}
+
+/* KARTU AI INTELIJENSI */
+.ai-intelligence-card {
+  background: linear-gradient(180deg, #0f172a 0%, #0b132b 100%);
+  border-color: #1e293b;
+  position: relative;
+}
+
+.ai-model-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  letter-spacing: 0.03em;
+}
+
+.ai-panels-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.ai-box {
+  background: #0b132b;
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ai-box-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.btn-micro-copy {
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #162244;
+  border: 1px solid #1c294d;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.15s ease;
+}
+
+.btn-micro-copy:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.ai-box-content {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  line-height: 1.65;
+  white-space: pre-line;
+  flex: 1;
+}
+
+.placeholder-ai {
+  color: var(--text-subtle);
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* GRID PESERTA */
+.grid-peserta-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.peserta-item-card {
+  padding: 14px 16px;
+  background: #0b132b;
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all var(--trans-speed) ease;
+}
+
+.peserta-item-card:hover {
+  border-color: #38bdf8;
+  background: #162244;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xs);
+}
+
+.peserta-avatar-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.peserta-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.peserta-nama {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.peserta-jabatan {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.peserta-instansi {
+  font-size: 11px;
+  color: #0284c7;
+  font-weight: 600;
+}
+
+/* LIST POIN PEMBAHASAN */
+.list-pembahasan {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.poin-row-item {
+  padding: 16px 18px;
+  background: #0b132b;
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all var(--trans-speed) ease;
+}
+
+.poin-row-item:hover {
+  border-color: #38bdf8;
+  background: #162244;
+}
+
+.poin-number {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  padding-top: 2px;
+}
+
+.poin-content {
+  flex: 1;
+}
+
+.poin-text {
+  font-size: 14px;
+  color: #e2e8f0;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.poin-decision-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.decision-disetujui {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.30);
+}
+
+.decision-kajian {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.decision-ditunda {
+  background: rgba(100, 116, 139, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+/* LIST TINDAK LANJUT */
+.list-tindak-lanjut {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tindak-row-item {
+  padding: 14px 18px;
+  background: #0b132b;
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all var(--trans-speed) ease;
+}
+
+.tindak-row-item:hover {
+  background: #162244;
+  border-color: #38bdf8;
+}
+
+.tindak-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.tindak-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.tindak-task {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+.tindak-task.selesai {
+  text-decoration: line-through;
+  color: #475569;
+}
+
+.tindak-right-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pic-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+}
+
+.deadline-badge {
+  font-size: 11.5px;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--text-muted);
+}
+
+/* PRATINJAU DOKUMEN CETAK RESMI */
+.paper-preview {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 36px 44px;
+  font-family: "Times New Roman", Times, serif;
+  color: #000000;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* KOP SURAT RESMI BAPPEDA */
+.kop-surat-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.kop-logo-box {
+  width: 90px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kop-logo-img {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  display: block;
+}
+
+.kop-text-box {
+  flex: 1;
+  text-align: center;
+  color: #000000;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.kop-instansi-prov {
+  font-size: 13pt;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.kop-nama-dinas {
+  font-size: 14.5pt;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.25;
+  margin-top: 3px;
+}
+
+.kop-alamat {
+  font-size: 9pt;
+  line-height: 1.35;
+  margin-top: 4px;
+  color: #222222;
+}
+
+.kop-kontak {
+  font-size: 8.5pt;
+  line-height: 1.35;
+  color: #333333;
+}
+
+.kop-spacer {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.kop-garis-tebal {
+  border-top: 2.5px solid #000000;
+  margin-bottom: 2px;
+}
+
+.kop-garis-tipis {
+  border-top: 1px solid #000000;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  .kop-surat-wrapper {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .kop-spacer {
+    display: none;
+  }
+
+  .kop-logo-box {
+    width: auto;
+  }
+
+  .kop-instansi-prov {
+    font-size: 11pt;
+  }
+
+  .kop-nama-dinas {
+    font-size: 12pt;
+  }
+}
+
+.btn-print-action {
+  padding: 6px 14px;
+  background: #0b132b;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-print-action:hover {
+  background: #162244;
+  color: #ffffff;
+}
+
+
+/* ==========================================================================
+   CETAK DOKUMEN RESMI (PRINT PREVIEW STYLES)
+   ========================================================================== */
+@media print {
+
+  body,
+  html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+  }
+
+  .sidebar,
+  .top-command-bar,
+  .detail-hero-card,
+  .ai-intelligence-card,
+  .card-luxury:not(.document-preview-card),
+  .card-header,
+  .btn-print-action,
+  .sidebar-overlay,
+  #tampilan-form,
+  #tampilan-riwayat,
+  #tampilan-pengaturan {
+    display: none !important;
+  }
+
+  /* Sembunyikan pseudo-element yang mungkin masih memakan ruang */
+  .detail-hero-card::before,
+  .detail-hero-card::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Reset semua container layout agar tidak ada ruang kosong */
+  html, body,
+  .app-layout,
+  .main-panel,
+  .main-scrollable-content,
+  #tampilan-detail,
+  .view-section,
+  .detail-cards-container,
+  .document-preview-card {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: unset !important;
+    max-width: unset !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    gap: 0 !important;
+    animation: none !important;
+  }
+
+  .paper-preview {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    font-family: "Times New Roman", Times, serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .kop-surat-wrapper,
+  .kop-logo-img,
+  .kop-garis-tebal,
+  .kop-garis-tipis {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  p, div {
+    orphans: 3;
+    widows: 3;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 20mm 20mm 20mm 20mm;
+  }
+}
+
+
+/* ==========================================================================
+   PRINT STYLESHEET (@media print)
+   ========================================================================== */
+@media print {
+  /* Sembunyikan elemen UI chrome saat cetak */
+  .sidebar,
+  .sidebar-overlay,
+  .app-header,
+  .hero-top-row,
+  .detail-hero-card,
+  .card-action-bar,
+  .detail-officials-grid,
+  .tabs-nav-bar,
+  .ai-suite-wrapper,
+  .grid-peserta-cards,
+  .poin-pembahasan-list,
+  .toast,
+  .kontainer-toast,
+  #tampilan-riwayat,
+  #tampilan-form,
+  #tampilan-pengaturan,
+  #modal-anggota,
+  .btn-action-primary,
+  .export-group,
+  .btn-print-action,
+  .card-action-bar-top {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .app-layout {
+    display: block !important;
+  }
+
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .paper-sheet-document,
+  .document-preview-card,
+  #paper-preview-content {
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .kop-surat-wrapper,
+  .kop-garis-tebal,
+  .kop-garis-tipis {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

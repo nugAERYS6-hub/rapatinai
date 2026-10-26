@@ -1,0 +1,591 @@
+/* ==========================================================================
+   LAYOUT UTAMA
+   ========================================================================== */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   SIDEBAR EKSEKUTIF
+   ========================================================================== */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  flex-shrink: 0;
+  background-color: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-sidebar);
+  z-index: 40;
+  transition: margin-left 0.32s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.32s cubic-bezier(0.2, 0, 0, 1),
+              opacity 0.22s ease;
+  will-change: margin-left, transform;
+}
+
+body.sidebar-collapsed .sidebar {
+  margin-left: -260px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.sidebar-header {
+  height: 64px;
+  padding: 0 16px 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-sidebar);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-title-notulensi {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ==========================================================================
+   TOMBOL HAMBURGER TOGGLE SIDEBAR (From Uiverse.io by Creatlydev)
+   ========================================================================== */
+.icon-menu {
+  --gap: 5px;
+  --height-bar: 2.5px;
+  --pos-y-bar-one: 0;
+  --pos-y-bar-three: 0;
+  --scale-bar: 1;
+  --rotate-bar-one: 0;
+  --rotate-bar-three: 0;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.bar {
+  position: relative;
+  height: var(--height-bar);
+  width: 100%;
+  border-radius: .5rem;
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.tema-terang .bar {
+  background-color: var(--accent-blue);
+  box-shadow: none;
+}
+
+.bar--1 {
+  top: var(--pos-y-bar-one);
+  transform: rotate(var(--rotate-bar-one));
+  transition: top 200ms 100ms, transform 100ms;
+}
+
+.bar--2 {
+  transform: scaleX(var(--scale-bar));
+  transition: transform 150ms 100ms;
+}
+
+.bar--3 {
+  bottom: var(--pos-y-bar-three);
+  transform: rotate(var(--rotate-bar-three));
+  transition: bottom 200ms 100ms, transform 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--1 {
+  transition: top 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--3 {
+  transition: bottom 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu {
+  --pos-y-bar-one: calc(var(--gap) + var(--height-bar));
+  --pos-y-bar-three: calc(var(--gap) + var(--height-bar));
+  --scale-bar: 0;
+  --rotate-bar-one: 45deg;
+  --rotate-bar-three: -45deg;
+}
+
+.tombol-hamburger-sidebar {
+  background: transparent;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.tombol-hamburger-sidebar:hover {
+  background: var(--accent-blue-light);
+  border-color: var(--accent-blue-border);
+  transform: scale(1.05);
+}
+
+.tombol-hamburger-sidebar:active {
+  transform: scale(0.95);
+}
+
+.tombol-hamburger-top {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+  margin-right: 12px;
+}
+
+.tombol-hamburger-top:hover {
+  background: var(--accent-blue-light);
+  border-color: var(--accent-blue-border);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+  transform: scale(1.05);
+}
+
+.tombol-hamburger-top:active {
+  transform: scale(0.95);
+}
+
+body.sidebar-collapsed .tombol-hamburger-top {
+  display: flex;
+  animation: fadeInPop 0.25s var(--ease-smooth);
+}
+
+@media (max-width: 960px) {
+  .tombol-hamburger-top {
+    display: flex !important;
+  }
+}
+
+@keyframes fadeInPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tombol-icon-mobile {
+  display: none;
+}
+
+/* SIDEBAR MENU UTAMA */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px;
+  gap: 6px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #8896ab;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.menu-item.aktif {
+  background: #131f37;
+  border-color: #1e3a66;
+  color: #38bdf8;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.menu-item.aktif .menu-icon {
+  color: #38bdf8;
+}
+
+.menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-riwayat-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* TEMA TERANG OVERRIDES */
+body.tema-terang {
+  --bg-app: #f6f8fb;
+  --bg-sidebar: #0b0f19;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f8fafc;
+  --bg-input: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  --border-light: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 6px -1px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 25px -4px rgba(15, 23, 42, 0.07), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+}
+
+body.tema-terang .main-panel { background: #f6f8fb; }
+body.tema-terang .top-command-bar { background: rgba(255,255,255,0.9); border-bottom-color: #e2e8f0; }
+body.tema-terang .card-luxury { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .detail-hero-card { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .form-card-section { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .ai-box { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .poin-row-item { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .poin-row-item:hover { background: #ffffff; border-color: #94a3b8; }
+body.tema-terang .tindak-row-item { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .tindak-row-item:hover { background: #ffffff; border-color: #94a3b8; }
+body.tema-terang .peserta-item-card { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .peserta-item-card:hover { background: #ffffff; border-color: #94a3b8; }
+body.tema-terang input[type="text"],
+body.tema-terang input[type="date"],
+body.tema-terang select,
+body.tema-terang textarea { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang input[type="text"]::placeholder,
+body.tema-terang textarea::placeholder { color: #94a3b8; }
+body.tema-terang input:focus,
+body.tema-terang select:focus,
+body.tema-terang textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+body.tema-terang .modal-card { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .detail-officials-grid { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .attendee-chips-wall { background: #f8fafc; border-color: #e2e8f0; }
+body.tema-terang .chip-attendee { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang .btn-export { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang .btn-export:hover { background: #f1f5f9; }
+body.tema-terang .btn-print-action { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang .btn-row-del { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
+body.tema-terang .btn-batal-besar { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
+body.tema-terang .btn-batal-besar:hover { background: #f1f5f9; color: #0f172a; }
+body.tema-terang .btn-secondary { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
+body.tema-terang .riwayat-search-wrap input[type="text"],
+body.tema-terang #input-cari-rapat { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang .riwayat-search-wrap .search-icon { color: #94a3b8; }
+body.tema-terang .card-header { border-bottom-color: #e2e8f0; }
+body.tema-terang .card-header h2 { color: #0f172a; }
+body.tema-terang .ai-intelligence-card { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .section-title { color: #0f172a; }
+body.tema-terang .poin-text { color: #0f172a; }
+body.tema-terang .tindak-task { color: #0f172a; }
+body.tema-terang .form-title { color: #0f172a; }
+body.tema-terang .ai-box-content { color: #334155; }
+body.tema-terang .ai-box-title { color: #0f172a; }
+body.tema-terang .detail-judul-topik { color: #0f172a; }
+body.tema-terang .official-name { color: #0f172a; }
+body.tema-terang .peserta-nama { color: #0f172a; }
+body.tema-terang .modal-card-header h3 { color: #0f172a; }
+body.tema-terang label { color: #334155; }
+body.tema-terang .btn-tema-wrapper .btn-tema { background: #f1f5f9; border-color: #e2e8f0; }
+body.tema-terang .breadcrumb-current { color: #0f172a; }
+body.tema-terang .item-topik { color: #0f172a; }
+body.tema-terang .item-rapat-sidebar.aktif .item-topik { color: #0369a1; }
+body.tema-terang .item-tanggal, body.tema-terang .item-row-meta { color: #64748b; }
+body.tema-terang .item-rapat-sidebar { background: #ffffff; border-color: #e2e8f0; }
+body.tema-terang .item-rapat-sidebar:hover { background: #f8fafc; border-color: #cbd5e1; }
+body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: #38bdf8; }
+
+
+/* ==========================================================================
+   MAIN PANEL WORKSPACE
+   ========================================================================== */
+.main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #050811;
+  min-width: 0;
+}
+
+/* TOP COMMAND BAR */
+.top-command-bar {
+  height: 64px;
+  padding: 0 36px;
+  background: #050811;
+  border-bottom: 1px solid var(--border-sidebar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.command-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.breadcrumb-root {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  color: #334155;
+  font-size: 12px;
+}
+
+.breadcrumb-middle {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.breadcrumb-middle:hover {
+  color: #38bdf8;
+}
+
+.breadcrumb-current {
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 450px;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.command-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.draft-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.30);
+  border-radius: 20px;
+  font-size: 11.5px;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.btn-header-action {
+  position: relative;
+  overflow: hidden;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, #0b1120 0%, #0f1e3d 50%, #1e3a8a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.01em;
+  box-shadow: 0 3px 12px rgba(11, 17, 32, 0.25), 0 0 0 1px rgba(30, 58, 138, 0.3);
+  animation: noticePulseGlow 3.5s infinite ease-in-out;
+  transition: all var(--trans-speed) var(--ease-smooth);
+}
+
+.btn-header-action .btn-plus-icon {
+  font-size: 15px;
+  font-weight: 800;
+  color: #38bdf8;
+  display: inline-block;
+  line-height: 1;
+  transition: transform 0.25s var(--ease-smooth);
+}
+
+.btn-header-action:hover {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 65%, #2563eb 100%);
+  border-color: #38bdf8;
+  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 6px 22px rgba(30, 58, 138, 0.5), 0 0 16px rgba(56, 189, 248, 0.45);
+}
+
+.btn-header-action:hover .btn-plus-icon {
+  transform: rotate(90deg) scale(1.15);
+}
+
+.btn-header-action:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* KILAUAN ANIMASI AGAR MUDAH DINOTICE PENGGUNA */
+.btn-header-action::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -80%;
+  width: 45%;
+  height: 200%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent);
+  transform: rotate(25deg);
+  animation: sheenSweep 3.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+@keyframes noticePulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 3px 12px rgba(11, 17, 32, 0.25), 0 0 0 0 rgba(56, 189, 248, 0.5);
+    transform: translateY(0);
+  }
+
+  50% {
+    box-shadow: 0 5px 20px rgba(30, 58, 138, 0.4), 0 0 0 5px rgba(56, 189, 248, 0);
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes sheenSweep {
+  0% {
+    left: -80%;
+  }
+
+  25%,
+  100% {
+    left: 150%;
+  }
+}
+
+.main-scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 48px 64px;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 960px) {
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    margin-left: 0;
+    box-shadow: none;
+  }
+
+  body.sidebar-collapsed .sidebar {
+    margin-left: 0;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .sidebar.buka {
+    transform: translateX(0);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 7, 15, 0.65);
+    backdrop-filter: blur(6px);
+    z-index: 35;
+  }
+
+  .tombol-hamburger-top {
+    display: flex !important;
+  }
+
+  .top-command-bar {
+    padding: 0 20px;
+  }
+
+  .main-scrollable-content {
+    padding: 24px 20px 48px;
+  }
+
+  .form-card-section {
+    padding: 24px 20px;
+  }
+
+  .detail-hero-card {
+    padding: 24px;
+  }
+
+  .detail-officials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-panels-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+

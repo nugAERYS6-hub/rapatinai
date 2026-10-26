@@ -83,3 +83,56 @@ php artisan test --filter=RapatApiTest
 | `POST` | `/api/rapat/{id}/action-items` | Menghasilkan Action Items tugas terstruktur AI |
 | `GET` | `/api/rapat/{id}/export-pdf` | Mengunduh Laporan Resmi format PDF |
 | `GET` | `/api/rapat/{id}/export-word` | Mengunduh Laporan Resmi format Word (DOCX) |
+| `GET` | `/api/backup/mysql` | Mengunduh cadangan database MySQL (.sql) |
+| `POST` | `/api/backup/restore` | Memulihkan database dari berkas backup .sql |
+
+---
+
+## 📁 Struktur Folder & File Berdasarkan Fungsi
+
+Struktur folder telah dipisahkan secara modular berdasarkan menu dan fungsinya (Single Responsibility Principle):
+
+```text
+rapatinAI/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Rapat/                # Fungsi Menu Rapat Baru & Riwayat Rapat
+│   │   │   │   ├── RapatController.php   (CRUD & Statistik)
+│   │   │   │   ├── AiController.php      (Fitur AI: Ringkasan, Ide Baru, Action Items)
+│   │   │   │   └── ExportController.php  (Ekspor PDF & Word)
+│   │   │   ├── Pengaturan/           # Fungsi Menu Pengaturan
+│   │   │   │   └── BackupController.php  (Backup & Restore Database)
+│   │   │   └── RapatController.php   (Aggregator controller backward-compatible)
+│   │   └── Requests/
+│   │       ├── StoreRapatRequest.php
+│   │       └── UpdateRapatRequest.php
+│   └── Services/
+│       ├── Rapat/                    # Service logika bisnis rapat
+│       │   ├── GeminiService.php
+│       │   └── ExportService.php
+│       └── Pengaturan/               # Service pencadangan database
+│           └── BackupService.php
+│
+├── public/
+│   ├── css/                          # CSS Modular berdasarkan Menu & Fungsi
+│   │   ├── shared/                   (variables, layout, components)
+│   │   ├── rapat-baru/               (form notulen baru, input dinamis)
+│   │   ├── riwayat/                  (panel riwayat, detail, AI suite, cetak)
+│   │   ├── pengaturan/               (backup, tabel log, tema)
+│   │   └── app.css                   (Master stylesheet @import)
+│   ├── js/                           # JavaScript Modular berdasarkan Menu & Fungsi
+│   │   ├── shared/                   (state registry, utils, ui & sidebar)
+│   │   ├── rapat-baru/               (form handler, chips peserta, input dinamis, draf)
+│   │   ├── riwayat/                  (riwayat list & filter, detail rapat, AI suite, ekspor)
+│   │   ├── pengaturan/               (backup & restore database, tema switcher)
+│   │   └── app.js                    (Master client orchestrator & router)
+│   ├── stitch_screens/               # Mockup Layar Terkategori
+│   │   ├── rapat_baru/               (Screen 1 & 2: Form Bagian 1, 2, 3)
+│   │   ├── riwayat_rapat/            (Screen 3, 4, 5, 6: Detail, KOP, Lampiran)
+│   │   └── index.html                (Penampil showcase koleksi layar)
+│   ├── index.html                    (Halaman web utama single-page application)
+│   ├── style.css                     (Proxy entrypoint ke css/app.css)
+│   └── script.js                     (Proxy entrypoint ke js/app.js)
+```
+
