@@ -21,10 +21,80 @@
   flex-direction: column;
   border-right: 1px solid var(--border-sidebar);
   z-index: 40;
+  position: relative;
+  overflow: visible;
+  --sidebar-mouse-y: 35%;
   transition: margin-left 0.32s cubic-bezier(0.2, 0, 0, 1),
               transform 0.32s cubic-bezier(0.2, 0, 0, 1),
               opacity 0.22s ease;
   will-change: margin-left, transform;
+}
+
+/* Background Texture Layer & Palette Overlays (Modern Minimalist Executive Dark Aesthetic) */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #060913;
+  background-image: 
+    /* Ambient top cyan header aura */
+    radial-gradient(ellipse 130% 220px at 50% -30px, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.05) 50%, transparent 80%),
+    /* Precision modern geometric micro-dots (SaaS Linear / Vercel style) */
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.065) 1px, transparent 1.2px),
+    /* Delicate structural micro-grid lines */
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    /* Deep obsidian foundation gradient */
+    linear-gradient(180deg, #090e1c 0%, #060913 45%, #03050a 100%);
+  background-size: 
+    100% 220px,
+    20px 20px,
+    60px 60px,
+    60px 60px,
+    100% 100%;
+  background-position: 
+    center top,
+    0 0,
+    0 0,
+    0 0,
+    center center;
+  background-repeat: 
+    no-repeat,
+    repeat,
+    repeat,
+    repeat,
+    no-repeat;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Atmospheric Interactive Cyan Glow & Modern Hairline Highlight */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(280px circle at 50% var(--sidebar-mouse-y, 35%), rgba(56, 189, 248, 0.11) 0%, rgba(37, 99, 235, 0.03) 45%, transparent 70%),
+    linear-gradient(180deg, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0.05) 35%, transparent 80%);
+  background-position: 
+    center center,
+    right top;
+  background-size: 
+    100% 100%,
+    1px 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar-header,
+.sidebar-menu,
+.sidebar > * {
+  position: relative;
+  z-index: 2;
 }
 
 body.sidebar-collapsed .sidebar {
@@ -40,9 +110,10 @@ body.sidebar-collapsed .sidebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-sidebar);
+  border-bottom: none;
   box-sizing: border-box;
   flex-shrink: 0;
+  background: transparent;
 }
 
 .brand {
@@ -50,14 +121,32 @@ body.sidebar-collapsed .sidebar {
   align-items: center;
 }
 
+@font-face {
+  font-family: "The Seasons";
+  src: url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff") format("woff"),
+       url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 .brand-title-notulensi {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-family: 'The Seasons', 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  font-synthesis: weight;
+  letter-spacing: -0.015em;
   line-height: 1;
-  color: #ffffff;
   display: inline-flex;
   align-items: center;
+  background: linear-gradient(135deg, #ffffff 15%, #7dd3fc 60%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
+  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.75);
 }
 
 /* ==========================================================================
@@ -87,13 +176,13 @@ body.sidebar-collapsed .sidebar {
   height: var(--height-bar);
   width: 100%;
   border-radius: .5rem;
-  background-color: var(--accent-cyan);
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  background-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.45);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 body.tema-terang .bar {
-  background-color: var(--accent-blue);
+  background-color: #0284c7;
   box-shadow: none;
 }
 
@@ -210,41 +299,98 @@ body.sidebar-collapsed .tombol-hamburger-top {
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  padding: 16px 14px;
-  gap: 6px;
+  padding: 16px 0 16px 14px;
+  gap: 10px;
+  position: relative;
+  z-index: 10;
+}
+
+/* FLUID SLIDING ACTIVE NOTCH GLIDER */
+.sidebar-active-glider {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: -1px;
+  height: 44px;
+  background: var(--bg-app);
+  border-radius: 999px 0 0 999px;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.25s ease,
+              opacity 0.2s ease;
+  will-change: transform;
+}
+
+/* Inverted rounded corner atas pada glider */
+.sidebar-active-glider::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 0 0, transparent 18px, var(--bg-app) 18.5px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Inverted rounded corner bawah pada glider */
+.sidebar-active-glider::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 0 100%, transparent 18px, var(--bg-app) 18.5px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: #8896ab;
+  padding: 12px 18px;
+  margin-right: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+  color: #94a3b8;
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s var(--ease-smooth);
+  position: relative;
+  z-index: 2;
+  transition: color 0.25s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
-.menu-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+.menu-item:hover:not(.aktif) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: #ffffff;
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
+/* Menu item ketika aktif (latar dan kurva disediakan oleh glider di bawahnya) */
 .menu-item.aktif {
-  background: #131f37;
-  border-color: #1e3a66;
-  color: #38bdf8;
+  margin-right: -1px;
+  background: transparent;
+  border-color: transparent;
+  color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
 .menu-item.aktif .menu-icon {
-  color: #38bdf8;
+  color: var(--accent-cyan);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+  transform: scale(1.08);
 }
 
 .menu-icon {
@@ -260,84 +406,386 @@ body.sidebar-collapsed .tombol-hamburger-top {
   overflow: hidden;
 }
 
-/* TEMA TERANG OVERRIDES */
-body.tema-terang {
-  --bg-app: #f6f8fb;
-  --bg-sidebar: #0b0f19;
-  --bg-card: #ffffff;
-  --bg-card-subtle: #f8fafc;
-  --bg-input: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-subtle: #94a3b8;
-  --border-light: #e2e8f0;
-  --border-subtle: #f1f5f9;
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 2px 6px -1px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 10px 25px -4px rgba(15, 23, 42, 0.07), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+/* SMOOTH VIEW TRANSITION ANIMATION */
+.view-section {
+  width: 100%;
 }
 
-body.tema-terang .main-panel { background: #f6f8fb; }
-body.tema-terang .top-command-bar { background: rgba(255,255,255,0.9); border-bottom-color: #e2e8f0; }
-body.tema-terang .card-luxury { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .detail-hero-card { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .form-card-section { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .ai-box { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .poin-row-item { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .poin-row-item:hover { background: #ffffff; border-color: #94a3b8; }
-body.tema-terang .tindak-row-item { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .tindak-row-item:hover { background: #ffffff; border-color: #94a3b8; }
-body.tema-terang .peserta-item-card { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .peserta-item-card:hover { background: #ffffff; border-color: #94a3b8; }
+.view-section:not(.tersembunyi) {
+  animation: viewTransitionSlide 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes viewTransitionSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* TEMA TERANG OVERRIDES (EXECUTIVE LUXURY LIGHT MODE) */
+body.tema-terang {
+  --bg-app: #f8fafc;
+  --bg-sidebar: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f1f5f9;
+  --bg-input: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+  --border-card: #e2e8f0;
+  --border-light: #cbd5e1;
+  --border-subtle: #f1f5f9;
+  --border-sidebar: #e2e8f0;
+  --shadow-xs: inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 5px rgba(15, 23, 42, 0.04);
+  --shadow-sm: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 6px rgba(15, 23, 42, 0.05), 0 8px 18px -2px rgba(15, 23, 42, 0.06);
+  --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 12px rgba(15, 23, 42, 0.06), 0 14px 28px -4px rgba(15, 23, 42, 0.08);
+  --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 1), 0 8px 20px rgba(15, 23, 42, 0.07), 0 24px 44px -6px rgba(15, 23, 42, 0.10);
+}
+
+body.tema-terang .main-panel { background: #f8fafc; }
+body.tema-terang .top-command-bar { 
+  background: rgba(255, 255, 255, 0.88); 
+  border-bottom: 1px solid #e2e8f0; 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); 
+}
+
+/* SIDEBAR TEMA TERANG DENGAN TEKSTUR PALET TERANG */
+body.tema-terang .sidebar {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-right: 1px solid #e2e8f0;
+}
+
+body.tema-terang .sidebar::before {
+  background-color: transparent;
+  background-image: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.70) 0%, rgba(248, 250, 252, 0.38) 40%, rgba(241, 245, 249, 0.65) 100%),
+    url('../../img/sidebar-texture-light.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  opacity: 0.96;
+}
+
+body.tema-terang .sidebar::after {
+  background: 
+    radial-gradient(260px circle at 50% var(--sidebar-mouse-y, 35%), rgba(2, 132, 199, 0.09) 0%, transparent 68%),
+    linear-gradient(90deg, transparent 94%, rgba(2, 132, 199, 0.06) 100%);
+  background-size: auto;
+  background-position: 0 0;
+  background-repeat: repeat;
+}
+
+body.tema-terang .sidebar-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+body.tema-terang .brand-title-notulensi {
+  font-weight: 800;
+  font-synthesis: weight;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 55%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 2px rgba(2, 132, 199, 0.22));
+  text-shadow: none;
+  -webkit-text-stroke: 0.5px #0284c7;
+}
+
+body.tema-terang .tombol-hamburger-sidebar:hover,
+body.tema-terang .tombol-hamburger-top:hover {
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(2, 132, 199, 0.25);
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+}
+
+body.tema-terang .menu-item {
+  color: #475569;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+body.tema-terang .menu-item:hover:not(.aktif) {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+body.tema-terang .sidebar-active-glider {
+  background: var(--bg-app);
+  box-shadow: -4px 0 14px rgba(15, 23, 42, 0.07);
+}
+
+body.tema-terang .menu-item.aktif {
+  background: transparent;
+  border-color: transparent;
+  color: #0f172a;
+  box-shadow: none;
+}
+
+body.tema-terang .menu-item.aktif .menu-icon {
+  color: #0284c7;
+}
+
+/* BAGAN & KARTU UTAMA TEMA TERANG (EFEK TIMBUL & OUTLINE TEGAS) */
+body.tema-terang .card-luxury,
+body.tema-terang .detail-hero-card,
+body.tema-terang .form-card-section,
+body.tema-terang .modal-card,
+body.tema-terang .ai-intelligence-card,
+body.tema-terang .theme-toggle-card,
+body.tema-terang .backup-info-panel,
+body.tema-terang .backup-table-wrap {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 5px rgba(15, 23, 42, 0.05), 0 8px 20px -3px rgba(15, 23, 42, 0.07) !important;
+  transition: all 0.22s var(--ease-smooth);
+}
+
+body.tema-terang .card-luxury:hover,
+body.tema-terang .detail-hero-card:hover,
+body.tema-terang .form-card-section:hover,
+body.tema-terang .ai-intelligence-card:hover,
+body.tema-terang .theme-toggle-card:hover {
+  border-color: #94a3b8 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 10px rgba(15, 23, 42, 0.07), 0 14px 28px -4px rgba(15, 23, 42, 0.10) !important;
+}
+
+body.tema-terang .riwayat-stat-card,
+body.tema-terang .backup-stat-card {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 5px rgba(15, 23, 42, 0.05), 0 6px 14px -2px rgba(15, 23, 42, 0.07) !important;
+  transition: all 0.22s var(--ease-smooth);
+}
+
+body.tema-terang .riwayat-stat-card:hover,
+body.tema-terang .backup-stat-card:hover {
+  border-color: #0284c7 !important;
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 12px rgba(15, 23, 42, 0.08), 0 14px 26px -4px rgba(15, 23, 42, 0.10) !important;
+}
+
+body.tema-terang .item-rapat-sidebar {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 4px rgba(15, 23, 42, 0.05), 0 6px 14px -2px rgba(15, 23, 42, 0.06) !important;
+  transition: all 0.22s var(--ease-smooth);
+}
+
+body.tema-terang .item-rapat-sidebar:hover {
+  background: #ffffff !important;
+  border-color: #0284c7 !important;
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 12px rgba(15, 23, 42, 0.08), 0 12px 24px -3px rgba(15, 23, 42, 0.10) !important;
+}
+
+body.tema-terang .item-rapat-sidebar.aktif {
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 14px rgba(2, 132, 199, 0.20) !important;
+}
+
+body.tema-terang .riwayat-search-wrap input[type="text"],
+body.tema-terang #input-cari-rapat {
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04), 0 2px 5px rgba(15, 23, 42, 0.05) !important;
+  color: #0f172a !important;
+}
+
+body.tema-terang .riwayat-search-wrap input[type="text"]:focus,
+body.tema-terang #input-cari-rapat:focus {
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15), 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.tema-terang .filter-pills .pill {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #475569 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.tema-terang .filter-pills .pill:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+body.tema-terang .filter-pills .pill.aktif {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35) !important;
+}
+
+body.tema-terang .ai-box,
+body.tema-terang .detail-officials-grid,
+body.tema-terang .attendee-chips-wall {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03), 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.tema-terang .official-card,
+body.tema-terang .peserta-item-card,
+body.tema-terang .poin-row-item,
+body.tema-terang .tindak-row-item {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 4px rgba(15, 23, 42, 0.04), 0 5px 12px -2px rgba(15, 23, 42, 0.06) !important;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+body.tema-terang .official-card:hover,
+body.tema-terang .peserta-item-card:hover,
+body.tema-terang .poin-row-item:hover,
+body.tema-terang .tindak-row-item:hover {
+  border-color: #0284c7 !important;
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 12px rgba(15, 23, 42, 0.08), 0 12px 24px -3px rgba(15, 23, 42, 0.09) !important;
+}
+
 body.tema-terang input[type="text"],
 body.tema-terang input[type="date"],
 body.tema-terang select,
-body.tema-terang textarea { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
+body.tema-terang textarea {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
 body.tema-terang input[type="text"]::placeholder,
-body.tema-terang textarea::placeholder { color: #94a3b8; }
+body.tema-terang textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
 body.tema-terang input:focus,
 body.tema-terang select:focus,
-body.tema-terang textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
-body.tema-terang .modal-card { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .detail-officials-grid { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .attendee-chips-wall { background: #f8fafc; border-color: #e2e8f0; }
-body.tema-terang .chip-attendee { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
-body.tema-terang .btn-export { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
-body.tema-terang .btn-export:hover { background: #f1f5f9; }
-body.tema-terang .btn-print-action { background: #ffffff; border-color: #e2e8f0; color: #0f172a; }
-body.tema-terang .btn-row-del { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
-body.tema-terang .btn-batal-besar { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
-body.tema-terang .btn-batal-besar:hover { background: #f1f5f9; color: #0f172a; }
-body.tema-terang .btn-secondary { background: #ffffff; border-color: #e2e8f0; color: #64748b; }
-body.tema-terang .riwayat-search-wrap input[type="text"],
-body.tema-terang #input-cari-rapat { background-color: #ffffff; border-color: #e2e8f0; color: #0f172a; }
-body.tema-terang .riwayat-search-wrap .search-icon { color: #94a3b8; }
-body.tema-terang .card-header { border-bottom-color: #e2e8f0; }
-body.tema-terang .card-header h2 { color: #0f172a; }
-body.tema-terang .ai-intelligence-card { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .section-title { color: #0f172a; }
-body.tema-terang .poin-text { color: #0f172a; }
-body.tema-terang .tindak-task { color: #0f172a; }
-body.tema-terang .form-title { color: #0f172a; }
-body.tema-terang .ai-box-content { color: #334155; }
-body.tema-terang .ai-box-title { color: #0f172a; }
-body.tema-terang .detail-judul-topik { color: #0f172a; }
-body.tema-terang .official-name { color: #0f172a; }
-body.tema-terang .peserta-nama { color: #0f172a; }
-body.tema-terang .modal-card-header h3 { color: #0f172a; }
-body.tema-terang label { color: #334155; }
-body.tema-terang .btn-tema-wrapper .btn-tema { background: #f1f5f9; border-color: #e2e8f0; }
-body.tema-terang .breadcrumb-current { color: #0f172a; }
-body.tema-terang .item-topik { color: #0f172a; }
-body.tema-terang .item-rapat-sidebar.aktif .item-topik { color: #0369a1; }
-body.tema-terang .item-tanggal, body.tema-terang .item-row-meta { color: #64748b; }
-body.tema-terang .item-rapat-sidebar { background: #ffffff; border-color: #e2e8f0; }
-body.tema-terang .item-rapat-sidebar:hover { background: #f8fafc; border-color: #cbd5e1; }
-body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: #38bdf8; }
+body.tema-terang textarea:focus {
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+}
+
+body.tema-terang .chip-attendee,
+body.tema-terang .btn-export,
+body.tema-terang .btn-print-action,
+body.tema-terang .btn-row-del,
+body.tema-terang .btn-batal-besar,
+body.tema-terang .btn-secondary {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+  color: #334155 !important;
+}
+
+body.tema-terang .btn-export:hover,
+body.tema-terang .btn-batal-besar:hover,
+body.tema-terang .btn-secondary:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+body.tema-terang .btn-ai-action {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.tema-terang .btn-ai-action:hover {
+  background: #f0fdf4 !important;
+  border-color: #86efac !important;
+  color: #15803d !important;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.14) !important;
+}
+
+body.tema-terang .btn-restore-trigger {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #a7f3d0 !important;
+  color: #059669 !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12) !important;
+}
+
+body.tema-terang .btn-restore-trigger:hover {
+  background: #d1fae5 !important;
+  border-color: #6ee7b7 !important;
+  color: #047857 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.20) !important;
+}
+
+body.tema-terang .btn-add-dashed {
+  color: #0284c7 !important;
+  border: 1.5px dashed rgba(2, 132, 199, 0.45) !important;
+}
+
+body.tema-terang .btn-add-dashed:hover {
+  background: rgba(2, 132, 199, 0.08) !important;
+  border-color: #0284c7 !important;
+}
+
+body.tema-terang input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none !important;
+  opacity: 0.7 !important;
+}
+
+body.tema-terang .theme-toggle-card {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.tema-terang .theme-toggle-card:hover {
+  border-color: #0284c7 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15) !important;
+}
+
+body.tema-terang .theme-toggle-title {
+  color: #0f172a !important;
+}
+
+body.tema-terang .theme-toggle-desc {
+  color: #64748b !important;
+}
+
+body.tema-terang .breadcrumb-root { color: #64748b !important; }
+body.tema-terang .breadcrumb-separator { color: #94a3b8 !important; }
+body.tema-terang .breadcrumb-middle { color: #475569 !important; }
+body.tema-terang .breadcrumb-middle:hover { color: #0284c7 !important; }
+
+body.tema-terang .card-header { border-bottom: 1.5px solid #cbd5e1 !important; }
+body.tema-terang .card-header h2 { color: #0f172a !important; }
+body.tema-terang .section-title { color: #0f172a !important; }
+body.tema-terang .poin-text { color: #0f172a !important; }
+body.tema-terang .tindak-task { color: #0f172a !important; }
+body.tema-terang .form-title { color: #0f172a !important; }
+body.tema-terang .ai-box-content { color: #334155 !important; }
+body.tema-terang .ai-box-title { color: #0f172a !important; }
+body.tema-terang .detail-judul-topik { color: #0f172a !important; }
+body.tema-terang .official-name { color: #0f172a !important; }
+body.tema-terang .peserta-nama { color: #0f172a !important; }
+body.tema-terang .modal-card-header h3 { color: #0f172a !important; }
+body.tema-terang label { color: #334155 !important; }
+body.tema-terang .breadcrumb-current { color: #0f172a !important; }
+body.tema-terang .item-topik { color: #0f172a !important; }
+body.tema-terang .item-rapat-sidebar.aktif .item-topik { color: #0369a1 !important; }
+body.tema-terang .item-tanggal, body.tema-terang .item-row-meta { color: #64748b !important; }
 
 
 /* ==========================================================================
-   MAIN PANEL WORKSPACE
+   MAIN PANEL WORKSPACE & INTERACTIVE BACKGROUND
    ========================================================================== */
 .main-panel {
   flex: 1;
@@ -346,6 +794,158 @@ body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: 
   overflow: hidden;
   background: #050811;
   min-width: 0;
+  position: relative;
+  --mouse-x: 50%;
+  --mouse-y: 35%;
+}
+
+/* Canvas container for interactive background */
+.interactive-bg-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* 1. Architectural subtle dot-grid & coordinates texture */
+.bg-grid-texture {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(56, 189, 248, 0.14) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 28px 28px, 56px 56px, 56px 56px;
+  background-position: 0 0, 0 0, 0 0;
+  opacity: 0.85;
+  mask-image: radial-gradient(ellipse 95% 85% at 50% 30%, black 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 30%, black 50%, transparent 100%);
+}
+
+/* 2. Interactive Spotlight that fluidly follows the cursor */
+.bg-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    650px circle at var(--mouse-x, 50%) var(--mouse-y, 35%),
+    rgba(56, 189, 248, 0.09) 0%,
+    rgba(37, 99, 235, 0.05) 30%,
+    rgba(99, 102, 241, 0.02) 55%,
+    transparent 75%
+  );
+  transition: opacity 0.3s ease;
+  will-change: background;
+}
+
+/* 3. Ambient slow-drifting aurora glow orbs */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(130px);
+  will-change: transform;
+  opacity: 0.6;
+}
+
+.bg-orb-1 {
+  width: 520px;
+  height: 520px;
+  top: -120px;
+  right: 5%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.10) 0%, rgba(37, 99, 235, 0.04) 60%, transparent 75%);
+  animation: driftOrb1 26s ease-in-out infinite alternate;
+}
+
+.bg-orb-2 {
+  width: 460px;
+  height: 460px;
+  bottom: 10%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.03) 60%, transparent 75%);
+  animation: driftOrb2 32s ease-in-out infinite alternate;
+}
+
+@keyframes driftOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, 60px) scale(1.12); }
+  100% { transform: translate(40px, 100px) scale(0.95); }
+}
+
+@keyframes driftOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(90px, -70px) scale(1.08); }
+  100% { transform: translate(-50px, -40px) scale(0.92); }
+}
+
+/* Adaptasi Tema Terang untuk Interactive Background */
+body.tema-terang .bg-grid-texture {
+  background-image:
+    radial-gradient(rgba(2, 132, 199, 0.16) 1.2px, transparent 1.2px),
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px, 56px 56px, 56px 56px;
+  opacity: 0.75;
+}
+
+body.tema-terang .bg-spotlight {
+  background: radial-gradient(
+    650px circle at var(--mouse-x, 50%) var(--mouse-y, 35%),
+    rgba(2, 132, 199, 0.08) 0%,
+    rgba(59, 130, 246, 0.04) 30%,
+    rgba(99, 102, 241, 0.015) 55%,
+    transparent 75%
+  );
+}
+
+body.tema-terang .bg-orb-1 {
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.06) 0%, transparent 70%);
+}
+
+body.tema-terang .bg-orb-2 {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+}
+
+/* Card Interactive Cursor Sheen */
+.card-luxury::after,
+.detail-hero-card::after,
+.form-card-section::after,
+.riwayat-stat-card::after,
+.backup-stat-card::after,
+.item-rapat-sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    380px circle at var(--card-mouse-x, -500px) var(--card-mouse-y, -500px),
+    rgba(56, 189, 248, 0.06),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+body.tema-terang .card-luxury::after,
+body.tema-terang .detail-hero-card::after,
+body.tema-terang .form-card-section::after,
+body.tema-terang .riwayat-stat-card::after,
+body.tema-terang .backup-stat-card::after,
+body.tema-terang .item-rapat-sidebar::after {
+  background: radial-gradient(
+    380px circle at var(--card-mouse-x, -500px) var(--card-mouse-y, -500px),
+    rgba(2, 132, 199, 0.05),
+    transparent 65%
+  );
+}
+
+.card-luxury:hover::after,
+.detail-hero-card:hover::after,
+.form-card-section:hover::after,
+.riwayat-stat-card:hover::after,
+.backup-stat-card:hover::after,
+.item-rapat-sidebar:hover::after {
+  opacity: 1;
 }
 
 /* TOP COMMAND BAR */
@@ -513,6 +1113,8 @@ body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: 
   flex: 1;
   overflow-y: auto;
   padding: 36px 48px 64px;
+  position: relative;
+  z-index: 10;
 }
 
 
@@ -545,6 +1147,24 @@ body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: 
   .sidebar.buka {
     transform: translateX(0);
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  }
+
+  .sidebar-menu {
+    padding-right: 14px;
+  }
+
+  .sidebar-active-glider {
+    right: 14px;
+    border-radius: 999px;
+  }
+
+  .sidebar-active-glider::before,
+  .sidebar-active-glider::after {
+    display: none;
+  }
+
+  .menu-item.aktif {
+    margin-right: 0;
   }
 
   .sidebar-overlay {

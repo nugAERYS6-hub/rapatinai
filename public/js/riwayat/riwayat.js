@@ -4,7 +4,7 @@
 
 import { STATE, el } from "../shared/state.js";
 import { escapeHtml } from "../shared/utils.js";
-import { tutupSemuaView, resetSemuaMenuAktif, tutupSidebarMobile } from "../shared/ui.js";
+import { tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
 
 /**
  * Memuat ringkasan statistik (total, bulan ini, ada AI)
@@ -109,7 +109,6 @@ export function renderSidebarList() {
     `;
 
     item.addEventListener("click", () => {
-      tutupSidebarMobile();
       window.location.hash = `#/detail/${rapat.id}`;
     });
 
@@ -125,7 +124,6 @@ export function bukaRiwayat(syncHash = true) {
     window.location.hash = "#/riwayat";
     return;
   }
-  tutupSidebarMobile();
   resetSemuaMenuAktif();
   if (el.menuRiwayatRapat) el.menuRiwayatRapat.classList.add("aktif");
   el.breadcrumbMiddle?.classList.add("tersembunyi");
@@ -142,7 +140,6 @@ export function initRiwayatEvents() {
   // Menu sidebar click
   if (el.menuRiwayatRapat) {
     el.menuRiwayatRapat.addEventListener("click", () => {
-      tutupSidebarMobile();
       if (window.location.hash === "#/riwayat") {
         bukaRiwayat(false);
       } else {

@@ -4,7 +4,7 @@
 
 import { el, elPengaturan } from "../shared/state.js";
 import { escapeHtml, formatUkuranFile, formatWaktuBackup } from "../shared/utils.js";
-import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif, tutupSidebarMobile } from "../shared/ui.js";
+import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
 import { muatStats, muatDaftarRapat } from "../riwayat/riwayat.js";
 
 const BACKUP_STORAGE_KEY = "rapatinai_backup_log_v1";
@@ -151,7 +151,6 @@ export function bukaPengaturan(syncHash = true) {
     window.location.hash = "#/pengaturan";
     return;
   }
-  tutupSidebarMobile();
   resetSemuaMenuAktif();
   if (elPengaturan.menuPengaturan) elPengaturan.menuPengaturan.classList.add("aktif");
   el.breadcrumbMiddle?.classList.add("tersembunyi");
@@ -168,7 +167,6 @@ export function bukaPengaturan(syncHash = true) {
 export function initBackupEvents() {
   if (elPengaturan.menuPengaturan) {
     elPengaturan.menuPengaturan.addEventListener("click", () => {
-      tutupSidebarMobile();
       if (window.location.hash === "#/pengaturan") {
         bukaPengaturan(false);
       } else {

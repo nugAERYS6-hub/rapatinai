@@ -101,11 +101,17 @@ export function toggleSidebar(forceState) {
 }
 
 export function bukaSidebarMobile() {
-  toggleSidebar(false);
+  const isMobile = window.innerWidth <= 960;
+  if (isMobile) {
+    toggleSidebar(false);
+  }
 }
 
 export function tutupSidebarMobile() {
-  toggleSidebar(true);
+  const isMobile = window.innerWidth <= 960;
+  if (isMobile) {
+    toggleSidebar(true);
+  }
 }
 
 /**
@@ -149,4 +155,132 @@ export function initSidebarEvents() {
 
   window.addEventListener("resize", syncHamburgerMotion);
   syncHamburgerMotion();
+
+  // Inisialisasi glider tab menu aktif
+  initSidebarGlider();
 }
+
+/**
+ * Update posisi glider aktif di sidebar menu (motion meluncur mulus dari tab ke tab)
+ */
+export function updateSidebarGlider(immediate = false) {
+  const sidebarMenu = document.getElementById("sidebar-menu");
+  const glider = document.getElementById("sidebar-active-glider");
+  if (!sidebarMenu || !glider) return;
+
+  const activeItem = sidebarMenu.querySelector(".menu-item.aktif");
+  if (!activeItem) {
+    glider.style.opacity = "0";
+    return;
+  }
+
+  const menuRect = sidebarMenu.getBoundingClientRect();
+  const itemRect = activeItem.getBoundingClientRect();
+  const topOffset = itemRect.top - menuRect.top;
+  const height = itemRect.height;
+
+  if (immediate) {
+    glider.style.transition = "none";
+    glider.style.transform = `translateY(${topOffset}px)`;
+    glider.style.height = `${height}px`;
+    glider.style.opacity = "1";
+    void glider.offsetHeight; // Force reflow
+    glider.style.transition = "";
+  } else {
+    glider.style.opacity = "1";
+    glider.style.height = `${height}px`;
+    glider.style.transform = `translateY(${topOffset}px)`;
+  }
+}
+
+/**
+ * Inisialisasi observer & listeners untuk glider menu sidebar
+ */
+export function initSidebarGlider() {
+  const sidebarMenu = document.getElementById("sidebar-menu");
+  if (!sidebarMenu) return;
+
+  // Inisialisasi posisi awal tanpa hentakan
+  requestAnimationFrame(() => updateSidebarGlider(true));
+
+  // Amati perubahan class pada menu-item secara otomatis
+  const observer = new MutationObserver(() => {
+    requestAnimationFrame(() => updateSidebarGlider(false));
+  });
+
+  observer.observe(sidebarMenu, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ["class"]
+  });
+
+  window.addEventListener("resize", () => {
+    requestAnimationFrame(() => updateSidebarGlider(true));
+  });
+}
+
+/**
+ * Inisialisasi latar belakang interaktif (grid texture, mouse spotlight, dan card shimmer)
+ */
+export function initInteractiveBackground() {
+  const mainPanel = document.querySelector(".main-panel");
+  if (!mainPanel) return;
+
+  let rafId = null;
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight * 0.35;
+  let currentX = targetX;
+  let currentY = targetY;
+
+  function updateMotion() {
+    currentX += (targetX - currentX) * 0.14;
+    currentY += (targetY - currentY) * 0.14;
+
+    mainPanel.style.setProperty("--mouse-x", `${currentX.toFixed(1)}px`);
+    mainPanel.style.setProperty("--mouse-y", `${currentY.toFixed(1)}px`);
+
+    if (Math.abs(targetX - currentX) > 0.2 || Math.abs(targetY - currentY) > 0.2) {
+      rafId = requestAnimationFrame(updateMotion);
+    } else {
+      rafId = null;
+    }
+  }
+
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      const rect = mainPanel.getBoundingClientRect();
+      targetX = e.clientX - rect.left;
+      targetY = e.clientY - rect.top;
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateMotion);
+      }
+
+      // Card hover shimmer positioning
+      const card = e.target.closest(
+        ".card-luxury, .detail-hero-card, .form-card-section, .riwayat-stat-card, .backup-stat-card, .item-rapat-sidebar"
+      );
+      if (card) {
+        const cRect = card.getBoundingClientRect();
+        card.style.setProperty("--card-mouse-x", `${(e.clientX - cRect.left).toFixed(1)}px`);
+        card.style.setProperty("--card-mouse-y", `${(e.clientY - cRect.top).toFixed(1)}px`);
+      }
+    },
+    { passive: true }
+  );
+
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) {
+    sidebar.addEventListener(
+      "pointermove",
+      (e) => {
+        const sRect = sidebar.getBoundingClientRect();
+        const relY = e.clientY - sRect.top;
+        sidebar.style.setProperty("--sidebar-mouse-y", `${relY.toFixed(1)}px`);
+      },
+      { passive: true }
+    );
+  }
+}
+

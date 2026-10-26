@@ -8,7 +8,7 @@
 // ==========================================================================
 
 import { el } from "./shared/state.js";
-import { initSidebarEvents, toggleSidebar } from "./shared/ui.js";
+import { initSidebarEvents, toggleSidebar, initInteractiveBackground, updateSidebarGlider } from "./shared/ui.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
 import { initRiwayatEvents, muatStats, muatDaftarRapat, bukaRiwayat } from "./riwayat/riwayat.js";
 import { initDetailEvents, tampilkanDetailRapat } from "./riwayat/detail.js";
@@ -27,26 +27,31 @@ export async function handleRoute() {
     const id = hash.replace("#/detail/", "").trim();
     if (id) {
       await tampilkanDetailRapat(id, false);
+      requestAnimationFrame(updateSidebarGlider);
       return;
     }
   }
 
   if (hash === "#/pengaturan" || hash === "#pengaturan") {
     bukaPengaturan(false);
+    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/riwayat" || hash === "#riwayat") {
     bukaRiwayat(false);
+    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/baru" || hash === "#baru") {
     tampilkanFormBaru(false);
+    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   tampilkanFormBaru(false);
+  requestAnimationFrame(updateSidebarGlider);
 }
 
 /**
@@ -73,7 +78,8 @@ function initKeyboardShortcuts() {
  * Inisialisasi Aplikasi Saat Halaman Selesai Dimuat
  */
 export async function inisialisasiApp() {
-  // 1. Inisialisasi komponen dasar & event
+  // 1. Inisialisasi komponen dasar, latar interaktif & event
+  initInteractiveBackground();
   initSidebarEvents();
   initFormEvents();
   initRiwayatEvents();

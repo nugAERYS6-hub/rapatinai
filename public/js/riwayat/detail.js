@@ -72,8 +72,12 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
     if (el.detailNotulis) el.detailNotulis.textContent = rapat.notulis || "-";
     if (el.detailTotalPeserta) el.detailTotalPeserta.textContent = `${rapat.anggota?.length || 0} Orang Hadir`;
 
-    if (el.avatarPimpinan) el.avatarPimpinan.textContent = (rapat.pimpinanRapat || "P").charAt(0).toUpperCase();
-    if (el.avatarNotulis) el.avatarNotulis.textContent = (rapat.notulis || "N").charAt(0).toUpperCase();
+    if (el.avatarPimpinan) {
+      el.avatarPimpinan.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>`;
+    }
+    if (el.avatarNotulis) {
+      el.avatarNotulis.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>`;
+    }
 
     if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf`;
     if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word`;
@@ -111,13 +115,14 @@ export function renderPesertaGrid(anggota) {
 
   el.kontenPesertaGrid.innerHTML = anggota
     .map((a) => {
-      const inisial = escapeHtml((a.nama || "P").charAt(0).toUpperCase());
       const nama = escapeHtml(a.nama || "-");
       const jabatan = escapeHtml(a.jabatan || "-");
       const instansi = escapeHtml(a.asalInstansi || "-");
       return `
         <div class="peserta-item-card">
-          <div class="peserta-avatar-badge">${inisial}</div>
+          <div class="peserta-avatar-badge" aria-hidden="true">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
           <div class="peserta-details">
             <span class="peserta-nama" title="${nama}">${nama}</span>
             <span class="peserta-jabatan">${jabatan}</span>
