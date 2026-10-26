@@ -1,42 +1,80 @@
 // ==========================================================================
-// MENU: PENGATURAN - MANAJEMEN TEMA (GELAP & TERANG)
+// MENU: PENGATURAN - MANAJEMEN TEMA (UNIFIED SINGLE TOGGLE - UIVERSE SUN & MOON)
 // ==========================================================================
-
-import { elPengaturan } from "../shared/state.js";
 
 /**
  * Menerapkan tema tampilan ke seluruh dokumen
+ * Catatan: Switch Uiverse: checked = Malam (Gelap), unchecked = Siang (Terang)
+ * @param {"gelap"|"terang"} tema
  */
 export function terapkanTema(tema) {
-  if (tema === "terang") {
-    document.body.classList.add("tema-terang");
-    if (elPengaturan.btnTemaGelap) elPengaturan.btnTemaGelap.classList.remove("aktif");
-    if (elPengaturan.btnTemaTerang) elPengaturan.btnTemaTerang.classList.add("aktif");
-    if (elPengaturan.checkGelap) elPengaturan.checkGelap.classList.add("tersembunyi");
-    if (elPengaturan.checkTerang) elPengaturan.checkTerang.classList.remove("tersembunyi");
-  } else {
+  const isGelap = tema === "gelap";
+
+  if (isGelap) {
     document.body.classList.remove("tema-terang");
-    if (elPengaturan.btnTemaGelap) elPengaturan.btnTemaGelap.classList.add("aktif");
-    if (elPengaturan.btnTemaTerang) elPengaturan.btnTemaTerang.classList.remove("aktif");
-    if (elPengaturan.checkGelap) elPengaturan.checkGelap.classList.remove("tersembunyi");
-    if (elPengaturan.checkTerang) elPengaturan.checkTerang.classList.add("tersembunyi");
+  } else {
+    document.body.classList.add("tema-terang");
   }
+
+  // Update input checkbox state: checked = Gelap/Malam, unchecked = Terang/Siang
+  const toggleInput = document.getElementById("theme-toggle-input");
+  if (toggleInput) {
+    toggleInput.checked = isGelap;
+  }
+
+  // Update visual text badge
+  const badgeTitle = document.getElementById("theme-badge-title");
+  const badgeSub = document.getElementById("theme-badge-sub");
+
+  if (badgeTitle) {
+    badgeTitle.textContent = isGelap ? "Tema Gelap" : "Tema Terang";
+  }
+  if (badgeSub) {
+    badgeSub.textContent = isGelap
+      ? "Mode malam aktif — kontras tinggi dan nyaman di mata."
+      : "Mode terang aktif — tampilan jernih dan cerah di kondisi terang.";
+  }
+
   try {
     localStorage.setItem("rapatinai_tema", tema);
   } catch (e) {}
 }
 
 /**
- * Inisialisasi tema yang tersimpan dan event tombol
+ * Inisialisasi tema yang tersimpan dan event switch
  */
 export function initTemaEvents() {
   const temaTersimpan = localStorage.getItem("rapatinai_tema") || "gelap";
   terapkanTema(temaTersimpan);
 
-  if (elPengaturan.btnTemaGelap) {
-    elPengaturan.btnTemaGelap.addEventListener("click", () => terapkanTema("gelap"));
+  const toggleInput = document.getElementById("theme-toggle-input");
+  const toggleCard = document.getElementById("theme-toggle-card");
+
+  if (toggleInput) {
+    toggleInput.addEventListener("change", (e) => {
+      // Pada switch Uiverse: checked = gelap (malam), unchecked = terang (siang)
+      terapkanTema(e.target.checked ? "gelap" : "terang");
+    });
   }
-  if (elPengaturan.btnTemaTerang) {
-    elPengaturan.btnTemaTerang.addEventListener("click", () => terapkanTema("terang"));
+
+  // Klik pada seluruh baris kartu tema untuk pengalaman pengguna yang intuitif
+  if (toggleCard) {
+    toggleCard.addEventListener("click", (e) => {
+      // Jangan trigger ganda jika target klik adalah input atau label langsung
+      if (e.target && (e.target.tagName === "INPUT" || e.target.closest("label"))) {
+        return;
+      }
+      const isCurrentlyGelap = !document.body.classList.contains("tema-terang");
+      terapkanTema(isCurrentlyGelap ? "terang" : "gelap");
+    });
+
+    // Dukungan navigasi keyboard (Enter / Space)
+    toggleCard.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const isCurrentlyGelap = !document.body.classList.contains("tema-terang");
+        terapkanTema(isCurrentlyGelap ? "terang" : "gelap");
+      }
+    });
   }
 }
