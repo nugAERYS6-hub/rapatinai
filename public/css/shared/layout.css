@@ -140,13 +140,11 @@ body.sidebar-collapsed .sidebar {
   line-height: 1;
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(135deg, #ffffff 15%, #7dd3fc 60%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
-  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.75);
+  color: #ffffff;
+  background: none;
+  -webkit-text-fill-color: initial;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  -webkit-text-stroke: 0.4px #ffffff;
 }
 
 /* ==========================================================================
@@ -176,13 +174,13 @@ body.sidebar-collapsed .sidebar {
   height: var(--height-bar);
   width: 100%;
   border-radius: .5rem;
-  background-color: #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.45);
+  background-color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 body.tema-terang .bar {
-  background-color: #0284c7;
+  background-color: #0f172a;
   box-shadow: none;
 }
 
@@ -234,8 +232,8 @@ body.tema-terang .bar {
 }
 
 .tombol-hamburger-sidebar:hover {
-  background: var(--accent-blue-light);
-  border-color: var(--accent-blue-border);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
@@ -259,9 +257,9 @@ body.tema-terang .bar {
 }
 
 .tombol-hamburger-top:hover {
-  background: var(--accent-blue-light);
-  border-color: var(--accent-blue-border);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
@@ -490,21 +488,19 @@ body.tema-terang .sidebar-header {
 body.tema-terang .brand-title-notulensi {
   font-weight: 800;
   font-synthesis: weight;
-  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 55%, #ffffff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 1px 2px rgba(2, 132, 199, 0.22));
+  color: #0f172a;
+  background: none;
+  -webkit-text-fill-color: initial;
+  filter: none;
   text-shadow: none;
-  -webkit-text-stroke: 0.5px #0284c7;
+  -webkit-text-stroke: 0.4px #0f172a;
 }
 
 body.tema-terang .tombol-hamburger-sidebar:hover,
 body.tema-terang .tombol-hamburger-top:hover {
-  background: rgba(2, 132, 199, 0.08);
-  border-color: rgba(2, 132, 199, 0.25);
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.18);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 body.tema-terang .menu-item {
