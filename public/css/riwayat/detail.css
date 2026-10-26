@@ -437,10 +437,91 @@
   margin-bottom: 24px;
 }
 
+@media (max-width: 768px) {
+  .card-luxury {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .card-header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .ai-panels-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .ai-box {
+    padding: 16px 14px;
+    border-radius: 12px;
+  }
+
+  .grid-peserta-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .peserta-item-card {
+    padding: 12px 14px;
+    border-radius: 10px;
+  }
+
+  .poin-row-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .poin-left {
+    width: 100%;
+  }
+
+  .poin-decision-badge {
+    align-self: flex-start;
+  }
+
+  .tindak-row-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .tindak-left {
+    width: 100%;
+  }
+
+  .tindak-right-meta {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .paper-preview {
+    padding: 18px 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+  }
+}
+
 @media (max-width: 640px) {
   .kop-surat-wrapper {
     flex-direction: column;
     gap: 8px;
+    text-align: center;
   }
 
   .kop-spacer {
@@ -449,6 +530,12 @@
 
   .kop-logo-box {
     width: auto;
+    margin: 0 auto;
+  }
+
+  .kop-logo-img {
+    width: 64px;
+    height: 64px;
   }
 
   .kop-instansi-prov {

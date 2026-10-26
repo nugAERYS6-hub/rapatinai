@@ -560,19 +560,20 @@ body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: 
   }
 
   .top-command-bar {
-    padding: 0 20px;
+    padding: 0 16px;
+    height: 56px;
   }
 
   .main-scrollable-content {
-    padding: 24px 20px 48px;
+    padding: 20px 16px max(96px, env(safe-area-inset-bottom, 24px) + 72px);
   }
 
   .form-card-section {
-    padding: 24px 20px;
+    padding: 20px 16px;
   }
 
   .detail-hero-card {
-    padding: 24px;
+    padding: 22px 18px;
   }
 
   .detail-officials-grid {
@@ -586,6 +587,56 @@ body.tema-terang .item-rapat-sidebar.aktif { background: #f0f9ff; border-color: 
   .form-grid-2 {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-command-bar {
+    padding: 0 12px;
+    height: 54px;
+  }
+
+  .command-bar-left {
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .breadcrumb-root {
+    display: none;
+  }
+
+  .breadcrumb-separator:first-of-type {
+    display: none;
+  }
+
+  .breadcrumb-middle {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+
+  .breadcrumb-current {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+
+  .main-scrollable-content {
+    padding: 16px 12px max(100px, env(safe-area-inset-bottom, 28px) + 80px);
   }
 }
 

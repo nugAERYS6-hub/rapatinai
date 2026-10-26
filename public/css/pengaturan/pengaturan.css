@@ -174,8 +174,10 @@
 /* ── Table ── */
 .backup-table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-card);
+  width: 100%;
 }
 
 .backup-table {
@@ -228,6 +230,7 @@
   padding: 13px 16px;
   color: var(--text-main);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .backup-table tbody td:first-child {
@@ -241,7 +244,12 @@
   font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   color: var(--accent-cyan);
-  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .backup-td-waktu {
@@ -360,13 +368,62 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .backup-action-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .backup-action-group .btn-restore-trigger,
+  .backup-action-group .btn-backup-trigger,
+  .backup-action-group button,
+  .backup-action-group a {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
   .backup-stats-row {
     grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .backup-stat-card {
+    padding: 16px 18px;
+    border-radius: 12px;
+  }
+
+  .backup-log-card {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  .backup-log-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-hapus-log {
+    width: 100%;
+    justify-content: center;
+    min-height: 40px;
+  }
+
+  .backup-table {
+    min-width: 480px;
+    width: 100%;
   }
 
   .backup-table thead th:nth-child(4),
   .backup-table tbody td:nth-child(4) {
     display: none;
+  }
+
+  .backup-td-filename {
+    max-width: 200px;
   }
 }
 

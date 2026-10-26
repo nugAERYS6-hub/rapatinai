@@ -421,4 +421,128 @@
   color: #ffffff;
   transform: translateY(-1px);
 }
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE (RIWAYAT & HERO DETAIL)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .riwayat-panel-container {
+    gap: 18px;
+  }
+
+  .riwayat-search-wrap input[type="text"],
+  #input-cari-rapat {
+    font-size: 16px !important; /* Mencegah zoom di iOS */
+    height: 46px;
+    border-radius: 10px;
+  }
+
+  .riwayat-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .riwayat-stat-card {
+    padding: 12px 6px;
+    border-radius: 12px;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .riwayat-stat-label {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .riwayat-stat-val {
+    font-size: 20px;
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Hero Card Detail Rapat Responsif */
+  .detail-hero-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+    margin-bottom: 18px;
+  }
+
+  .hero-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .detail-judul-topik {
+    font-size: 19px !important;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    margin-bottom: 16px;
+    word-break: break-word;
+  }
+
+  .detail-officials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .official-card {
+    width: 100%;
+  }
+
+  .official-name {
+    font-size: 13.5px;
+    word-break: break-word;
+  }
+
+  .detail-action-ribbon {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-top: 16px;
+  }
+
+  .action-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .btn-ai-action,
+  .btn-export,
+  .btn-manage {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+    box-sizing: border-box;
+    font-size: 13.5px;
+  }
+}
 
