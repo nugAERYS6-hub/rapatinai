@@ -3,7 +3,7 @@
 // ==========================================================================
 
 import { STATE, el } from "../shared/state.js";
-import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
+import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif, tutupSidebarMobile } from "../shared/ui.js";
 import { renderAnggotaChips, initPesertaEvents } from "./peserta.js";
 import { tambahBarisPoin, tambahBarisTindakLanjut, ambilDataPoinForm, ambilDataTindakLanjutForm, initDinamisEvents } from "./dinamis.js";
 import { pulihkanDrafOtomatis, hapusDrafOtomatis, simpanDrafOtomatis } from "./draft.js";
@@ -115,6 +115,18 @@ export function bukaEditRapat() {
 export function initFormEvents() {
   initPesertaEvents();
   initDinamisEvents();
+
+  // Menu sidebar Rapat Baru click
+  if (el.menuRapatBaru) {
+    el.menuRapatBaru.addEventListener("click", () => {
+      tutupSidebarMobile();
+      if (window.location.hash === "#/baru") {
+        tampilkanFormBaru(false);
+      } else {
+        window.location.hash = "#/baru";
+      }
+    });
+  }
 
   // Batal form
   if (el.btnBatalForm) {

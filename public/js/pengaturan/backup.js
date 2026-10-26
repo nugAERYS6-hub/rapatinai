@@ -169,7 +169,11 @@ export function initBackupEvents() {
   if (elPengaturan.menuPengaturan) {
     elPengaturan.menuPengaturan.addEventListener("click", () => {
       tutupSidebarMobile();
-      window.location.hash = "#/pengaturan";
+      if (window.location.hash === "#/pengaturan") {
+        bukaPengaturan(false);
+      } else {
+        window.location.hash = "#/pengaturan";
+      }
     });
   }
 

@@ -143,7 +143,11 @@ export function initRiwayatEvents() {
   if (el.menuRiwayatRapat) {
     el.menuRiwayatRapat.addEventListener("click", () => {
       tutupSidebarMobile();
-      window.location.hash = "#/riwayat";
+      if (window.location.hash === "#/riwayat") {
+        bukaRiwayat(false);
+      } else {
+        window.location.hash = "#/riwayat";
+      }
     });
   }
 
