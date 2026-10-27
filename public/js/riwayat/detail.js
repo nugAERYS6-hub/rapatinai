@@ -82,6 +82,7 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
     if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf`;
     if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word`;
 
+    await muatKonfigInstansi();
     renderAiContent(rapat);
     renderPesertaGrid(rapat.anggota || []);
     renderPoinList(rapat.poinPembahasan || []);
@@ -167,10 +168,45 @@ export function renderPoinList(poinList) {
 }
 
 /**
- * Merender lembar pratinjau dokumen cetak dinas BAPPEDA
+ * Memuat konfigurasi profil dan kop surat instansi
+ */
+export async function muatKonfigInstansi() {
+  if (STATE.instansi) return STATE.instansi;
+  try {
+    const res = await fetch("/api/instansi");
+    const json = await res.json();
+    if (json.success && json.data) {
+      STATE.instansi = json.data;
+      return STATE.instansi;
+    }
+  } catch (e) {
+    console.warn("Gagal memuat konfigurasi instansi:", e);
+  }
+  STATE.instansi = {
+    pemerintah: "PEMERINTAH PROVINSI MALUKU UTARA",
+    opd: "BADAN PERENCANAAN PEMBANGUNAN DAERAH",
+    opd_singkat: "BAPPEDA",
+    alamat: "Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827",
+    kontak: "Laman: bappeda.malutprov.go.id | Pos-el: bappeda@malutprov.go.id",
+    logo_path: "logo-bappeda.jpg",
+  };
+  return STATE.instansi;
+}
+
+/**
+ * Merender lembar pratinjau dokumen cetak dinas resmi
  */
 export function renderPaperPreview(rapat) {
   if (!el.paperPreviewContent) return;
+
+  const instansi = STATE.instansi || {
+    pemerintah: "PEMERINTAH PROVINSI MALUKU UTARA",
+    opd: "BADAN PERENCANAAN PEMBANGUNAN DAERAH",
+    opd_singkat: "BAPPEDA",
+    alamat: "Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827",
+    kontak: "Laman: bappeda.malutprov.go.id | Pos-el: bappeda@malutprov.go.id",
+    logo_path: "logo-bappeda.jpg",
+  };
 
   const poinHtml = (rapat.poinPembahasan && rapat.poinPembahasan.length > 0)
     ? rapat.poinPembahasan
@@ -193,18 +229,22 @@ export function renderPaperPreview(rapat) {
   const pimpinanStr = escapeHtml(rapat.pimpinanRapat || "-");
   const notulisStr = escapeHtml(rapat.notulis || "-");
 
+  const logoHtml = instansi.logo_path
+    ? `<div class="kop-logo-box">
+         <img src="${escapeHtml(instansi.logo_path)}" alt="Logo ${escapeHtml(instansi.opd || 'Instansi')}" class="kop-logo-img" onerror="this.style.display='none'" />
+       </div>`
+    : "";
+
   el.paperPreviewContent.innerHTML = `
     <div style="max-width: 720px; margin: 0 auto; color: #000000; font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.6;">
-      <!-- KOP SURAT RESMI BAPPEDA PROVINSI MALUKU UTARA -->
+      <!-- KOP SURAT RESMI (DINAMIS) -->
       <div class="kop-surat-wrapper">
-        <div class="kop-logo-box">
-          <img src="logo-bappeda.jpg" alt="Logo BAPPEDA Maluku Utara" class="kop-logo-img" />
-        </div>
-        <div class="kop-text-box">
-          <div class="kop-instansi-prov">PEMERINTAH PROVINSI MALUKU UTARA</div>
-          <div class="kop-nama-dinas">BADAN PERENCANAAN PEMBANGUNAN DAERAH</div>
-          <div class="kop-alamat">Jalan Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827</div>
-          <div class="kop-kontak">Laman: bappeda.malutprov.go.id &nbsp;|&nbsp; Pos-el: bappeda@malutprov.go.id</div>
+        ${logoHtml}
+        <div class="kop-text-box" style="${!logoHtml ? 'text-align: center;' : ''}">
+          <div class="kop-instansi-prov">${escapeHtml((instansi.pemerintah || "").toUpperCase())}</div>
+          <div class="kop-nama-dinas">${escapeHtml((instansi.opd || "").toUpperCase())}</div>
+          ${instansi.alamat ? `<div class="kop-alamat">${escapeHtml(instansi.alamat)}</div>` : ''}
+          ${instansi.kontak ? `<div class="kop-kontak">${escapeHtml(instansi.kontak)}</div>` : ''}
         </div>
         <div class="kop-spacer"></div>
       </div>

@@ -11,23 +11,76 @@ use PhpOffice\PhpWord\Style\Font;
 
 class ExportService
 {
-    public static function generatePdf(Rapat $rapat)
+    /**
+     * Mendapatkan konfigurasi kop surat instansi secara dinamis
+     */
+    public static function getInstansiConfig(): array
     {
-        $logoPath = public_path('logo-bappeda.jpg');
-        if (!file_exists($logoPath)) {
-            $logoPath = base_path('../public/logo-bappeda.jpg');
+        return [
+            'pemerintah'  => config('instansi.pemerintah', env('INSTANSI_PEMERINTAH', 'PEMERINTAH PROVINSI MALUKU UTARA')),
+            'opd'         => config('instansi.opd', env('INSTANSI_OPD', 'BADAN PERENCANAAN PEMBANGUNAN DAERAH')),
+            'opd_singkat' => config('instansi.opd_singkat', env('INSTANSI_OPD_SINGKAT', 'BAPPEDA')),
+            'alamat'      => config('instansi.alamat', env('INSTANSI_ALAMAT', 'Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827')),
+            'kontak'      => config('instansi.kontak', env('INSTANSI_KONTAK', 'Laman: bappeda.malutprov.go.id | Pos-el: bappeda@malutprov.go.id')),
+            'logo_path'   => config('instansi.logo_path', env('INSTANSI_LOGO_PATH', 'logo-bappeda.jpg')),
+        ];
+    }
+
+    /**
+     * Menyelesaikan path absolut file logo instansi dari konfigurasi
+     */
+    public static function resolveLogoPath(?string $logoSetting = null): ?string
+    {
+        if (empty($logoSetting)) {
+            $logoSetting = config('instansi.logo_path', env('INSTANSI_LOGO_PATH', 'logo-bappeda.jpg'));
         }
 
+        if (empty($logoSetting)) {
+            return null;
+        }
+
+        // 1. Path absolut langsung yang valid
+        if (file_exists($logoSetting)) {
+            return $logoSetting;
+        }
+
+        // 2. Path relatif di dalam folder public/
+        $publicPath = public_path($logoSetting);
+        if (file_exists($publicPath)) {
+            return $publicPath;
+        }
+
+        // 3. Fallback path relatif terhadap root aplikasi
+        $basePublic = base_path('../public/' . $logoSetting);
+        if (file_exists($basePublic)) {
+            return $basePublic;
+        }
+
+        // 4. Path di dalam storage/app/public/
+        $storagePath = storage_path('app/public/' . $logoSetting);
+        if (file_exists($storagePath)) {
+            return $storagePath;
+        }
+
+        return null;
+    }
+
+    public static function generatePdf(Rapat $rapat)
+    {
+        $instansi = self::getInstansiConfig();
+        $logoPath = self::resolveLogoPath($instansi['logo_path'] ?? null);
+
         $logoBase64 = '';
-        if (file_exists($logoPath)) {
+        if ($logoPath && file_exists($logoPath)) {
             $type = pathinfo($logoPath, PATHINFO_EXTENSION);
             $data = file_get_contents($logoPath);
             $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         }
 
         $pdf = Pdf::loadView('pdf.laporan_rapat', [
-            'rapat' => $rapat,
+            'rapat'      => $rapat,
             'logoBase64' => $logoBase64,
+            'instansi'   => $instansi,
         ])->setPaper('a4', 'portrait');
 
         $safeTopic = preg_replace('/[^a-zA-Z0-9-_]/', '_', $rapat->topik);
@@ -38,6 +91,9 @@ class ExportService
 
     public static function generateWord(Rapat $rapat)
     {
+        $instansi = self::getInstansiConfig();
+        $logoPath = self::resolveLogoPath($instansi['logo_path'] ?? null);
+
         $phpWord = new PhpWord();
         $phpWord->setDefaultFontName('Arial');
         $phpWord->setDefaultFontSize(11);
@@ -49,17 +105,67 @@ class ExportService
             'marginRight' => 1440,
         ]);
 
-        $section->addText("PEMERINTAH PROVINSI MALUKU UTARA", [
-            'bold' => true, 'size' => 12, 'name' => 'Arial'
-        ], ['alignment' => Jc::CENTER, 'spaceAfter' => 60]);
+        // KOP SURAT (Dinamis)
+        if ($logoPath && file_exists($logoPath)) {
+            $kopTable = $section->addTable(['borderSize' => 0, 'borderColor' => 'FFFFFF']);
+            $kopTable->addRow();
 
-        $section->addText("BADAN PERENCANAAN PEMBANGUNAN DAERAH (BAPPEDA)", [
-            'bold' => true, 'size' => 14, 'name' => 'Arial'
-        ], ['alignment' => Jc::CENTER, 'spaceAfter' => 60]);
+            // Kolom Logo
+            $cellLogo = $kopTable->addCell(1600, ['valign' => 'center']);
+            $cellLogo->addImage($logoPath, [
+                'width' => 60,
+                'height' => 60,
+                'alignment' => Jc::CENTER,
+            ]);
 
-        $section->addText("Jalan Raya Lintas Halmahera, Gosale Puncak, Kota Sofifi, Maluku Utara 97852", [
-            'italic' => true, 'size' => 9, 'name' => 'Arial'
-        ], ['alignment' => Jc::CENTER, 'spaceAfter' => 120]);
+            // Kolom Teks Kop Surat
+            $cellText = $kopTable->addCell(7400, ['valign' => 'center']);
+            $cellText->addText(strtoupper($instansi['pemerintah']), [
+                'bold' => true, 'size' => 11, 'name' => 'Arial'
+            ], ['alignment' => Jc::CENTER, 'spaceAfter' => 30]);
+
+            $opdTitle = strtoupper($instansi['opd']);
+            if (!empty($instansi['opd_singkat'])) {
+                $opdTitle .= " (" . strtoupper($instansi['opd_singkat']) . ")";
+            }
+            $cellText->addText($opdTitle, [
+                'bold' => true, 'size' => 13, 'name' => 'Arial'
+            ], ['alignment' => Jc::CENTER, 'spaceAfter' => 30]);
+
+            if (!empty($instansi['alamat'])) {
+                $cellText->addText($instansi['alamat'], [
+                    'size' => 8.5, 'name' => 'Arial'
+                ], ['alignment' => Jc::CENTER, 'spaceAfter' => 20]);
+            }
+            if (!empty($instansi['kontak'])) {
+                $cellText->addText($instansi['kontak'], [
+                    'italic' => true, 'size' => 8, 'name' => 'Arial'
+                ], ['alignment' => Jc::CENTER, 'spaceAfter' => 40]);
+            }
+        } else {
+            $section->addText(strtoupper($instansi['pemerintah']), [
+                'bold' => true, 'size' => 12, 'name' => 'Arial'
+            ], ['alignment' => Jc::CENTER, 'spaceAfter' => 40]);
+
+            $opdTitle = strtoupper($instansi['opd']);
+            if (!empty($instansi['opd_singkat'])) {
+                $opdTitle .= " (" . strtoupper($instansi['opd_singkat']) . ")";
+            }
+            $section->addText($opdTitle, [
+                'bold' => true, 'size' => 14, 'name' => 'Arial'
+            ], ['alignment' => Jc::CENTER, 'spaceAfter' => 40]);
+
+            if (!empty($instansi['alamat'])) {
+                $section->addText($instansi['alamat'], [
+                    'size' => 9, 'name' => 'Arial'
+                ], ['alignment' => Jc::CENTER, 'spaceAfter' => 20]);
+            }
+            if (!empty($instansi['kontak'])) {
+                $section->addText($instansi['kontak'], [
+                    'italic' => true, 'size' => 8.5, 'name' => 'Arial'
+                ], ['alignment' => Jc::CENTER, 'spaceAfter' => 60]);
+            }
+        }
 
         $section->addLine([
             'weight' => 2, 'width' => 450, 'height' => 0, 'color' => '000000'

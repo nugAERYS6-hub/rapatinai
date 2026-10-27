@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\Log;
 class ExportController extends Controller
 {
     /**
+     * Mendapatkan profil & konfigurasi kop surat instansi
+     */
+    public function getInstansi()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => ExportService::getInstansiConfig(),
+        ]);
+    }
+
+    /**
      * Ekspor Laporan Resmi ke format PDF
      */
     public function exportPdf($id)

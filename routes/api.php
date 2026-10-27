@@ -30,7 +30,8 @@ Route::post('/rapat/{id}/rangkum', [AiController::class, 'rangkum']);
 Route::post('/rapat/{id}/ide-baru', [AiController::class, 'ideBaru']);
 Route::post('/rapat/{id}/action-items', [AiController::class, 'actionItems']);
 
-// --- 3. Ekspor Dokumen Resmi (PDF & Word) ---
+// --- 3. Ekspor Dokumen Resmi (PDF & Word) & Profil Instansi ---
+Route::get('/instansi', [ExportController::class, 'getInstansi']);
 Route::get('/rapat/{id}/export-pdf', [ExportController::class, 'exportPdf']);
 Route::get('/rapat/{id}/export-word', [ExportController::class, 'exportWord']);
 

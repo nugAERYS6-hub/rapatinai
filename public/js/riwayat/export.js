@@ -18,10 +18,19 @@ export function initExportEvents() {
         ? r.poinPembahasan.map((p, i) => `   ${i + 1}. ${typeof p === "string" ? p : (p.isi || "")}`).join("\n")
         : "   - Tidak ada catatan hasil rapat -";
 
+      const instansi = STATE.instansi || {
+        pemerintah: "PEMERINTAH PROVINSI MALUKU UTARA",
+        opd: "BADAN PERENCANAAN PEMBANGUNAN DAERAH",
+        opd_singkat: "BAPPEDA",
+        alamat: "Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827",
+      };
+
+      const opdBaris = (instansi.opd || "").toUpperCase() + (instansi.opd_singkat ? ` (${instansi.opd_singkat.toUpperCase()})` : "");
+
       const teksLengkap = `
-PEMERINTAH PROVINSI MALUKU UTARA
-BADAN PERENCANAAN PEMBANGUNAN DAERAH (BAPPEDA)
-Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827
+${(instansi.pemerintah || "").toUpperCase()}
+${opdBaris}
+${instansi.alamat || ""}
 ================================================================================
 LAPORAN HASIL RAPAT
 ${(r.topik || "").toUpperCase()}

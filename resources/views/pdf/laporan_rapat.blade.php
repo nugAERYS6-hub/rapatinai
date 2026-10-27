@@ -151,19 +151,23 @@
     </style>
 </head>
 <body>
-    <!-- KOP SURAT RESMI -->
+    <!-- KOP SURAT RESMI (DINAMIS) -->
     <table class="kop-table">
         <tr>
+            @if(!empty($logoBase64))
             <td class="kop-logo">
-                @if(!empty($logoBase64))
-                    <img src="{{ $logoBase64 }}" alt="Logo BAPPEDA"/>
-                @endif
+                <img src="{{ $logoBase64 }}" alt="Logo {{ $instansi['opd'] ?? 'Instansi' }}"/>
             </td>
-            <td class="kop-text">
-                <h3>PEMERINTAH PROVINSI MALUKU UTARA</h3>
-                <h2>BADAN PERENCANAAN PEMBANGUNAN DAERAH</h2>
-                <p>Jl. Raya Lintas Halmahera, Gosale Puncak, Sofifi, Maluku Utara 97827</p>
-                <p>Laman: bappeda.malutprov.go.id &nbsp;|&nbsp; Pos-el: bappeda@malutprov.go.id</p>
+            @endif
+            <td class="kop-text" @if(empty($logoBase64)) style="text-align: center;" @endif>
+                <h3>{{ strtoupper($instansi['pemerintah'] ?? 'PEMERINTAH DAERAH') }}</h3>
+                <h2>{{ strtoupper($instansi['opd'] ?? 'ORGANISASI PERANGKAT DAERAH') }}</h2>
+                @if(!empty($instansi['alamat']))
+                    <p>{{ $instansi['alamat'] }}</p>
+                @endif
+                @if(!empty($instansi['kontak']))
+                    <p>{{ $instansi['kontak'] }}</p>
+                @endif
             </td>
         </tr>
     </table>

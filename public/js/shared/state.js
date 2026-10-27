@@ -15,6 +15,7 @@ export const STATE = {
   isEditing: false,
   editId: null,
   draftStorageKey: "rapatinai_draft_v3",
+  instansi: null,
 };
 
 export const el = {
