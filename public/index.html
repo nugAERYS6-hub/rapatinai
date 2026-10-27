@@ -731,12 +731,16 @@
                 <div class="form-grid-2">
                   <div class="input-field-group">
                     <label for="waktu">Waktu Pelaksanaan</label>
-                    <input type="text" id="waktu" />
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <input type="time" id="waktu" title="Waktu Mulai" style="flex: 1;" />
+                      <span style="color: var(--text-muted, #94a3b8); font-size: 0.85rem; font-weight: 500;">s/d</span>
+                      <input type="time" id="waktu-selesai" title="Waktu Selesai (Opsional)" style="flex: 1;" />
+                    </div>
                   </div>
 
                   <div class="input-field-group">
                     <label for="tempat">Tempat Pelaksanaan</label>
-                    <input type="text" id="tempat" />
+                    <input type="text" id="tempat" placeholder="Ruang Rapat / Tautan Virtual" />
                   </div>
                 </div>
 

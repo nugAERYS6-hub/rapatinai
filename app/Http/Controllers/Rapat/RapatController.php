@@ -20,7 +20,11 @@ class RapatController extends Controller
         try {
             $totalRapat = Rapat::count();
             $bulanIni = date('Y-m');
-            $rapatBulanIni = Rapat::where('tanggal', 'like', "{$bulanIni}%")->count();
+            $tahun = (int)date('Y');
+            $bulan = (int)date('m');
+            $rapatBulanIni = Rapat::whereYear('tanggal', $tahun)
+                ->whereMonth('tanggal', $bulan)
+                ->count();
             $denganAI = Rapat::whereNotNull('ringkasanAI')
                 ->where('ringkasanAI', '!=', '')
                 ->count();
@@ -51,8 +55,18 @@ class RapatController extends Controller
             $offset = ($page - 1) * $limit;
             $q = trim((string)$request->query('q', ''));
             $filter = $request->query('filter', 'all');
+            $startDate = $request->query('start_date');
+            $endDate = $request->query('end_date');
 
             $query = Rapat::query();
+
+            // Filter rentang tanggal
+            if (!empty($startDate)) {
+                $query->whereDate('tanggal', '>=', $startDate);
+            }
+            if (!empty($endDate)) {
+                $query->whereDate('tanggal', '<=', $endDate);
+            }
 
             if ($q !== '') {
                 $query->where(function ($builder) use ($q) {
@@ -64,8 +78,8 @@ class RapatController extends Controller
                 });
             } else {
                 if ($filter === 'bulan_ini') {
-                    $bulanIni = date('Y-m');
-                    $query->where('tanggal', 'like', "{$bulanIni}%");
+                    $query->whereYear('tanggal', (int)date('Y'))
+                        ->whereMonth('tanggal', (int)date('m'));
                 } elseif ($filter === 'ada_ai') {
                     $query->whereNotNull('ringkasanAI')->where('ringkasanAI', '!=', '');
                 }
@@ -73,15 +87,23 @@ class RapatController extends Controller
 
             $totalCount = $query->count();
             $items = $query->orderBy('tanggal', 'desc')
+                ->orderBy('waktu', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->offset($offset)
                 ->limit($limit)
                 ->get();
 
             $data = $items->map(function ($r) {
+                $tglFormatted = $r->tanggal instanceof \DateTimeInterface
+                    ? $r->tanggal->format('Y-m-d')
+                    : (string)$r->tanggal;
+
                 return [
                     'id' => (string)$r->id,
-                    'tanggal' => (string)$r->tanggal,
+                    'tanggal' => $tglFormatted,
+                    'waktu' => (string)$r->formatted_waktu,
+                    'waktu_mulai' => $r->waktu ? substr((string)$r->waktu, 0, 5) : '',
+                    'waktu_selesai' => $r->waktu_selesai ? substr((string)$r->waktu_selesai, 0, 5) : '',
                     'topik' => (string)$r->topik,
                     'pimpinanRapat' => (string)$r->pimpinanRapat,
                     'notulis' => (string)$r->notulis,
@@ -136,13 +158,19 @@ class RapatController extends Controller
             $poinPembahasan = $request->input('poinPembahasan', []);
             $tindakLanjut = $request->input('tindakLanjut', []);
 
+            [$waktuMulai, $waktuSelesai] = Rapat::parseWaktuInput(
+                $request->input('waktu'),
+                $request->input('waktu_selesai')
+            );
+
             $rapat = Rapat::create([
                 'id'             => $newId,
                 'tanggal'        => $request->input('tanggal'),
                 'topik'          => $request->input('topik'),
                 'pimpinanRapat'  => $request->input('pimpinanRapat'),
                 'notulis'        => $request->input('notulis'),
-                'waktu'          => $request->input('waktu', ''),
+                'waktu'          => $waktuMulai,
+                'waktu_selesai'  => $waktuSelesai,
                 'tempat'         => $request->input('tempat', ''),
                 'anggota'        => is_string($anggota) ? $anggota : json_encode($anggota, JSON_UNESCAPED_UNICODE),
                 'poinPembahasan' => is_string($poinPembahasan) ? $poinPembahasan : json_encode($poinPembahasan, JSON_UNESCAPED_UNICODE),
@@ -177,7 +205,15 @@ class RapatController extends Controller
             if ($request->has('topik')) $rapat->topik = $request->input('topik');
             if ($request->has('pimpinanRapat')) $rapat->pimpinanRapat = $request->input('pimpinanRapat');
             if ($request->has('notulis')) $rapat->notulis = $request->input('notulis');
-            if ($request->has('waktu')) $rapat->waktu = $request->input('waktu');
+
+            if ($request->has('waktu') || $request->has('waktu_selesai')) {
+                $waktuInput = $request->has('waktu') ? $request->input('waktu') : $rapat->waktu;
+                $waktuSelesaiInput = $request->has('waktu_selesai') ? $request->input('waktu_selesai') : $rapat->waktu_selesai;
+                [$waktuMulai, $waktuSelesai] = Rapat::parseWaktuInput($waktuInput, $waktuSelesaiInput);
+                $rapat->waktu = $waktuMulai;
+                $rapat->waktu_selesai = $waktuSelesai;
+            }
+
             if ($request->has('tempat')) $rapat->tempat = $request->input('tempat');
 
             if ($request->has('anggota')) {

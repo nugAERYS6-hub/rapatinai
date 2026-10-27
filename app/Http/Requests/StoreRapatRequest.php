@@ -21,6 +21,7 @@ class StoreRapatRequest extends FormRequest
             'pimpinanRapat'=> ['required', 'string', 'min:2', 'max:255'],
             'notulis'      => ['required', 'string', 'min:2', 'max:255'],
             'waktu'        => ['nullable', 'string', 'max:255'],
+            'waktu_selesai'=> ['nullable', 'string', 'max:255'],
             'tempat'       => ['nullable', 'string', 'max:255'],
             'status'       => ['nullable', 'string', 'in:Selesai,Berlangsung,Dijadwalkan'],
 

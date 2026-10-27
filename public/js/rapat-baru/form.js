@@ -33,6 +33,7 @@ export function tampilkanFormBaru(syncHash = true) {
   if (el.formRapat) el.formRapat.reset();
   if (el.editIdRapat) el.editIdRapat.value = "";
   if (el.inputWaktu) el.inputWaktu.value = "";
+  if (el.inputWaktuSelesai) el.inputWaktuSelesai.value = "";
   if (el.inputTempat) el.inputTempat.value = "";
   if (el.inputStatus) el.inputStatus.value = "Selesai";
   STATE.anggotaForm = [];
@@ -79,7 +80,12 @@ export function bukaEditRapat() {
   if (el.inputTopik) el.inputTopik.value = r.topik || "";
   if (el.inputPimpinan) el.inputPimpinan.value = r.pimpinanRapat || "";
   if (el.inputNotulis) el.inputNotulis.value = r.notulis || "";
-  if (el.inputWaktu) el.inputWaktu.value = r.waktu || "";
+
+  const waktuMulai = r.waktu_mulai || (r.waktu && r.waktu.includes('-') ? r.waktu.split('-')[0].trim() : (r.waktu || ""));
+  const waktuSelesai = r.waktu_selesai || (r.waktu && r.waktu.includes('-') ? r.waktu.split('-')[1].trim() : "");
+  if (el.inputWaktu) el.inputWaktu.value = waktuMulai;
+  if (el.inputWaktuSelesai) el.inputWaktuSelesai.value = waktuSelesai;
+
   if (el.inputTempat) el.inputTempat.value = r.tempat || "";
   if (el.inputStatus) el.inputStatus.value = r.status || "Selesai";
 
@@ -152,7 +158,7 @@ export function initFormEvents() {
   }
 
   // Input change auto-save listeners
-  [el.inputTanggal, el.inputTopik, el.inputPimpinan, el.inputNotulis, el.inputWaktu, el.inputTempat, el.inputStatus].filter(Boolean).forEach((input) => {
+  [el.inputTanggal, el.inputTopik, el.inputPimpinan, el.inputNotulis, el.inputWaktu, el.inputWaktuSelesai, el.inputTempat, el.inputStatus].filter(Boolean).forEach((input) => {
     input.addEventListener("input", simpanDrafOtomatis);
     input.addEventListener("change", simpanDrafOtomatis);
   });
@@ -167,6 +173,7 @@ export function initFormEvents() {
       const pimpinan = el.inputPimpinan?.value.trim();
       const notulis = el.inputNotulis?.value.trim();
       const waktu = el.inputWaktu ? el.inputWaktu.value.trim() : "";
+      const waktuSelesai = el.inputWaktuSelesai ? el.inputWaktuSelesai.value.trim() : "";
       const tempat = el.inputTempat ? el.inputTempat.value.trim() : "";
       const status = el.inputStatus ? el.inputStatus.value : "Selesai";
 
@@ -184,6 +191,7 @@ export function initFormEvents() {
         pimpinanRapat: pimpinan,
         notulis,
         waktu,
+        waktu_selesai: waktuSelesai,
         tempat,
         anggota: STATE.anggotaForm,
         poinPembahasan,

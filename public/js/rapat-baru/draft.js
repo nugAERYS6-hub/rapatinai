@@ -17,6 +17,7 @@ export function simpanDrafOtomatis() {
     pimpinan: el.inputPimpinan?.value || "",
     notulis: el.inputNotulis?.value || "",
     waktu: el.inputWaktu ? el.inputWaktu.value : "",
+    waktu_selesai: el.inputWaktuSelesai ? el.inputWaktuSelesai.value : "",
     tempat: el.inputTempat ? el.inputTempat.value : "",
     status: el.inputStatus ? el.inputStatus.value : "Selesai",
     anggota: STATE.anggotaForm,
@@ -46,6 +47,7 @@ export function pulihkanDrafOtomatis() {
     if (el.inputPimpinan) el.inputPimpinan.value = d.pimpinan || "";
     if (el.inputNotulis) el.inputNotulis.value = d.notulis || "";
     if (el.inputWaktu) el.inputWaktu.value = d.waktu || "";
+    if (el.inputWaktuSelesai) el.inputWaktuSelesai.value = d.waktu_selesai || "";
     if (el.inputTempat) el.inputTempat.value = d.tempat || "";
     if (el.inputStatus && d.status) el.inputStatus.value = d.status;
 

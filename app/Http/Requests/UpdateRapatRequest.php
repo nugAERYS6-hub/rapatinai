@@ -21,6 +21,7 @@ class UpdateRapatRequest extends FormRequest
             'pimpinanRapat' => ['sometimes', 'string', 'min:2', 'max:255'],
             'notulis'       => ['sometimes', 'string', 'min:2', 'max:255'],
             'waktu'         => ['sometimes', 'nullable', 'string', 'max:255'],
+            'waktu_selesai' => ['sometimes', 'nullable', 'string', 'max:255'],
             'tempat'        => ['sometimes', 'nullable', 'string', 'max:255'],
             'status'        => ['sometimes', 'string', 'in:Selesai,Berlangsung,Dijadwalkan'],
             'ringkasanAI'   => ['sometimes', 'nullable', 'string'],

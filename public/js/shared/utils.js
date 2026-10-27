@@ -23,7 +23,13 @@ export function escapeHtml(str) {
 export function formatHariTanggal(tglStr) {
   if (!tglStr) return "-";
   try {
-    const d = new Date(tglStr);
+    let d;
+    if (typeof tglStr === "string" && /^\d{4}-\d{2}-\d{2}$/.test(tglStr)) {
+      const [y, m, day] = tglStr.split("-").map(Number);
+      d = new Date(y, m - 1, day);
+    } else {
+      d = new Date(tglStr);
+    }
     if (isNaN(d.getTime())) return tglStr;
     const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const bulanArr = [

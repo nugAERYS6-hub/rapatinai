@@ -97,6 +97,7 @@ export const el = {
   inputPimpinan: document.getElementById("pimpinan"),
   inputNotulis: document.getElementById("notulis"),
   inputWaktu: document.getElementById("waktu"),
+  inputWaktuSelesai: document.getElementById("waktu-selesai"),
   inputTempat: document.getElementById("tempat"),
   inputStatus: document.getElementById("status-rapat"),
   daftarAnggotaChips: document.getElementById("daftar-anggota-chips"),
