@@ -268,65 +268,142 @@
   margin-bottom: 24px;
 }
 
+/* ==========================================================================
+   OFFICIALS CARDS (PIMPINAN, NOTULIS, TOTAL PESERTA)
+   ========================================================================== */
 .detail-officials-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  margin-bottom: 28px;
-  padding: 16px 20px;
-  background: #0b132b;
-  border: 1px solid #1c294d;
-  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .official-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: #0b132b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.official-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.official-card-pimpinan:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.official-card-notulis:hover {
+  border-color: rgba(2, 132, 199, 0.45);
+}
+
+.official-card-peserta:hover {
+  border-color: rgba(16, 185, 129, 0.45);
 }
 
 .official-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #0ea5e9, #2563eb);
-  color: white;
-  font-weight: 700;
-  font-size: 15px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.official-card:hover .official-avatar {
+  transform: scale(1.05);
+}
+
+.official-avatar svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Distinct Role Themes */
+.avatar-pimpinan-style {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(129, 140, 248, 0.12));
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.avatar-notulis-style {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.2), rgba(56, 189, 248, 0.12));
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.35);
+}
+
+.avatar-peserta-style {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.12));
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
 }
 
 .official-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
 
 .official-role {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.official-card-pimpinan .official-role {
+  color: #a5b4fc;
+}
+
+.official-card-notulis .official-role {
+  color: #38bdf8;
+}
+
+.official-card-peserta .official-role {
+  color: #34d399;
 }
 
 .official-name {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 700;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
 }
 
-/* ACTION RIBBON */
+/* ==========================================================================
+   ACTION RIBBON & SUITE BUTTONS
+   ========================================================================== */
 .detail-action-ribbon {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px;
-  padding-top: 24px;
-  border-top: 1px solid #1c294d;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-top: 8px;
+  background: rgba(11, 19, 43, 0.65);
+  border: 1px solid rgba(28, 41, 77, 0.8);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
 }
 
 .action-group {
@@ -336,66 +413,139 @@
   flex-wrap: wrap;
 }
 
+.action-group-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-divider-vertical {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 2px;
+}
+
+.btn-svg-icon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
 /* TOMBOL AI */
 .btn-ai-action {
   padding: 9px 16px;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  color: #f8fafc;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-  transition: all var(--trans-speed) var(--ease-smooth);
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.btn-ai-action:hover {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+.btn-ai-ringkasan {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(99, 102, 241, 0.15));
+  color: #c7d2fe;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.btn-ai-ringkasan:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #ffffff;
+  border-color: #6366f1;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+}
+
+.btn-ai-ide {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.22), rgba(245, 158, 11, 0.12));
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.btn-ai-ide:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: #ffffff;
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35);
+}
+
+.btn-ai-action-items {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(5, 150, 105, 0.12));
+  color: #a7f3d0;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.btn-ai-action-items:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #ffffff;
+  border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
 }
 
 .btn-ai-action:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
-/* TOMBOL EXPORT & MANAGE */
+/* TOMBOL EXPORT */
 .btn-export {
   padding: 8px 14px;
   background: #0b132b;
   border: 1px solid #1e293b;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: #e2e8f0;
+  color: #cbd5e1;
   text-decoration: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   box-shadow: var(--shadow-xs);
-  transition: all var(--trans-speed) ease;
+  transition: all 0.2s ease;
 }
 
 .btn-export:hover {
   background: #162244;
   border-color: #38bdf8;
-  transform: translateY(-1px);
   color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
+.btn-export:hover .btn-svg-icon {
+  transform: translateY(-1px);
+}
+
+.btn-export-pdf .icon-pdf {
+  color: #f87171;
+}
+
+.btn-export-word .icon-word {
+  color: #60a5fa;
+}
+
+.btn-export-copy .icon-copy {
+  color: #94a3b8;
+}
+
+/* TOMBOL MANAGE */
 .btn-manage {
   padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid transparent;
-  transition: all var(--trans-speed) ease;
+  transition: all 0.2s ease;
 }
 
 .btn-edit {
@@ -407,7 +557,9 @@
 .btn-edit:hover {
   background: #f59e0b;
   color: #000000;
+  border-color: #d97706;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
 .btn-delete {
@@ -419,7 +571,9 @@
 .btn-delete:hover {
   background: #ef4444;
   color: #ffffff;
+  border-color: #dc2626;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 /* ==========================================================================
@@ -506,14 +660,16 @@
 
   .detail-officials-grid {
     grid-template-columns: 1fr !important;
-    gap: 12px;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    margin-bottom: 18px;
   }
 
   .official-card {
     width: 100%;
+    box-sizing: border-box;
   }
 
   .official-name {
@@ -525,14 +681,20 @@
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    padding-top: 16px;
+    padding: 14px;
+    border-radius: 14px;
   }
 
-  .action-group {
+  .action-group,
+  .action-group-right {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 8px;
+  }
+
+  .action-divider-vertical {
+    display: none;
   }
 
   .btn-ai-action,
@@ -540,9 +702,9 @@
   .btn-manage {
     width: 100%;
     justify-content: center;
-    min-height: 44px;
+    min-height: 42px;
     box-sizing: border-box;
-    font-size: 13.5px;
+    font-size: 13px;
   }
 }
 
