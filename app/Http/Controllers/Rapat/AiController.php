@@ -15,6 +15,8 @@ class AiController extends Controller
      */
     public function rangkum($id)
     {
+        @set_time_limit(90);
+
         try {
             $rapat = Rapat::find($id);
             if (!$rapat) {
@@ -27,8 +29,14 @@ class AiController extends Controller
 
             return response()->json(['success' => true, 'ringkasanAI' => $ringkasan]);
         } catch (\Throwable $e) {
-            Log::error("Error rangkum: " . $e->getMessage());
-            return response()->json(['success' => false, 'pesan' => "Gagal membuat ringkasan AI: " . $e->getMessage()], 500);
+            Log::error("Error rangkum rapat {$id}: " . $e->getMessage());
+            $errorInfo = GeminiService::klasifikasiError($e);
+            return response()->json([
+                'success' => false,
+                'pesan' => $errorInfo['pesan'],
+                'tipe' => $errorInfo['tipe'],
+                'detail' => config('app.debug') ? $e->getMessage() : null,
+            ], $errorInfo['status']);
         }
     }
 
@@ -37,6 +45,8 @@ class AiController extends Controller
      */
     public function ideBaru($id)
     {
+        @set_time_limit(90);
+
         try {
             $rapat = Rapat::find($id);
             if (!$rapat) {
@@ -49,8 +59,14 @@ class AiController extends Controller
 
             return response()->json(['success' => true, 'ideBaruAI' => $ide]);
         } catch (\Throwable $e) {
-            Log::error("Error ide baru: " . $e->getMessage());
-            return response()->json(['success' => false, 'pesan' => "Gagal membuat ide baru: " . $e->getMessage()], 500);
+            Log::error("Error ide baru rapat {$id}: " . $e->getMessage());
+            $errorInfo = GeminiService::klasifikasiError($e);
+            return response()->json([
+                'success' => false,
+                'pesan' => $errorInfo['pesan'],
+                'tipe' => $errorInfo['tipe'],
+                'detail' => config('app.debug') ? $e->getMessage() : null,
+            ], $errorInfo['status']);
         }
     }
 
@@ -59,6 +75,8 @@ class AiController extends Controller
      */
     public function actionItems($id)
     {
+        @set_time_limit(90);
+
         try {
             $rapat = Rapat::find($id);
             if (!$rapat) {
@@ -68,7 +86,14 @@ class AiController extends Controller
             $items = GeminiService::mintaActionItemsAI($rapat);
             return response()->json(['success' => true, 'actionItems' => $items]);
         } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'pesan' => $e->getMessage()], 500);
+            Log::error("Error action items rapat {$id}: " . $e->getMessage());
+            $errorInfo = GeminiService::klasifikasiError($e);
+            return response()->json([
+                'success' => false,
+                'pesan' => $errorInfo['pesan'],
+                'tipe' => $errorInfo['tipe'],
+                'detail' => config('app.debug') ? $e->getMessage() : null,
+            ], $errorInfo['status']);
         }
     }
 }

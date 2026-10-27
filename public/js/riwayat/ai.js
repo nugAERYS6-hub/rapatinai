@@ -117,9 +117,41 @@ export function renderAiContent(rapat) {
 /**
  * Inisialisasi event tombol-tombol AI dan tombol salin AI
  */
+/**
+ * Merender kotak pesan error/peringatan AI yang informatif beserta tombol coba lagi
+ */
+function renderAiErrorUI(container, err, onRetry) {
+  const isTimeout = err?.tipe === "timeout" || (err?.message && err.message.toLowerCase().includes("timeout"));
+  const isQuota = err?.tipe === "quota" || (err?.message && err.message.toLowerCase().includes("kuota"));
+  const isOverload = err?.tipe === "overload" || (err?.message && (err.message.toLowerCase().includes("high demand") || err.message.toLowerCase().includes("lonjakan")));
+
+  const badgeColor = isTimeout ? "#d97706" : (isQuota ? "#7c3aed" : (isOverload ? "#0284c7" : "#ef4444"));
+  const badgeTitle = isTimeout ? "Waktu Respons Habis (Timeout)" : (isQuota ? "Batas Kuota Gemini Tercapai" : (isOverload ? "Server AI Sibuk (Lonjakan Beban)" : "Gagal Memproses AI"));
+
+  container.innerHTML = `
+    <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid ${badgeColor}50; border-radius: 8px; padding: 12px; margin-top: 6px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+        <span style="font-weight: 700; font-size: 0.85rem; color: ${badgeColor}; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-triangle-exclamation"></i> ${badgeTitle}
+        </span>
+        ${onRetry ? `<button type="button" class="btn-retry-ai" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; background: #2563eb; color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px;"><i class="fa-solid fa-rotate-right"></i> Coba Lagi</button>` : ''}
+      </div>
+      <p style="font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.45;">${escapeHtml(err.message || "Terjadi kendala pada layanan AI.")}</p>
+    </div>
+  `;
+
+  if (onRetry) {
+    const btn = container.querySelector(".btn-retry-ai");
+    if (btn) btn.addEventListener("click", onRetry);
+  }
+}
+
+/**
+ * Inisialisasi event tombol-tombol AI dan tombol salin AI
+ */
 export function initAiEvents() {
   if (el.btnAiRingkasan) {
-    el.btnAiRingkasan.addEventListener("click", async () => {
+    const handleRingkasan = async () => {
       if (!STATE.rapatAktif) return;
       el.btnAiRingkasan.disabled = true;
       el.kontenRingkasanAi.innerHTML = `
@@ -131,8 +163,12 @@ export function initAiEvents() {
 
       try {
         const res = await fetch(`/api/rapat/${STATE.rapatAktif.id}/rangkum`, { method: "POST" });
-        const json = await res.json();
-        if (!json.success) throw new Error(json.pesan || "Gagal membuat ringkasan");
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json.success) {
+          const err = new Error(json.pesan || `Gagal membuat ringkasan (HTTP ${res.status})`);
+          err.tipe = json.tipe || "error";
+          throw err;
+        }
 
         STATE.rapatAktif.ringkasanAI = bersihkanRingkasan(json.ringkasanAI);
         el.kontenRingkasanAi.innerHTML = `<div class="item-muncul">${formatRingkasanHTML(STATE.rapatAktif.ringkasanAI, false)}</div>`;
@@ -140,16 +176,18 @@ export function initAiEvents() {
         muatStats();
         renderPaperPreview(STATE.rapatAktif);
       } catch (err) {
-        el.kontenRingkasanAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
+        renderAiErrorUI(el.kontenRingkasanAi, err, handleRingkasan);
         tampilkanToast(err.message, "error");
       } finally {
         el.btnAiRingkasan.disabled = false;
       }
-    });
+    };
+
+    el.btnAiRingkasan.addEventListener("click", handleRingkasan);
   }
 
   if (el.btnAiIde) {
-    el.btnAiIde.addEventListener("click", async () => {
+    const handleIde = async () => {
       if (!STATE.rapatAktif) return;
       el.btnAiIde.disabled = true;
       el.kontenIdeAi.innerHTML = `
@@ -161,23 +199,29 @@ export function initAiEvents() {
 
       try {
         const res = await fetch(`/api/rapat/${STATE.rapatAktif.id}/ide-baru`, { method: "POST" });
-        const json = await res.json();
-        if (!json.success) throw new Error(json.pesan || "Gagal membuat ide baru");
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json.success) {
+          const err = new Error(json.pesan || `Gagal membuat ide baru (HTTP ${res.status})`);
+          err.tipe = json.tipe || "error";
+          throw err;
+        }
 
         STATE.rapatAktif.ideBaruAI = json.ideBaruAI;
         el.kontenIdeAi.innerHTML = `<p class="item-muncul">${escapeHtml(json.ideBaruAI)}</p>`;
         tampilkanToast("Ide strategis AI berhasil disusun!");
       } catch (err) {
-        el.kontenIdeAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
+        renderAiErrorUI(el.kontenIdeAi, err, handleIde);
         tampilkanToast(err.message, "error");
       } finally {
         el.btnAiIde.disabled = false;
       }
-    });
+    };
+
+    el.btnAiIde.addEventListener("click", handleIde);
   }
 
   if (el.btnAiActionItems) {
-    el.btnAiActionItems.addEventListener("click", async () => {
+    const handleActionItems = async () => {
       if (!STATE.rapatAktif) return;
       el.btnAiActionItems.disabled = true;
       el.kontenActionItemsAi.innerHTML = `
@@ -189,20 +233,26 @@ export function initAiEvents() {
 
       try {
         const res = await fetch(`/api/rapat/${STATE.rapatAktif.id}/action-items`, { method: "POST" });
-        const json = await res.json();
-        if (!json.success) throw new Error(json.pesan || "Gagal membuat action items");
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json.success) {
+          const err = new Error(json.pesan || `Gagal membuat action items (HTTP ${res.status})`);
+          err.tipe = json.tipe || "error";
+          throw err;
+        }
 
         const items = json.actionItems || [];
         STATE.rapatAktif.actionItemsAI = items;
         renderActionItemsUI(items);
         tampilkanToast("Action items AI berhasil diekstrak!");
       } catch (err) {
-        el.kontenActionItemsAi.innerHTML = `<p style="color: #ef4444;">Error: ${escapeHtml(err.message)}</p>`;
+        renderAiErrorUI(el.kontenActionItemsAi, err, handleActionItems);
         tampilkanToast(err.message, "error");
       } finally {
         el.btnAiActionItems.disabled = false;
       }
-    });
+    };
+
+    el.btnAiActionItems.addEventListener("click", handleActionItems);
   }
 
   if (el.btnCopyRingkasan) {
