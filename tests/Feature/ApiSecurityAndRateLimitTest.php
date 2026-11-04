@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class ApiSecurityAndRateLimitTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * 1. Pengujian Proteksi Endpoint API
      */

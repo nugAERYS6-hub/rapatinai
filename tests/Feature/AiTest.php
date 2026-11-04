@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Rapat;
 use App\Services\GeminiService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AiTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_siapkan_poin_pembahasan_ringkas_kompresi(): void
     {
         // 50 poin pembahasan panjang

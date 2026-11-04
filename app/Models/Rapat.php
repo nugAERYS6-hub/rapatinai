@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rapat extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'rapat';
     protected $primaryKey = 'id';
     public $incrementing = false;
@@ -26,8 +29,11 @@ class Rapat extends Model
         'ringkasanAI',
         'ideBaruAI',
         'status',
+        'created_by',
+        'taskboard_id',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -35,6 +41,7 @@ class Rapat extends Model
      */
     protected $casts = [
         'tanggal' => 'date:Y-m-d',
+        'deleted_at' => 'datetime',
     ];
 
     public static function parseAnggota($nilai): array
@@ -253,6 +260,31 @@ class Rapat extends Model
         return "{$hari} / {$tglNum} {$bln} {$thn}";
     }
 
+    public function toApiSummary(): array
+    {
+        $tglFormatted = $this->tanggal instanceof \DateTimeInterface
+            ? $this->tanggal->format('Y-m-d')
+            : (string)$this->tanggal;
+
+        return [
+            'id' => (string)$this->id,
+            'tanggal' => $tglFormatted,
+            'waktu' => (string)$this->formatted_waktu,
+            'waktu_mulai' => $this->waktu ? substr((string)$this->waktu, 0, 5) : '',
+            'waktu_selesai' => $this->waktu_selesai ? substr((string)$this->waktu_selesai, 0, 5) : '',
+            'topik' => (string)$this->topik,
+            'pimpinanRapat' => (string)$this->pimpinanRapat,
+            'notulis' => (string)$this->notulis,
+            'status' => $this->status ?? 'Selesai',
+            'created_by' => $this->created_by,
+            'taskboard_id' => $this->taskboard_id,
+            'created_at' => $this->created_at ? (string)$this->created_at : null,
+            'deleted_at' => $this->deleted_at ? (string)$this->deleted_at : null,
+            'hasRingkasan' => (!empty($this->ringkasanAI)) ? 1 : 0,
+            'hasIdeBaru' => (!empty($this->ideBaruAI)) ? 1 : 0,
+        ];
+    }
+
     public function toApiDetail(): array
     {
         $tglFormatted = $this->tanggal instanceof \DateTimeInterface
@@ -278,8 +310,11 @@ class Rapat extends Model
             'ringkasanAI'    => $this->ringkasanAI,
             'ideBaruAI'      => $this->ideBaruAI,
             'status'         => $this->status ?? 'Selesai',
+            'created_by'     => $this->created_by,
+            'taskboard_id'   => $this->taskboard_id,
             'created_at'     => $this->created_at ? (string)$this->created_at : null,
             'updated_at'     => $this->updated_at ? (string)$this->updated_at : null,
+            'deleted_at'     => $this->deleted_at ? (string)$this->deleted_at : null,
         ];
     }
 }

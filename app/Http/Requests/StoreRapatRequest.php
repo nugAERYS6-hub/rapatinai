@@ -42,6 +42,9 @@ class StoreRapatRequest extends FormRequest
             'tindakLanjut.*.deadline' => ['nullable', 'string', 'max:255'],
             'tindakLanjut.*.selesai'  => ['nullable'],
             'tindakLanjut.*.teks'     => ['nullable', 'string'],
+
+            'created_by'              => ['nullable', 'string', 'max:100'],
+            'taskboard_id'            => ['nullable', 'string', 'max:100'],
         ];
     }
 

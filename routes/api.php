@@ -21,6 +21,7 @@ Route::middleware(['api.auth', 'throttle:api'])->group(function () {
     // --- 1. Manajemen Rapat (Baca Data & Statistik) ---
     Route::get('/stats', [RapatController::class, 'stats']);
     Route::get('/rapat', [RapatController::class, 'index']);
+    Route::get('/rapat/trash', [RapatController::class, 'trash']);
     Route::get('/rapat/{id}', [RapatController::class, 'show']);
 
     // --- 1. Manajemen Rapat (Operasi Tulis CRUD - Rate Limited) ---
@@ -28,6 +29,8 @@ Route::middleware(['api.auth', 'throttle:api'])->group(function () {
         Route::post('/rapat', [RapatController::class, 'store']);
         Route::put('/rapat/{id}', [RapatController::class, 'update']);
         Route::delete('/rapat/{id}', [RapatController::class, 'destroy']);
+        Route::post('/rapat/{id}/restore', [RapatController::class, 'restore']);
+        Route::delete('/rapat/{id}/force', [RapatController::class, 'forceDelete']);
     });
 
     // --- 2. Fitur AI Notulensi (Gemini Flash - Strict Rate Limited) ---

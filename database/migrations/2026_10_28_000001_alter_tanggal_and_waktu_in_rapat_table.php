@@ -56,10 +56,12 @@ return new class extends Migration
             DB::table('rapat')->where('id', $row->id)->update($update);
         }
 
-        // 3. Ubah tipe data kolom tanggal menjadi DATE dan waktu menjadi TIME
-        DB::statement("ALTER TABLE `rapat` MODIFY `tanggal` DATE NOT NULL;");
-        DB::statement("ALTER TABLE `rapat` MODIFY `waktu` TIME NULL;");
-        DB::statement("ALTER TABLE `rapat` MODIFY `waktu_selesai` TIME NULL;");
+        // 3. Ubah tipe data kolom tanggal menjadi DATE dan waktu menjadi TIME (khusus MySQL)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `rapat` MODIFY `tanggal` DATE NOT NULL;");
+            DB::statement("ALTER TABLE `rapat` MODIFY `waktu` TIME NULL;");
+            DB::statement("ALTER TABLE `rapat` MODIFY `waktu_selesai` TIME NULL;");
+        }
 
         // 4. Tambahkan indeks komposit untuk optimasi query rentang tanggal & sorting kronologis
         Schema::table('rapat', function (Blueprint $table) {
@@ -76,8 +78,10 @@ return new class extends Migration
             $table->dropIndex('rapat_tanggal_waktu_index');
         });
 
-        DB::statement("ALTER TABLE `rapat` MODIFY `tanggal` VARCHAR(32) NOT NULL;");
-        DB::statement("ALTER TABLE `rapat` MODIFY `waktu` VARCHAR(255) NULL;");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `rapat` MODIFY `tanggal` VARCHAR(32) NOT NULL;");
+            DB::statement("ALTER TABLE `rapat` MODIFY `waktu` VARCHAR(255) NULL;");
+        }
 
         if (Schema::hasColumn('rapat', 'waktu_selesai')) {
             Schema::table('rapat', function (Blueprint $table) {

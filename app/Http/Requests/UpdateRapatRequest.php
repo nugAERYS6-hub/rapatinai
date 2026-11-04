@@ -44,6 +44,9 @@ class UpdateRapatRequest extends FormRequest
             'tindakLanjut.*.deadline' => ['sometimes', 'nullable', 'string', 'max:255'],
             'tindakLanjut.*.selesai'  => ['sometimes', 'nullable'],
             'tindakLanjut.*.teks'     => ['sometimes', 'nullable', 'string'],
+
+            'created_by'              => ['sometimes', 'nullable', 'string', 'max:100'],
+            'taskboard_id'            => ['sometimes', 'nullable', 'string', 'max:100'],
         ];
     }
 

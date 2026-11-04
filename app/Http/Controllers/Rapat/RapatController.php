@@ -178,6 +178,8 @@ class RapatController extends Controller
                 'ringkasanAI'    => null,
                 'ideBaruAI'      => null,
                 'status'         => $request->input('status', 'Selesai'),
+                'created_by'     => $request->input('created_by'),
+                'taskboard_id'   => $request->input('taskboard_id'),
             ]);
 
             return response()->json([
@@ -231,6 +233,8 @@ class RapatController extends Controller
             if ($request->has('status')) $rapat->status = $request->input('status');
             if ($request->has('ringkasanAI')) $rapat->ringkasanAI = $request->input('ringkasanAI');
             if ($request->has('ideBaruAI')) $rapat->ideBaruAI = $request->input('ideBaruAI');
+            if ($request->has('created_by')) $rapat->created_by = $request->input('created_by');
+            if ($request->has('taskboard_id')) $rapat->taskboard_id = $request->input('taskboard_id');
 
             $rapat->save();
 
@@ -245,7 +249,7 @@ class RapatController extends Controller
     }
 
     /**
-     * Menghapus notulen rapat
+     * Menghapus notulen rapat (Soft Delete - dipindahkan ke tempat sampah)
      */
     public function destroy($id)
     {
@@ -255,8 +259,77 @@ class RapatController extends Controller
                 return response()->json(['success' => false, 'pesan' => 'Rapat tidak ditemukan'], 404);
             }
             $rapat->delete();
-            return response()->json(['success' => true, 'pesan' => 'Notulen rapat berhasil dihapus']);
+            return response()->json([
+                'success' => true,
+                'pesan' => 'Notulen rapat berhasil dipindahkan ke tempat sampah (soft delete)'
+            ]);
         } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Menampilkan daftar rapat yang berada di tempat sampah (Soft Deleted)
+     */
+    public function trash(Request $request)
+    {
+        try {
+            $items = Rapat::onlyTrashed()
+                ->orderBy('deleted_at', 'desc')
+                ->get();
+
+            $data = $items->map(fn($r) => $r->toApiSummary());
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'total' => $items->count(),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error GET /api/rapat/trash: " . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Memulihkan notulen rapat dari tempat sampah
+     */
+    public function restore($id)
+    {
+        try {
+            $rapat = Rapat::onlyTrashed()->find($id);
+            if (!$rapat) {
+                return response()->json(['success' => false, 'pesan' => 'Rapat di tempat sampah tidak ditemukan'], 404);
+            }
+            $rapat->restore();
+            return response()->json([
+                'success' => true,
+                'pesan' => 'Notulen rapat berhasil dipulihkan',
+                'data' => $rapat->toApiDetail(),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error POST /api/rapat/{$id}/restore: " . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Menghapus notulen rapat secara permanen dari database
+     */
+    public function forceDelete($id)
+    {
+        try {
+            $rapat = Rapat::onlyTrashed()->find($id);
+            if (!$rapat) {
+                return response()->json(['success' => false, 'pesan' => 'Rapat di tempat sampah tidak ditemukan'], 404);
+            }
+            $rapat->forceDelete();
+            return response()->json([
+                'success' => true,
+                'pesan' => 'Notulen rapat berhasil dihapus secara permanen',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error DELETE /api/rapat/{$id}/force: " . $e->getMessage());
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }

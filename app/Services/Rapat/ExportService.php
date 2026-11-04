@@ -84,7 +84,9 @@ class ExportService
         ])->setPaper('a4', 'portrait');
 
         $safeTopic = preg_replace('/[^a-zA-Z0-9-_]/', '_', $rapat->topik);
-        $fileName = "Laporan_Rapat_{$safeTopic}_{$rapat->tanggal}.pdf";
+        $tglStr = $rapat->tanggal instanceof \DateTimeInterface ? $rapat->tanggal->format('Y-m-d') : (string)$rapat->tanggal;
+        $safeTgl = preg_replace('/[^a-zA-Z0-9-_]/', '_', $tglStr);
+        $fileName = "Laporan_Rapat_{$safeTopic}_{$safeTgl}.pdf";
 
         return $pdf->download($fileName);
     }
@@ -277,7 +279,9 @@ class ExportService
         $cellKanan->addText($rapat->pimpinanRapat, ['bold' => true, 'size' => 10, 'underline' => 'single'], ['alignment' => Jc::CENTER]);
 
         $safeTopic = preg_replace('/[^a-zA-Z0-9-_]/', '_', $rapat->topik);
-        $fileName = "Laporan_Rapat_{$safeTopic}_{$rapat->tanggal}.docx";
+        $tglStr = $rapat->tanggal instanceof \DateTimeInterface ? $rapat->tanggal->format('Y-m-d') : (string)$rapat->tanggal;
+        $safeTgl = preg_replace('/[^a-zA-Z0-9-_]/', '_', $tglStr);
+        $fileName = "Laporan_Rapat_{$safeTopic}_{$safeTgl}.docx";
         $tempPath = storage_path("app/{$fileName}");
 
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
