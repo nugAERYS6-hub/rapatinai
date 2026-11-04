@@ -7,3 +7,5 @@ data/rapatinai.db*
 composer.phar
 .phpunit.result.cache
 /storage/*.key
+public/storage
+storage/app/public/lampiran/

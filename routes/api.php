@@ -3,6 +3,7 @@
 use App\Http\Controllers\Pengaturan\BackupController;
 use App\Http\Controllers\Rapat\AiController;
 use App\Http\Controllers\Rapat\ExportController;
+use App\Http\Controllers\Rapat\LampiranController;
 use App\Http\Controllers\Rapat\RapatController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,12 +41,20 @@ Route::middleware(['api.auth', 'throttle:api'])->group(function () {
         Route::post('/rapat/{id}/action-items', [AiController::class, 'actionItems']);
     });
 
-    // --- 3. Ekspor Dokumen Resmi (PDF & Word) & Profil Instansi ---
+    // --- 3. Lampiran Berkas Dokumen Pendukung Rapat ---
+    Route::get('/rapat/{id}/lampiran', [LampiranController::class, 'index']);
+    Route::get('/rapat/{id}/lampiran/{lampiranId}/download', [LampiranController::class, 'download']);
+    Route::middleware(['throttle:crud'])->group(function () {
+        Route::post('/rapat/{id}/lampiran', [LampiranController::class, 'store']);
+        Route::delete('/rapat/{id}/lampiran/{lampiranId}', [LampiranController::class, 'destroy']);
+    });
+
+    // --- 4. Ekspor Dokumen Resmi (PDF & Word) & Profil Instansi ---
     Route::get('/instansi', [ExportController::class, 'getInstansi']);
     Route::get('/rapat/{id}/export-pdf', [ExportController::class, 'exportPdf']);
     Route::get('/rapat/{id}/export-word', [ExportController::class, 'exportWord']);
 
-    // --- 4. Pengaturan & Cadangan Database (Strict Rate Limited) ---
+    // --- 5. Pengaturan & Cadangan Database (Strict Rate Limited) ---
     Route::middleware(['throttle:backup'])->group(function () {
         Route::get('/backup/mysql', [BackupController::class, 'backupMysql']);
         Route::post('/backup/restore', [BackupController::class, 'restoreBackup']);

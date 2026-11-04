@@ -315,6 +315,15 @@ class Rapat extends Model
             'created_at'     => $this->created_at ? (string)$this->created_at : null,
             'updated_at'     => $this->updated_at ? (string)$this->updated_at : null,
             'deleted_at'     => $this->deleted_at ? (string)$this->deleted_at : null,
+            'lampiran'       => $this->lampiran ? $this->lampiran->map(fn($l) => $l->toApiArray())->values()->all() : [],
         ];
+    }
+
+    /**
+     * Relasi ke berkas lampiran pendukung rapat
+     */
+    public function lampiran()
+    {
+        return $this->hasMany(RapatLampiran::class, 'rapat_id', 'id')->orderBy('created_at', 'desc');
     }
 }
