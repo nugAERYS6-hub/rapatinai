@@ -60,4 +60,61 @@ class AiTest extends TestCase
             ->assertJsonPath('success', false)
             ->assertJsonPath('pesan', 'Rapat tidak ditemukan');
     }
+
+    public function test_schema_action_items_valid(): void
+    {
+        $schema = GeminiService::schemaActionItems();
+        $this->assertEquals('ARRAY', $schema['type']);
+        $this->assertEquals('OBJECT', $schema['items']['type']);
+        $this->assertArrayHasKey('tugas', $schema['items']['properties']);
+        $this->assertArrayHasKey('pic', $schema['items']['properties']);
+        $this->assertArrayHasKey('prioritas', $schema['items']['properties']);
+        $this->assertArrayHasKey('estimasi', $schema['items']['properties']);
+        $this->assertEquals(['Tinggi', 'Sedang', 'Normal'], $schema['items']['properties']['prioritas']['enum']);
+    }
+
+    public function test_parse_json_action_items_structured(): void
+    {
+        $rawJson = json_encode([
+            [
+                'tugas' => 'Menyusun draf P-Renja 2026',
+                'pic' => 'Bidang Perencanaan Bappeda',
+                'prioritas' => 'Tinggi',
+                'estimasi' => '2 Minggu',
+            ],
+            [
+                'tugas' => 'Koordinasi dengan Diskominfo',
+                'pic' => 'Siti Rahma',
+                'prioritas' => 'medium', // test normalization to 'Sedang'
+                'estimasi' => '3 Hari',
+            ],
+        ]);
+
+        $parsed = GeminiService::parseJsonActionItems($rawJson);
+        $this->assertCount(2, $parsed);
+        $this->assertEquals('Menyusun draf P-Renja 2026', $parsed[0]['tugas']);
+        $this->assertEquals('Bidang Perencanaan Bappeda', $parsed[0]['pic']);
+        $this->assertEquals('Tinggi', $parsed[0]['prioritas']);
+        $this->assertEquals('2 Minggu', $parsed[0]['estimasi']);
+
+        $this->assertEquals('Sedang', $parsed[1]['prioritas']);
+    }
+
+    public function test_parse_json_action_items_with_markdown_wrapper(): void
+    {
+        $raw = "```json\n[{\"tugas\":\"Update server database\",\"pic\":\"Admin IT\",\"prioritas\":\"Normal\",\"estimasi\":\"1 Hari\"}]\n```";
+        $parsed = GeminiService::parseJsonActionItems($raw);
+        $this->assertCount(1, $parsed);
+        $this->assertEquals('Update server database', $parsed[0]['tugas']);
+        $this->assertEquals('Admin IT', $parsed[0]['pic']);
+    }
+
+    public function test_parse_json_action_items_fallback_malformed(): void
+    {
+        $malformed = "Ini bukan format JSON yang valid dari AI";
+        $parsed = GeminiService::parseJsonActionItems($malformed);
+        $this->assertCount(1, $parsed);
+        $this->assertEquals('Ini bukan format JSON yang valid dari AI', $parsed[0]['tugas']);
+        $this->assertEquals('-', $parsed[0]['pic']);
+    }
 }

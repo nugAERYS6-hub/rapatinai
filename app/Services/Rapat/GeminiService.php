@@ -95,23 +95,27 @@ class GeminiService
      * Memanggil Google Gemini API dengan optimasi timeout, model fallback yang valid,
      * dan manajemen waktu kumulatif agar tidak menyebabkan HTTP 504.
      */
-    public static function panggilGemini(string $prompt, float $temperature = 0.3, int $maxOutputTokens = 2048): string
-    {
+    public static function panggilGemini(
+        string $prompt,
+        float $temperature = 0.3,
+        int $maxOutputTokens = 2048,
+        array $extraConfig = []
+    ): string {
         $apiKey = config('services.gemini.key') ?? env('GEMINI_API_KEY');
         if (empty($apiKey)) {
             throw new \RuntimeException("Kunci API Gemini (GEMINI_API_KEY) belum dikonfigurasi di file .env atau config.");
         }
 
         // Daftar model resmi Google Gemini yang aktif, cepat, dan responsif
-        $configuredModel = config('services.gemini.model', 'gemini-flash-lite-latest');
+        $configuredModel = config('services.gemini.model', 'gemini-2.5-flash');
         $modelCandidates = array_unique([
             $configuredModel,
-            'gemini-flash-lite-latest',
-            'gemini-3.5-flash',
-            'gemini-3.6-flash',
-            'gemini-3.7-flash',
-            'gemini-3.8-flash',
+            'gemini-2.5-flash',
+            'gemini-2.5-flash-lite',
+            'gemini-2.0-flash',
+            'gemini-1.5-flash',
             'gemini-flash-latest',
+            'gemini-flash-lite-latest',
         ]);
 
         $timeoutPerAttempt = (int) config('services.gemini.timeout', 25);
@@ -119,6 +123,11 @@ class GeminiService
 
         $startTime = microtime(true);
         $lastException = null;
+
+        $generationConfig = array_merge([
+            'temperature' => $temperature,
+            'maxOutputTokens' => $maxOutputTokens,
+        ], $extraConfig);
 
         foreach ($modelCandidates as $model) {
             $elapsed = microtime(true) - $startTime;
@@ -142,10 +151,7 @@ class GeminiService
                                 ]
                             ]
                         ],
-                        'generationConfig' => [
-                            'temperature' => $temperature,
-                            'maxOutputTokens' => $maxOutputTokens,
-                        ]
+                        'generationConfig' => $generationConfig,
                     ]);
 
                 if ($response->successful()) {
@@ -163,7 +169,7 @@ class GeminiService
                 $apiStatus = $errData['error']['status'] ?? '';
 
                 // Tangani kasus kuota habis / rate limit
-                if ($status === 429 || $apiStatus === 'RESOURCE_EXHAUSTED') {
+                if ($status === 429 || $apiStatus === 'RESOURCE_EXHAUSTED' || stripos($apiMessage, 'quota') !== false || stripos($apiMessage, 'rate limit') !== false) {
                     throw new \RuntimeException("Batas kuota panggilan Gemini API tercapai (Rate Limit / Quota Exceeded). Mohon tunggu sekitar 1-2 menit sebelum mencoba kembali.");
                 }
 
@@ -179,7 +185,7 @@ class GeminiService
             } catch (\Throwable $e) {
                 // Jika error adalah kuota/auth, jangan lanjutkan perulangan model karena hasilnya akan sama
                 $pesan = $e->getMessage();
-                if (str_contains($pesan, 'Batas kuota') || str_contains($pesan, 'Kunci API Gemini tidak valid')) {
+                if (str_contains($pesan, 'Batas kuota') || str_contains($pesan, 'Kunci API Gemini tidak valid') || str_contains($pesan, 'RESOURCE_EXHAUSTED')) {
                     throw $e;
                 }
 
@@ -212,11 +218,11 @@ class GeminiService
             $code = 503;
             $tipe = 'overload';
             $userMsg = "Server Google Gemini sedang mengalami lonjakan beban sesaat (high demand). Silakan tekan tombol 'Coba Lagi' untuk memproses ulang.";
-        } elseif (str_contains($msg, 'Batas kuota') || str_contains($msg, 'Rate Limit') || str_contains($msg, '429')) {
+        } elseif (str_contains($msg, 'Batas kuota') || str_contains($msg, 'Rate Limit') || str_contains($msg, '429') || str_contains($msg, 'RESOURCE_EXHAUSTED') || stripos($msg, 'quota') !== false) {
             $code = 429;
             $tipe = 'quota';
-            $userMsg = "Batas kuota Gemini API saat ini tercapai. Harap tunggu sekitar 1–2 menit sebelum mencoba kembali.";
-        } elseif (str_contains($msg, 'Kunci API') || str_contains($msg, 'tidak valid') || str_contains($msg, 'belum dikonfigurasi')) {
+            $userMsg = "Batas kuota panggilan Gemini API tercapai (Rate Limit / Quota Exceeded). Harap tunggu sekitar 1–2 menit sebelum mencoba kembali.";
+        } elseif (str_contains($msg, 'Kunci API') || str_contains($msg, 'tidak valid') || str_contains($msg, 'belum dikonfigurasi') || str_contains($msg, 'PERMISSION_DENIED') || str_contains($msg, '401') || str_contains($msg, '403')) {
             $code = 401;
             $tipe = 'auth';
             $userMsg = "Kunci API Gemini (GEMINI_API_KEY) belum terpasang atau tidak valid. Periksa konfigurasi di file .env.";
@@ -296,7 +302,41 @@ ATURAN:
     }
 
     /**
-     * Mengekstrak Action Items & Penugasan Konkret dari Notulen
+     * Skema Structured Output untuk Action Items sesuai standar OpenAPI / Gemini API
+     */
+    public static function schemaActionItems(): array
+    {
+        return [
+            'type' => 'ARRAY',
+            'description' => 'Daftar butir tindakan konkret / penugasan hasil rapat',
+            'items' => [
+                'type' => 'OBJECT',
+                'properties' => [
+                    'tugas' => [
+                        'type' => 'STRING',
+                        'description' => 'Rincian tugas atau tindakan konkret yang harus dilaksanakan',
+                    ],
+                    'pic' => [
+                        'type' => 'STRING',
+                        'description' => 'Pihak/Pejabat/OPD yang menjadi penanggung jawab tugas',
+                    ],
+                    'prioritas' => [
+                        'type' => 'STRING',
+                        'enum' => ['Tinggi', 'Sedang', 'Normal'],
+                        'description' => 'Tingkat urgensi penyelesaian tugas',
+                    ],
+                    'estimasi' => [
+                        'type' => 'STRING',
+                        'description' => 'Tenggat waktu atau durasi estimasi target penyelesaian (misal: 3 Hari, 1 Minggu, 30 Oktober 2026)',
+                    ],
+                ],
+                'required' => ['tugas', 'pic', 'prioritas', 'estimasi'],
+            ],
+        ];
+    }
+
+    /**
+     * Mengekstrak Action Items & Penugasan Konkret dari Notulen dengan Gemini Structured Output
      */
     public static function mintaActionItemsAI(Rapat $rapat): array
     {
@@ -311,40 +351,100 @@ ATURAN:
         $daftarTL = implode("\n", $daftarTLArr);
 
         $prompt = "Kamu adalah Project Management Specialist.
-Dari notulen rapat berikut, ekstrak daftar Action Items (Tugas Konkret) yang harus dilakukan.
-Keluarkan respon HANYA dalam format JSON valid berupa array objek:
-[
-  {
-    \"tugas\": \"Deskripsi tugas konkret\",
-    \"pic\": \"Pihak / Jabatan yang bertanggung jawab\",
-    \"prioritas\": \"Tinggi / Sedang / Normal\",
-    \"estimasi\": \"Contoh: 1 Minggu\"
-  }
-]
+Dari notulen rapat berikut, ekstrak seluruh Action Items (Tugas Konkret dan Tindak Lanjut) yang harus dilakukan.
+Keluarkan respon HANYA dalam format JSON valid sesuai skema yang diminta.
 
 Data Rapat:
 Topik: {$rapat->topik}
 Pimpinan: {$rapat->pimpinanRapat}
 Pembahasan:
 {$daftarPoin}
-Tindak lanjut tercatat:
-{$daftarTL}
+Tindak lanjut tercatat sebelumnya:
+{$daftarTL}";
 
-JANGAN berikan markdown pembuka/penutup atau teks lain selain JSON murni.";
+        $extraConfig = [
+            'responseMimeType' => 'application/json',
+            'responseSchema' => self::schemaActionItems(),
+        ];
 
-        $teks = self::panggilGemini($prompt, 0.1, 2048);
         try {
-            $bersih = preg_replace('/```(?:json)?/i', '', $teks);
-            $bersih = trim($bersih);
-            $parsed = json_decode($bersih, true);
-            if (is_array($parsed)) {
-                return $parsed;
+            $rawJson = self::panggilGemini($prompt, 0.1, 2048, $extraConfig);
+        } catch (\Throwable $e) {
+            // Jika model menolak responseSchema (400), coba ulang dengan responseMimeType saja
+            $pesan = $e->getMessage();
+            if (str_contains($pesan, 'schema') || str_contains($pesan, 'responseSchema') || str_contains($pesan, '400')) {
+                Log::warning("Gemini API responseSchema error, falling back to JSON responseMimeType: " . $pesan);
+                $rawJson = self::panggilGemini($prompt, 0.1, 2048, [
+                    'responseMimeType' => 'application/json',
+                ]);
+            } else {
+                throw $e;
             }
-        } catch (\Throwable $e) {}
+        }
 
+        return self::parseJsonActionItems($rawJson);
+    }
+
+    /**
+     * Parsing dan sanitasi respon JSON Action Items secara native dan aman
+     */
+    public static function parseJsonActionItems(string $rawJson): array
+    {
+        $bersih = trim($rawJson);
+        // Hapus pembungkus markdown ```json ... ``` jika model menyertakannya
+        if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $bersih, $matches)) {
+            $bersih = trim($matches[1]);
+        }
+
+        $decoded = json_decode($bersih, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            $list = isset($decoded['actionItems']) && is_array($decoded['actionItems'])
+                ? $decoded['actionItems']
+                : (isset($decoded['data']) && is_array($decoded['data']) ? $decoded['data'] : $decoded);
+
+            if (is_array($list)) {
+                $sanitized = [];
+                foreach ($list as $item) {
+                    if (is_string($item)) {
+                        $sanitized[] = [
+                            'tugas' => trim($item),
+                            'pic' => '-',
+                            'prioritas' => 'Normal',
+                            'estimasi' => '-',
+                        ];
+                    } elseif (is_array($item)) {
+                        $tugas = trim((string)($item['tugas'] ?? ($item['isi'] ?? '')));
+                        if ($tugas === '') continue;
+
+                        $prio = trim((string)($item['prioritas'] ?? 'Normal'));
+                        if (!in_array($prio, ['Tinggi', 'Sedang', 'Normal'])) {
+                            if (stripos($prio, 'tinggi') !== false || stripos($prio, 'high') !== false) {
+                                $prio = 'Tinggi';
+                            } elseif (stripos($prio, 'sedang') !== false || stripos($prio, 'med') !== false) {
+                                $prio = 'Sedang';
+                            } else {
+                                $prio = 'Normal';
+                            }
+                        }
+
+                        $sanitized[] = [
+                            'tugas' => $tugas,
+                            'pic' => trim((string)($item['pic'] ?? '-')) ?: '-',
+                            'prioritas' => $prio,
+                            'estimasi' => trim((string)($item['estimasi'] ?? ($item['deadline'] ?? '-'))) ?: '-',
+                        ];
+                    }
+                }
+                if (!empty($sanitized)) {
+                    return $sanitized;
+                }
+            }
+        }
+
+        // Fallback jika bukan format array objek
         return [
             [
-                'tugas' => $teks,
+                'tugas' => $bersih,
                 'pic' => '-',
                 'prioritas' => 'Normal',
                 'estimasi' => '-',
