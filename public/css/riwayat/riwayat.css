@@ -125,7 +125,9 @@
   line-height: 1;
 }
 
-.riwayat-stat-ai { color: var(--accent-cyan, #38bdf8); }
+.riwayat-stat-ai {
+  color: var(--accent-cyan, #38bdf8);
+}
 
 /* List header */
 .riwayat-list-header {
@@ -586,7 +588,8 @@
 
   .riwayat-search-wrap input[type="text"],
   #input-cari-rapat {
-    font-size: 16px !important; /* Mencegah zoom di iOS */
+    font-size: 16px !important;
+    /* Mencegah zoom di iOS */
     height: 46px;
     border-radius: 10px;
   }
