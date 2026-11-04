@@ -737,4 +737,192 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-}
+}
+
+
+/* ==========================================================================
+   KARTU LAMPIRAN BERKAS & DOKUMEN PENDUKUNG
+   ========================================================================== */
+.lampiran-upload-area {
+  border: 2px dashed #263353;
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  background: rgba(15, 23, 42, 0.4);
+  text-align: center;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.lampiran-upload-area:hover,
+.lampiran-upload-area.dragover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.lampiran-upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.lampiran-upload-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-pilih-lampiran {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-pilih-lampiran:hover {
+  background: #0369a1;
+}
+
+.lampiran-format-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 4px 0 0 0;
+}
+
+.grid-lampiran-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.card-lampiran-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #0b132b;
+  border: 1px solid #1c294d;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.card-lampiran-item:hover {
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.lampiran-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.lampiran-icon-pdf { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.lampiran-icon-image { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.lampiran-icon-word { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+.lampiran-icon-presentation { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.lampiran-icon-excel { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.lampiran-icon-default { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+.lampiran-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lampiran-item-nama {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.lampiran-item-meta {
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lampiran-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-lampiran-action {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-lampiran-unduh {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.btn-lampiran-unduh:hover {
+  background: #38bdf8;
+  color: #0b132b;
+}
+
+.btn-lampiran-hapus {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.btn-lampiran-hapus:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.lampiran-empty-state {
+  text-align: center;
+  padding: 24px 16px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Light Mode Overrides */
+body.tema-terang .lampiran-upload-area {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+body.tema-terang .card-lampiran-item {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+body.tema-terang .lampiran-item-nama {
+  color: #0f172a;
+}

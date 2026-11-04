@@ -707,4 +707,121 @@
     font-size: 13px;
   }
 }
-
+
+
+
+/* ==========================================================================
+   TEMPAT SAMPAH (TRASH & RESTORE)
+   ========================================================================== */
+.trash-notice-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #fca5a5;
+  animation: fadeInSlide 0.25s ease;
+}
+
+.trash-notice-icon {
+  font-size: 20px;
+}
+
+.trash-notice-text {
+  line-height: 1.5;
+}
+
+.pill-trash {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: #f87171 !important;
+}
+
+.pill-trash:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.pill-trash.aktif {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+.badge-trash-count {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.2);
+  margin-left: 4px;
+}
+
+.item-rapat-sidebar.trash-item {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.03);
+}
+
+.item-rapat-sidebar.trash-item:hover {
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.trash-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-trash-restore,
+.btn-trash-force {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.btn-trash-restore {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.btn-trash-restore:hover {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.btn-trash-force {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-trash-force:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+body.tema-terang .trash-notice-banner {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+body.tema-terang .item-rapat-sidebar.trash-item {
+  background: #fff5f5;
+  border-color: #fecaca;
+}

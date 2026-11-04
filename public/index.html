@@ -12,7 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
-  <link rel="stylesheet" href="css/app.css?v=1.1.0" />
+  <link rel="stylesheet" href="css/app.css?v=1.2.0" />
 </head>
 
 <body>
@@ -135,6 +135,13 @@
                 <button type="button" class="pill aktif" data-filter="all">Semua</button>
                 <button type="button" class="pill" data-filter="bulan_ini">Bulan Ini</button>
                 <button type="button" class="pill" data-filter="ada_ai">Ada AI</button>
+                <button type="button" class="pill pill-trash" data-filter="trash" id="pill-filter-trash" title="Lihat notulen di tempat sampah">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right:3px;vertical-align:-1px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Tempat Sampah</span>
+                  <span class="badge-trash-count tersembunyi" id="badge-trash-count">0</span>
+                </button>
               </div>
             </div>
 
@@ -158,6 +165,14 @@
             <div class="riwayat-list-header">
               <span class="riwayat-list-title">Riwayat Notulen</span>
               <span class="counter-badge" id="counter-daftar">0</span>
+            </div>
+
+            <!-- BANNER NOTIFIKASI TEMPAT SAMPAH -->
+            <div id="trash-notice-banner" class="trash-notice-banner tersembunyi">
+              <div class="trash-notice-icon">🗑️</div>
+              <div class="trash-notice-text">
+                <strong>Mode Tempat Sampah:</strong> Menampilkan notulen rapat yang telah dihapus sementara. Anda dapat memulihkan (*restore*) data kembali ke daftar aktif atau menghapusnya secara permanen.
+              </div>
             </div>
 
             <!-- DAFTAR RAPAT GRID -->
@@ -381,6 +396,37 @@
                 <span class="badge-count" id="badge-poin-count">0 Notulensi</span>
               </div>
               <div class="list-pembahasan" id="konten-poin-list"></div>
+            </div>
+
+            <!-- KARTU LAMPIRAN DOKUMEN & FOTO PENDUKUNG -->
+            <div class="card-luxury lampiran-card" id="kotak-lampiran-container">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h2>Lampiran Dokumen &amp; Foto</h2>
+                </div>
+                <span class="badge-count" id="badge-lampiran-count">0 Berkas</span>
+              </div>
+
+              <!-- UPLOAD BAR -->
+              <div class="lampiran-upload-area" id="dropzone-lampiran">
+                <input type="file" id="input-file-lampiran" style="display:none;" accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
+                <div class="lampiran-upload-content">
+                  <div class="lampiran-upload-icon" aria-hidden="true">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  <div class="lampiran-upload-text">
+                    <label for="input-file-lampiran" class="btn-pilih-lampiran" id="label-pilih-lampiran">
+                      <span>＋ Unggah Berkas Lampiran</span>
+                    </label>
+                    <p class="lampiran-format-hint">Mendukung PDF, Foto (JPG/PNG), Word (DOCX), Materi (PPTX), dan Excel (Maks. 10 MB per berkas)</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- GRID LIST LAMPIRAN -->
+              <div class="grid-lampiran-cards" id="konten-lampiran-grid"></div>
             </div>
 
             <!-- KARTU PRATINJAU DOKUMEN CETAK RESMI -->
@@ -871,7 +917,7 @@
   <!-- TOAST CONTAINER -->
   <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-  <script type="module" src="js/app.js?v=1.1.0"></script>
+  <script type="module" src="js/app.js?v=1.2.0"></script>
 </body>
 
 </html>

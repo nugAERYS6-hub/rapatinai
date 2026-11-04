@@ -28,6 +28,7 @@ class RapatController extends Controller
             $denganAI = Rapat::whereNotNull('ringkasanAI')
                 ->where('ringkasanAI', '!=', '')
                 ->count();
+            $terhapus = Rapat::onlyTrashed()->count();
 
             return response()->json([
                 'success' => true,
@@ -36,6 +37,7 @@ class RapatController extends Controller
                     'rapatBulanIni' => $rapatBulanIni,
                     'denganAI' => $denganAI,
                     'bulanIni' => $bulanIni,
+                    'terhapus' => $terhapus,
                 ],
             ]);
         } catch (\Throwable $e) {

@@ -40,7 +40,7 @@ class RapatApiTest extends TestCase
                  ->assertJsonPath('success', true)
                  ->assertJsonStructure([
                      'success',
-                     'data' => ['totalRapat', 'rapatBulanIni', 'denganAI', 'bulanIni']
+                     'data' => ['totalRapat', 'rapatBulanIni', 'denganAI', 'bulanIni', 'terhapus']
                  ]);
     }
 

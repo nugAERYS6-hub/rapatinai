@@ -32,6 +32,9 @@ export const el = {
   inputCari: document.getElementById("input-cari-rapat"),
   btnClearCari: document.getElementById("tombol-clear-cari"),
   filterPills: document.getElementById("filter-pills"),
+  pillFilterTrash: document.getElementById("pill-filter-trash"),
+  badgeTrashCount: document.getElementById("badge-trash-count"),
+  trashNoticeBanner: document.getElementById("trash-notice-banner"),
   daftarRapatSidebar: document.getElementById("daftar-rapat-sidebar"),
   counterDaftar: document.getElementById("counter-daftar"),
   btnPrevPage: document.getElementById("btn-prev-page"),
@@ -87,6 +90,10 @@ export const el = {
   btnPrintDoc: document.getElementById("btn-print-doc"),
   badgePesertaCount: document.getElementById("badge-peserta-count"),
   badgePoinCount: document.getElementById("badge-poin-count"),
+  kontenLampiranGrid: document.getElementById("konten-lampiran-grid"),
+  badgeLampiranCount: document.getElementById("badge-lampiran-count"),
+  inputFileLampiran: document.getElementById("input-file-lampiran"),
+  dropzoneLampiran: document.getElementById("dropzone-lampiran"),
 
   // Form View
   formRapat: document.getElementById("form-rapat"),
