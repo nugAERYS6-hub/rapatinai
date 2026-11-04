@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | RapatinAI API Secret Key
+    |--------------------------------------------------------------------------
+    |
+    | Kunci rahasia untuk memproteksi seluruh endpoint API RapatinAI dari akses
+    | liar atau tidak terotorisasi.
+    |
+    */
+
+    'api_key' => env('RAPATIN_API_KEY', 'rapatin-secure-key-malut-2026'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

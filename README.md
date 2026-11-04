@@ -67,6 +67,27 @@ php artisan test --filter=RapatApiTest
 
 ---
 
+## 🔒 Keamanan & Proteksi API
+
+Seluruh endpoint API pada RapatinAI telah dilengkapi lapisan perlindungan tingkat enterprise:
+1. **Otorisasi API Key (`EnsureApiAuthorized`)**:
+   - Memvalidasi header `X-API-KEY` (atau `Authorization: Bearer <token>`) sesuai kunci yang dikonfigurasi pada `.env` (`RAPATIN_API_KEY`).
+   - Endpoint sensitif seperti `/api/backup/mysql` dan `/api/backup/restore` secara ketat mewajibkan kunci API yang sah.
+   - Frontend SPA menyertakan interceptor `window.fetch` otomatis untuk menyematkan `X-API-KEY` dan `X-Requested-With: XMLHttpRequest`.
+2. **Parser & Validator Restore SQL (`SqlRestoreParser`)**:
+   - Memproses dump SQL berbasis *State Machine* (menangani tanda titik koma `;` di dalam string notulensi, karakter escape, dan komentar tanpa merusak integritas data).
+   - Membatasi eksekusi secara ketat ke tabel `rapat`. Perintah berbahaya seperti `DROP TABLE users`, `TRUNCATE`, `INTO OUTFILE`, atau manipulasi tabel sistem langsung diblokir.
+3. **Rate Limiting (`RateLimiter`)**:
+   - `throttle:api`: 60 permintaan/menit per IP untuk pembacaan data.
+   - `throttle:crud`: 30 permintaan/menit per IP untuk penambahan/perubahan/penghapusan notulen.
+   - `throttle:ai`: 10 permintaan/menit per IP untuk menjaga kuota panggilan Gemini API.
+   - `throttle:backup`: 5 permintaan/menit per IP untuk mencegah *I/O exhaustion* pada database.
+4. **Proteksi Produksi (`APP_DEBUG=false`)**:
+   - Mode debug dinonaktifkan untuk mencegah kebocoran *stack trace*, variabel lingkungan, dan kredensial database.
+   - Penanganan error API diseragamkan dalam format JSON yang aman dan informatif.
+
+---
+
 ## 📡 Daftar REST API Endpoints
 
 | Method | Endpoint | Deskripsi |

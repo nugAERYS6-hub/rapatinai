@@ -5,6 +5,38 @@
 import { tampilkanToast } from "./ui.js";
 
 /**
+ * Kunci API RapatinAI dari meta tag HTML
+ */
+export const RAPATIN_API_KEY =
+  (typeof document !== "undefined" && document.querySelector('meta[name="api-key"]')?.content) ||
+  "rapatin-secure-key-malut-2026";
+
+// Global Fetch Interceptor: Menyertakan header autentikasi X-API-KEY dan X-Requested-With secara otomatis
+if (typeof window !== "undefined" && window.fetch && !window.__rapatinFetchIntercepted) {
+  window.__rapatinFetchIntercepted = true;
+  const rawFetch = window.fetch;
+  window.fetch = function (resource, init = {}) {
+    init = init || {};
+    const apiKey = RAPATIN_API_KEY;
+
+    if (init.headers instanceof Headers) {
+      if (!init.headers.has("X-API-KEY")) init.headers.set("X-API-KEY", apiKey);
+      if (!init.headers.has("X-Requested-With")) init.headers.set("X-Requested-With", "XMLHttpRequest");
+    } else if (Array.isArray(init.headers)) {
+      init.headers.push(["X-API-KEY", apiKey]);
+      init.headers.push(["X-Requested-With", "XMLHttpRequest"]);
+    } else {
+      init.headers = Object.assign({}, init.headers, {
+        "X-API-KEY": apiKey,
+        "X-Requested-With": "XMLHttpRequest",
+      });
+    }
+
+    return rawFetch(resource, init);
+  };
+}
+
+/**
  * Mencegah serangan XSS dengan escaping karakter khusus HTML
  */
 export function escapeHtml(str) {

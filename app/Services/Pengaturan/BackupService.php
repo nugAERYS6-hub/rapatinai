@@ -103,60 +103,36 @@ class BackupService
     {
         $konten = file_get_contents($file->getRealPath());
 
-        if (empty(trim($konten))) {
-            throw new \InvalidArgumentException('File SQL kosong, tidak ada yang dipulihkan.');
+        if ($konten === false || empty(trim($konten))) {
+            throw new \InvalidArgumentException('File SQL kosong atau tidak dapat dibaca.');
         }
 
-        $barisBaris = array_filter(
-            preg_split('/\r?\n/', $konten),
-            fn($b) => !empty(trim($b)) && !str_starts_with(ltrim($b), '--')
-        );
+        // Parsing dan validasi menggunakan SqlRestoreParser
+        $parser = new SqlRestoreParser();
+        $hasilParse = $parser->parseAndValidate($konten);
 
-        $sqlGabung = implode("\n", $barisBaris);
-        $pernyataan = array_filter(
-            explode(';', $sqlGabung),
-            fn($s) => !empty(trim($s))
-        );
-
-        $izinkan = ['SET', 'DROP TABLE', 'CREATE TABLE', 'LOCK TABLES', 'UNLOCK TABLES', 'INSERT INTO'];
-        $jumlahInsert = 0;
-        $jumlahTotal = 0;
+        $statements = $hasilParse['statements'];
+        $totalInsert = $hasilParse['total_insert'];
+        $totalPernyataan = count($statements);
 
         DB::beginTransaction();
 
         try {
-            foreach ($pernyataan as $sql) {
-                $bersih = strtoupper(ltrim(trim($sql)));
-                $diizinkan = false;
-                foreach ($izinkan as $prefix) {
-                    if (str_starts_with($bersih, $prefix)) {
-                        $diizinkan = true;
-                        break;
-                    }
-                }
-
-                if (!$diizinkan) {
-                    continue;
-                }
-
-                DB::statement(trim($sql));
-                $jumlahTotal++;
-
-                if (str_starts_with($bersih, 'INSERT INTO')) {
-                    $jumlahInsert++;
-                }
+            foreach ($statements as $sql) {
+                DB::statement($sql);
             }
 
             DB::commit();
 
-            Log::info("Restore database berhasil: {$jumlahInsert} baris INSERT dari {$jumlahTotal} pernyataan.");
+            Log::info("Restore database berhasil: {$totalInsert} baris INSERT dari {$totalPernyataan} pernyataan.");
 
             return [
-                'total_pernyataan' => $jumlahTotal,
-                'total_insert'     => $jumlahInsert,
+                'total_pernyataan' => $totalPernyataan,
+                'total_insert'     => $totalInsert,
             ];
         } catch (\Throwable $e) {
             DB::rollBack();
+            Log::error("Gagal mengeksekusi restore database: " . $e->getMessage());
             throw $e;
         }
     }

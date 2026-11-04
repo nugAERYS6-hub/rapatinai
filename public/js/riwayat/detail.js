@@ -3,7 +3,7 @@
 // ==========================================================================
 
 import { STATE, el } from "../shared/state.js";
-import { escapeHtml, formatHariTanggal } from "../shared/utils.js";
+import { escapeHtml, formatHariTanggal, RAPATIN_API_KEY } from "../shared/utils.js";
 import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
 import { renderAiContent, formatRingkasanHTML } from "./ai.js";
 import { bukaRiwayat, muatStats, muatDaftarRapat } from "./riwayat.js";
@@ -79,8 +79,8 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
       el.avatarNotulis.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>`;
     }
 
-    if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf`;
-    if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word`;
+    if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`;
+    if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`;
 
     await muatKonfigInstansi();
     renderAiContent(rapat);
