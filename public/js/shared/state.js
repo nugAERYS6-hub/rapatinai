@@ -127,6 +127,14 @@ export const el = {
   btnBatalAnggota: document.getElementById("tombol-batal-anggota"),
   btnSimpanAnggota: document.getElementById("tombol-simpan-anggota"),
 
+  // Modal Preview Lampiran
+  modalPreviewLampiran: document.getElementById("modal-preview-lampiran"),
+  modalPreviewNama: document.getElementById("modal-preview-nama"),
+  modalPreviewMeta: document.getElementById("modal-preview-meta"),
+  modalPreviewBtnUnduh: document.getElementById("modal-preview-btn-unduh"),
+  modalPreviewBody: document.getElementById("modal-preview-body"),
+  btnClosePreviewX: document.getElementById("btn-close-preview-x"),
+
   // Toast
   kontainerToast: document.getElementById("kontainer-toast"),
 };

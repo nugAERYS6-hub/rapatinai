@@ -9,6 +9,67 @@ import { renderAiContent, formatRingkasanHTML } from "./ai.js";
 import { bukaRiwayat, muatStats, muatDaftarRapat } from "./riwayat.js";
 
 /**
+ * Menampilkan kerangka skeleton shimmer saat memuat data detail rapat
+ */
+export function tampilkanSkeletonDetail() {
+  tutupSemuaView();
+  if (el.viewDetail) el.viewDetail.classList.remove("tersembunyi");
+
+  if (el.detailTopik) {
+    el.detailTopik.innerHTML = `<span class="detail-skeleton-line skeleton-title"></span>`;
+  }
+  if (el.detailTanggal) {
+    el.detailTanggal.innerHTML = `<span class="detail-skeleton-pill"></span>`;
+  }
+  if (el.detailWaktu) {
+    el.detailWaktu.classList.remove("tersembunyi");
+    el.detailWaktu.innerHTML = `<span class="detail-skeleton-pill"></span>`;
+  }
+  if (el.detailTempat) {
+    el.detailTempat.classList.remove("tersembunyi");
+    el.detailTempat.innerHTML = `<span class="detail-skeleton-pill"></span>`;
+  }
+  if (el.detailStatus) {
+    el.detailStatus.className = "badge-status-rapat";
+    el.detailStatus.innerHTML = `<span class="detail-skeleton-pill"></span>`;
+  }
+  if (el.detailPimpinan) el.detailPimpinan.textContent = "...";
+  if (el.detailNotulis) el.detailNotulis.textContent = "...";
+  if (el.detailTotalPeserta) el.detailTotalPeserta.textContent = "...";
+
+  if (el.kontenPesertaGrid) {
+    el.kontenPesertaGrid.innerHTML = `
+      <div class="peserta-item-card skeleton-card-pulse">
+        <div class="detail-skeleton-circle"></div>
+        <div style="flex:1;"><div class="detail-skeleton-line" style="width:70%;margin-bottom:6px;"></div><div class="detail-skeleton-line" style="width:40%;"></div></div>
+      </div>
+      <div class="peserta-item-card skeleton-card-pulse">
+        <div class="detail-skeleton-circle"></div>
+        <div style="flex:1;"><div class="detail-skeleton-line" style="width:65%;margin-bottom:6px;"></div><div class="detail-skeleton-line" style="width:45%;"></div></div>
+      </div>
+    `;
+  }
+
+  if (el.kontenPoinList) {
+    el.kontenPoinList.innerHTML = `
+      <div class="poin-row-item skeleton-card-pulse">
+        <div class="detail-skeleton-circle" style="width:24px;height:24px;border-radius:6px;"></div>
+        <div class="poin-content" style="flex:1;"><div class="detail-skeleton-line" style="width:90%;margin-bottom:6px;"></div><div class="detail-skeleton-line" style="width:65%;"></div></div>
+      </div>
+    `;
+  }
+
+  if (el.kontenLampiranGrid) {
+    el.kontenLampiranGrid.innerHTML = `
+      <div class="card-lampiran-item skeleton-card-pulse">
+        <div class="detail-skeleton-circle" style="width:36px;height:36px;border-radius:8px;"></div>
+        <div style="flex:1;"><div class="detail-skeleton-line" style="width:60%;margin-bottom:6px;"></div><div class="detail-skeleton-line" style="width:30%;"></div></div>
+      </div>
+    `;
+  }
+}
+
+/**
  * Menampilkan rincian detail 1 notulen rapat eksekutif
  */
 export async function tampilkanDetailRapat(id, syncHash = true) {
@@ -16,6 +77,8 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
     window.location.hash = `#/detail/${id}`;
     return;
   }
+
+  tampilkanSkeletonDetail();
 
   try {
     const res = await fetch(`/api/rapat/${id}`);
@@ -445,6 +508,9 @@ export function renderLampiranGrid(lampiranList = []) {
           </div>
         </div>
         <div class="lampiran-item-actions">
+          <button type="button" class="btn-lampiran-action btn-lampiran-preview tombol-preview-lampiran" data-lampiran-id="${escapeHtml(item.id)}" title="Pratinjau berkas">
+            Lihat
+          </button>
           <a href="${downloadUrl}" class="btn-lampiran-action btn-lampiran-unduh" target="_blank" download title="Unduh berkas">
             Unduh
           </a>
@@ -457,6 +523,26 @@ export function renderLampiranGrid(lampiranList = []) {
   }).join("");
 
   el.kontenLampiranGrid.innerHTML = itemsHtml;
+
+  // Bind preview lampiran buttons & item click
+  el.kontenLampiranGrid.querySelectorAll(".tombol-preview-lampiran").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const lampiranId = btn.dataset.lampiranId;
+      const item = list.find((l) => String(l.id) === String(lampiranId));
+      if (item) bukaPreviewLampiran(item);
+    });
+  });
+
+  el.kontenLampiranGrid.querySelectorAll(".card-lampiran-item").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".lampiran-item-actions")) return;
+      const lampiranId = card.dataset.lampiranId;
+      const item = list.find((l) => String(l.id) === String(lampiranId));
+      if (item) bukaPreviewLampiran(item);
+    });
+  });
 
   // Bind hapus lampiran buttons
   el.kontenLampiranGrid.querySelectorAll(".tombol-hapus-lampiran").forEach((btn) => {
@@ -489,6 +575,83 @@ export function renderLampiranGrid(lampiranList = []) {
       }
     });
   });
+}
+
+/**
+ * Membuka modal pratinjau berkas lampiran (gambar/PDF/dokumen)
+ */
+export function bukaPreviewLampiran(item) {
+  if (!el.modalPreviewLampiran || !item) return;
+
+  const nama = item.nama_file || "Berkas";
+  const mime = (item.tipe_mime || "").toLowerCase();
+  const ext = nama.split(".").pop().toLowerCase();
+  const downloadUrl = item.download_url
+    ? `${item.download_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
+    : (item.url ? `${item.url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}` : "#");
+
+  if (el.modalPreviewNama) el.modalPreviewNama.textContent = nama;
+  if (el.modalPreviewMeta) {
+    el.modalPreviewMeta.textContent = `${item.ukuran_formatted || "-"} • ${item.kategori || "Dokumen"}`;
+  }
+  if (el.modalPreviewBtnUnduh) {
+    el.modalPreviewBtnUnduh.href = downloadUrl;
+  }
+
+  if (!el.modalPreviewBody) return;
+
+  if (mime.includes("image") || ["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) {
+    el.modalPreviewBody.innerHTML = `
+      <div class="preview-img-container">
+        <img src="${downloadUrl}" alt="${escapeHtml(nama)}" class="preview-img-full" />
+      </div>
+    `;
+  } else if (mime.includes("pdf") || ext === "pdf") {
+    el.modalPreviewBody.innerHTML = `
+      <iframe src="${downloadUrl}" class="preview-pdf-iframe" title="${escapeHtml(nama)}"></iframe>
+    `;
+  } else {
+    let iconLabel = ext.toUpperCase() || "FILE";
+    el.modalPreviewBody.innerHTML = `
+      <div class="preview-fallback-box">
+        <div class="lampiran-item-icon lampiran-icon-default" style="width: 58px; height: 58px; font-size: 18px; margin: 0 auto 16px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 800;">
+          <span>${iconLabel}</span>
+        </div>
+        <h4 style="font-size: 15px; font-weight: 600; color: inherit; margin-bottom: 8px;">${escapeHtml(nama)}</h4>
+        <p style="font-size: 12.5px; color: #64748b; margin-bottom: 20px; line-height: 1.5;">
+          Format berkas ini tidak dapat dipratinjau langsung di dalam jendela peramban. Silakan unduh untuk membuka dengan aplikasi terkait.
+        </p>
+        <a href="${downloadUrl}" class="btn-lampiran-action btn-lampiran-unduh" style="padding: 8px 18px; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" download>
+          Unduh Berkas (${escapeHtml(item.ukuran_formatted || "")})
+        </a>
+      </div>
+    `;
+  }
+
+  el.modalPreviewLampiran.showModal();
+}
+
+/**
+ * Inisialisasi event modal preview lampiran
+ */
+export function initModalPreviewEvents() {
+  if (el.btnClosePreviewX && el.modalPreviewLampiran) {
+    el.btnClosePreviewX.addEventListener("click", () => {
+      el.modalPreviewLampiran.close();
+    });
+  }
+
+  if (el.modalPreviewLampiran) {
+    el.modalPreviewLampiran.addEventListener("click", (e) => {
+      if (e.target === el.modalPreviewLampiran) {
+        el.modalPreviewLampiran.close();
+      }
+    });
+
+    el.modalPreviewLampiran.addEventListener("close", () => {
+      if (el.modalPreviewBody) el.modalPreviewBody.innerHTML = "";
+    });
+  }
 }
 
 /**
@@ -587,6 +750,7 @@ export function initLampiranUpload() {
  */
 export function initDetailEvents() {
   initLampiranUpload();
+  initModalPreviewEvents();
 
   if (el.btnHapusRapat) {
     el.btnHapusRapat.addEventListener("click", async () => {

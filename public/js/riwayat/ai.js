@@ -44,7 +44,7 @@ export function formatRingkasanHTML(text, indent = false) {
 }
 
 /**
- * Merender daftar action items AI ke dalam grid kartu
+ * Merender daftar action items AI ke dalam grid kartu dengan checklist interaktif
  */
 export function renderActionItemsUI(items) {
   if (!el.kontenActionItemsAi) return;
@@ -55,6 +55,9 @@ export function renderActionItemsUI(items) {
     return;
   }
 
+  const rapatId = STATE.rapatAktif?.id;
+  let doneCount = 0;
+
   const itemsHtml = items.map((item, idx) => {
     const tugas = escapeHtml(item.tugas || item.isi || "-");
     const pic = escapeHtml(item.pic || "-");
@@ -64,10 +67,19 @@ export function renderActionItemsUI(items) {
     if (prioritas.toLowerCase().includes("tinggi") || prioritas.toLowerCase().includes("high")) prioClass = "prio-tinggi";
     else if (prioritas.toLowerCase().includes("sedang") || prioritas.toLowerCase().includes("medium")) prioClass = "prio-sedang";
 
+    const storageKey = rapatId ? `rapat_${rapatId}_action_${idx}` : null;
+    const isDone = storageKey ? localStorage.getItem(storageKey) === "1" : false;
+    if (isDone) doneCount++;
+
     return `
-      <div class="action-item-card">
+      <div class="action-item-card ${isDone ? "is-completed" : ""}" data-idx="${idx}">
         <div class="action-item-header">
-          <span class="action-item-num">#${idx + 1}</span>
+          <div style="display: flex; align-items: center;">
+            <button type="button" class="btn-check-action-item ${isDone ? "is-done" : ""}" data-idx="${idx}" title="${isDone ? "Tandai belum selesai" : "Tandai selesai"}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </button>
+            <span class="action-item-num">#${idx + 1}</span>
+          </div>
           <span class="action-item-prio ${prioClass}">${prioritas}</span>
         </div>
         <div class="action-item-body">
@@ -87,7 +99,43 @@ export function renderActionItemsUI(items) {
     `;
   }).join("");
 
-  el.kontenActionItemsAi.innerHTML = `<div class="action-items-grid">${itemsHtml}</div>`;
+  const progressBadge = items.length > 0
+    ? `<div class="action-items-header-row"><span class="badge-action-progress" id="badge-action-progress">${doneCount} dari ${items.length} Tugas Selesai</span></div>`
+    : "";
+
+  el.kontenActionItemsAi.innerHTML = `${progressBadge}<div class="action-items-grid">${itemsHtml}</div>`;
+
+  // Bind toggle checklist
+  el.kontenActionItemsAi.querySelectorAll(".btn-check-action-item").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const idx = btn.dataset.idx;
+      const card = btn.closest(".action-item-card");
+      if (!card || !rapatId) return;
+
+      const key = `rapat_${rapatId}_action_${idx}`;
+      const currentlyDone = localStorage.getItem(key) === "1";
+      if (currentlyDone) {
+        localStorage.removeItem(key);
+        btn.classList.remove("is-done");
+        card.classList.remove("is-completed");
+        btn.title = "Tandai selesai";
+      } else {
+        localStorage.setItem(key, "1");
+        btn.classList.add("is-done");
+        card.classList.add("is-completed");
+        btn.title = "Tandai belum selesai";
+      }
+
+      const total = items.length;
+      let newDone = 0;
+      for (let i = 0; i < total; i++) {
+        if (localStorage.getItem(`rapat_${rapatId}_action_${i}`) === "1") newDone++;
+      }
+      const badge = el.kontenActionItemsAi.querySelector("#badge-action-progress");
+      if (badge) badge.textContent = `${newDone} dari ${total} Tugas Selesai`;
+    });
+  });
 }
 
 /**
@@ -255,15 +303,32 @@ export function initAiEvents() {
     el.btnAiActionItems.addEventListener("click", handleActionItems);
   }
 
+function animateCopyButton(btn) {
+  if (!btn) return;
+  const teksAsli = btn.textContent;
+  btn.classList.add("btn-copy-success");
+  btn.textContent = "✓ Tersalin!";
+  setTimeout(() => {
+    btn.classList.remove("btn-copy-success");
+    btn.textContent = teksAsli;
+  }, 2000);
+}
+
   if (el.btnCopyRingkasan) {
     el.btnCopyRingkasan.addEventListener("click", () => {
-      if (STATE.rapatAktif?.ringkasanAI) copyToClipboard(STATE.rapatAktif.ringkasanAI, "Ringkasan disalin!");
+      if (STATE.rapatAktif?.ringkasanAI) {
+        copyToClipboard(STATE.rapatAktif.ringkasanAI, "Ringkasan disalin!");
+        animateCopyButton(el.btnCopyRingkasan);
+      }
     });
   }
 
   if (el.btnCopyIde) {
     el.btnCopyIde.addEventListener("click", () => {
-      if (STATE.rapatAktif?.ideBaruAI) copyToClipboard(STATE.rapatAktif.ideBaruAI, "Ide rekomendasi disalin!");
+      if (STATE.rapatAktif?.ideBaruAI) {
+        copyToClipboard(STATE.rapatAktif.ideBaruAI, "Ide rekomendasi disalin!");
+        animateCopyButton(el.btnCopyIde);
+      }
     });
   }
 
@@ -283,6 +348,7 @@ export function initAiEvents() {
       }).join("\n\n");
 
       copyToClipboard(`ACTION ITEMS & PENUGASAN RAPAT:\n\n${text}`, "Action items disalin!");
+      animateCopyButton(el.btnCopyActionItems);
     });
   }
 }

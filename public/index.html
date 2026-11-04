@@ -12,7 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
-  <link rel="stylesheet" href="css/app.css?v=1.2.0" />
+  <link rel="stylesheet" href="css/app.css?v=1.3.0" />
 </head>
 
 <body>
@@ -914,10 +914,33 @@
     </div>
   </dialog>
 
+  <!-- ============================================== -->
+  <!-- MODAL POPUP: PRATINJAU LAMPIRAN (LIGHTBOX/PDF)   -->
+  <!-- ============================================== -->
+  <dialog id="modal-preview-lampiran" class="luxury-modal modal-preview-lampiran">
+    <div class="modal-card modal-card-preview">
+      <div class="modal-card-header">
+        <div class="preview-header-info">
+          <h3 id="modal-preview-nama" style="margin: 0; font-size: 15px; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 480px;">Nama Berkas</h3>
+          <span class="preview-badge-meta" id="modal-preview-meta" style="font-size: 11px; color: #94a3b8; margin-top: 2px; display: inline-block;">0 KB • Dokumen</span>
+        </div>
+        <div class="preview-header-actions" style="display: flex; align-items: center; gap: 8px;">
+          <a href="#" id="modal-preview-btn-unduh" class="btn-lampiran-action btn-lampiran-unduh" target="_blank" download title="Unduh berkas" style="padding: 5px 12px; font-size: 12px; text-decoration: none;">
+            Unduh
+          </a>
+          <button type="button" class="btn-close-modal" id="btn-close-preview-x" aria-label="Tutup">✕</button>
+        </div>
+      </div>
+      <div class="modal-preview-body" id="modal-preview-body">
+        <!-- Rendered preview (img / iframe / fallback) -->
+      </div>
+    </div>
+  </dialog>
+
   <!-- TOAST CONTAINER -->
   <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-  <script type="module" src="js/app.js?v=1.2.0"></script>
+  <script type="module" src="js/app.js?v=1.3.0"></script>
 </body>
 
 </html>

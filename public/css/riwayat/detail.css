@@ -926,3 +926,270 @@ body.tema-terang .card-lampiran-item {
 body.tema-terang .lampiran-item-nama {
   color: #0f172a;
 }
+
+/* ==========================================================================
+   UI/UX POLISH: MODAL PRATINJAU LAMPIRAN (LIGHTBOX / PDF)
+   ========================================================================== */
+.modal-preview-lampiran {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: 95vw;
+}
+
+.modal-card-preview {
+  width: 90vw;
+  max-width: 1000px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.75);
+}
+
+.preview-header-info h3 {
+  color: #f8fafc;
+  line-height: 1.3;
+}
+
+.modal-preview-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 280px;
+  margin-top: 14px;
+  border-radius: 12px;
+  background: rgba(3, 7, 18, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.preview-img-container {
+  max-width: 100%;
+  max-height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+}
+
+.preview-img-full {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: zoomInPreview 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zoomInPreview {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.preview-pdf-iframe {
+  width: 100%;
+  height: 74vh;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.preview-fallback-box {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 500px;
+}
+
+.btn-lampiran-preview {
+  background: rgba(14, 165, 233, 0.12);
+  color: #38bdf8;
+  border-color: rgba(14, 165, 233, 0.3);
+}
+
+.btn-lampiran-preview:hover {
+  background: rgba(14, 165, 233, 0.25);
+  color: #7dd3fc;
+  border-color: #38bdf8;
+}
+
+/* ==========================================================================
+   UI/UX POLISH: SKELETON SHIMMER LOADING DETAIL VIEW
+   ========================================================================== */
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.detail-skeleton-line {
+  display: inline-block;
+  height: 14px;
+  background: #1e293b;
+  border-radius: 6px;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+}
+
+.detail-skeleton-line.skeleton-title {
+  height: 28px;
+  width: 75%;
+  max-width: 500px;
+  margin-top: 4px;
+}
+
+.detail-skeleton-pill {
+  display: inline-block;
+  height: 22px;
+  width: 90px;
+  background: #1e293b;
+  border-radius: 9999px;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+}
+
+.detail-skeleton-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #1e293b;
+  flex-shrink: 0;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+}
+
+.skeleton-card-pulse {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   UI/UX POLISH: ACTION ITEMS CHECKLIST & PROGRESS TRACKER
+   ========================================================================== */
+.action-items-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge-action-progress {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.btn-check-action-item {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1.5px solid #475569;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  margin-right: 10px;
+  padding: 0;
+}
+
+.btn-check-action-item:hover {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.btn-check-action-item.is-done {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+.action-item-card.is-completed {
+  opacity: 0.65;
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.action-item-card.is-completed .action-item-text {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+/* Micro-interaction: Salin Button */
+.btn-micro-copy {
+  transition: all 0.2s ease;
+}
+
+.btn-micro-copy.btn-copy-success {
+  background: #059669 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   UI/UX POLISH: LIGHT THEME OVERRIDES
+   ========================================================================== */
+body.tema-terang .modal-card-preview {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.15);
+}
+
+body.tema-terang .preview-header-info h3 {
+  color: #0f172a;
+}
+
+body.tema-terang .modal-preview-body {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.tema-terang .btn-lampiran-preview {
+  background: #f0f9ff;
+  color: #0284c7;
+  border-color: #bae6fd;
+}
+
+body.tema-terang .btn-lampiran-preview:hover {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+body.tema-terang .detail-skeleton-line,
+body.tema-terang .detail-skeleton-pill,
+body.tema-terang .detail-skeleton-circle {
+  background: #e2e8f0;
+}
+
+body.tema-terang .btn-check-action-item {
+  border-color: #cbd5e1;
+}
+
+body.tema-terang .action-item-card.is-completed {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+body.tema-terang .action-item-card.is-completed .action-item-text {
+  color: #64748b;
+}
