@@ -6,7 +6,7 @@ import { STATE, el } from "../shared/state.js";
 import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
 import { renderAnggotaChips, initPesertaEvents } from "./peserta.js";
 import { tambahBarisPoin, tambahBarisTindakLanjut, ambilDataPoinForm, ambilDataTindakLanjutForm, initDinamisEvents } from "./dinamis.js";
-import { pulihkanDrafOtomatis, hapusDrafOtomatis, simpanDrafOtomatis } from "./draft.js";
+import { pulihkanDrafOtomatis, hapusDrafOtomatis, simpanDrafOtomatis, tampilkanBannerDrafJikaAda, initDraftEvents } from "./draft.js";
 import { muatStats, muatDaftarRapat, bukaRiwayat } from "../riwayat/riwayat.js";
 import { tampilkanDetailRapat } from "../riwayat/detail.js";
 
@@ -52,7 +52,7 @@ export function tampilkanFormBaru(syncHash = true) {
     el.inputTanggal.value = new Date().toISOString().slice(0, 10);
   }
 
-  pulihkanDrafOtomatis();
+  tampilkanBannerDrafJikaAda();
 
   document.querySelectorAll(".item-rapat-sidebar").forEach((i) => i.classList.remove("aktif"));
 
@@ -121,6 +121,7 @@ export function bukaEditRapat() {
 export function initFormEvents() {
   initPesertaEvents();
   initDinamisEvents();
+  initDraftEvents();
 
   // Menu sidebar Rapat Baru click
   if (el.menuRapatBaru) {
@@ -136,9 +137,15 @@ export function initFormEvents() {
   // Batal form
   if (el.btnBatalForm) {
     el.btnBatalForm.addEventListener("click", () => {
+      if (STATE.isFormDirty && !STATE.isEditing) {
+        const konfirmasi = confirm("Perhatian: Ada draf catatan notulen yang belum disimpan ke database. Yakin ingin membatalkan dan keluar?");
+        if (!konfirmasi) return;
+      }
+
       const sedangEdit = STATE.isEditing;
       STATE.isEditing = false;
       STATE.editId = null;
+      STATE.isFormDirty = false;
 
       if (sedangEdit && STATE.rapatAktif) {
         if (el.viewForm) el.viewForm.classList.add("tersembunyi");
@@ -157,11 +164,11 @@ export function initFormEvents() {
     el.btnEditRapat.addEventListener("click", bukaEditRapat);
   }
 
-  // Input change auto-save listeners
-  [el.inputTanggal, el.inputTopik, el.inputPimpinan, el.inputNotulis, el.inputWaktu, el.inputWaktuSelesai, el.inputTempat, el.inputStatus].filter(Boolean).forEach((input) => {
-    input.addEventListener("input", simpanDrafOtomatis);
-    input.addEventListener("change", simpanDrafOtomatis);
-  });
+  // Input change auto-save listeners menyeluruh (termasuk poin & tindak lanjut dinamis)
+  if (el.formRapat) {
+    el.formRapat.addEventListener("input", simpanDrafOtomatis);
+    el.formRapat.addEventListener("change", simpanDrafOtomatis);
+  }
 
   // Submit form (create & update)
   if (el.formRapat) {

@@ -41,6 +41,7 @@ class LampiranTest extends TestCase
 
     public function test_upload_lampiran_success(): void
     {
+        Storage::fake('local');
         Storage::fake('public');
         $rapat = $this->createSampleRapat();
 
@@ -56,17 +57,18 @@ class LampiranTest extends TestCase
                  ->assertJsonPath('success', true)
                  ->assertJsonPath('data.nama_file', 'daftar_hadir_peserta.pdf')
                  ->assertJsonPath('data.kategori', 'daftar_hadir')
-                 ->assertJsonPath('data.keterangan', 'Scan daftar hadir tanda tangan basah');
+                 ->assertJsonPath('data.keterangan', 'Scan daftar hadir tanda tangan basah')
+                 ->assertJsonPath('data.is_private', true);
 
         $lampiranId = $response->json('data.id');
         $lampiran = RapatLampiran::find($lampiranId);
         $this->assertNotNull($lampiran);
-        Storage::disk('public')->assertExists($lampiran->path);
+        Storage::disk('local')->assertExists($lampiran->path);
     }
 
     public function test_upload_lampiran_validation_max_size(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
         $rapat = $this->createSampleRapat();
 
         // Ukuran 12 MB (melebihi batas 10 MB)
@@ -82,7 +84,7 @@ class LampiranTest extends TestCase
 
     public function test_upload_lampiran_validation_disallowed_mime(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
         $rapat = $this->createSampleRapat();
 
         // Ekstensi tidak diizinkan (.exe)
@@ -98,7 +100,7 @@ class LampiranTest extends TestCase
 
     public function test_download_lampiran(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
         $rapat = $this->createSampleRapat();
 
         $file = UploadedFile::fake()->create('foto_kegiatan.jpg', 300, 'image/jpeg');
@@ -112,11 +114,31 @@ class LampiranTest extends TestCase
         $downloadRes->assertStatus(200);
         $this->assertStringContainsString('attachment', $downloadRes->headers->get('content-disposition'));
         $this->assertStringContainsString('foto_kegiatan.jpg', $downloadRes->headers->get('content-disposition'));
+        $this->assertEquals('nosniff', $downloadRes->headers->get('x-content-type-options'));
+    }
+
+    public function test_preview_lampiran_inline(): void
+    {
+        Storage::fake('local');
+        $rapat = $this->createSampleRapat();
+
+        $file = UploadedFile::fake()->create('dokumen_materi.pdf', 400, 'application/pdf');
+        $uploadRes = $this->postJson("/api/rapat/{$rapat->id}/lampiran", [
+            'berkas' => $file,
+            'kategori' => 'materi',
+        ]);
+        $lampiranId = $uploadRes->json('data.id');
+
+        $previewRes = $this->get("/api/rapat/{$rapat->id}/lampiran/{$lampiranId}/preview");
+        $previewRes->assertStatus(200);
+        $this->assertStringContainsString('inline', $previewRes->headers->get('content-disposition'));
+        $this->assertEquals('application/pdf', $previewRes->headers->get('content-type'));
+        $this->assertEquals('nosniff', $previewRes->headers->get('x-content-type-options'));
     }
 
     public function test_delete_lampiran(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
         $rapat = $this->createSampleRapat();
 
         $file = UploadedFile::fake()->create('bahan_tayang.pptx', 200, 'application/vnd.openxmlformats-officedocument.presentationml.presentation');
@@ -132,7 +154,7 @@ class LampiranTest extends TestCase
                   ->assertJsonPath('success', true);
 
         $this->assertNull(RapatLampiran::find($lampiranId));
-        Storage::disk('public')->assertMissing($lampiran->path);
+        Storage::disk('local')->assertMissing($lampiran->path);
     }
 }
 

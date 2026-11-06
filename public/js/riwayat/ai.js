@@ -68,7 +68,7 @@ export function renderActionItemsUI(items) {
     else if (prioritas.toLowerCase().includes("sedang") || prioritas.toLowerCase().includes("medium")) prioClass = "prio-sedang";
 
     const storageKey = rapatId ? `rapat_${rapatId}_action_${idx}` : null;
-    const isDone = storageKey ? localStorage.getItem(storageKey) === "1" : false;
+    const isDone = item.selesai === true || (storageKey ? localStorage.getItem(storageKey) === "1" : false);
     if (isDone) doneCount++;
 
     return `
@@ -105,35 +105,62 @@ export function renderActionItemsUI(items) {
 
   el.kontenActionItemsAi.innerHTML = `${progressBadge}<div class="action-items-grid">${itemsHtml}</div>`;
 
-  // Bind toggle checklist
+  // Bind toggle checklist dengan sinkronisasi ke backend
   el.kontenActionItemsAi.querySelectorAll(".btn-check-action-item").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.stopPropagation();
       const idx = btn.dataset.idx;
       const card = btn.closest(".action-item-card");
       if (!card || !rapatId) return;
 
+      const currentlyDone = btn.classList.contains("is-done");
+      const nextDone = !currentlyDone;
+
+      // Pembaruan UI optimis seketika
+      btn.classList.toggle("is-done", nextDone);
+      card.classList.toggle("is-completed", nextDone);
+      btn.title = nextDone ? "Tandai belum selesai" : "Tandai selesai";
+
       const key = `rapat_${rapatId}_action_${idx}`;
-      const currentlyDone = localStorage.getItem(key) === "1";
-      if (currentlyDone) {
-        localStorage.removeItem(key);
-        btn.classList.remove("is-done");
-        card.classList.remove("is-completed");
-        btn.title = "Tandai selesai";
-      } else {
-        localStorage.setItem(key, "1");
-        btn.classList.add("is-done");
-        card.classList.add("is-completed");
-        btn.title = "Tandai belum selesai";
-      }
+      if (nextDone) localStorage.setItem(key, "1");
+      else localStorage.removeItem(key);
 
       const total = items.length;
       let newDone = 0;
-      for (let i = 0; i < total; i++) {
-        if (localStorage.getItem(`rapat_${rapatId}_action_${i}`) === "1") newDone++;
-      }
+      el.kontenActionItemsAi.querySelectorAll(".btn-check-action-item").forEach((b) => {
+        if (b.classList.contains("is-done")) newDone++;
+      });
       const badge = el.kontenActionItemsAi.querySelector("#badge-action-progress");
       if (badge) badge.textContent = `${newDone} dari ${total} Tugas Selesai`;
+
+      try {
+        const res = await fetch(`/api/rapat/${rapatId}/action-items/${idx}/toggle`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ selesai: nextDone }),
+        });
+        const json = await res.json();
+        if (!json.success) throw new Error(json.pesan || "Gagal memperbarui status tugas");
+
+        if (items[idx]) {
+          items[idx].selesai = json.data.selesai;
+          items[idx].selesai_at = json.data.selesai_at;
+        }
+      } catch (err) {
+        // Rollback status UI jika koneksi gagal
+        btn.classList.toggle("is-done", currentlyDone);
+        card.classList.toggle("is-completed", currentlyDone);
+        if (currentlyDone) localStorage.setItem(key, "1");
+        else localStorage.removeItem(key);
+
+        let rollbackCount = 0;
+        el.kontenActionItemsAi.querySelectorAll(".btn-check-action-item").forEach((b) => {
+          if (b.classList.contains("is-done")) rollbackCount++;
+        });
+        if (badge) badge.textContent = `${rollbackCount} dari ${total} Tugas Selesai`;
+
+        tampilkanToast("Gagal menyimpan ke server: " + err.message, "error");
+      }
     });
   });
 }

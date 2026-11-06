@@ -158,4 +158,56 @@ class RapatApiTest extends TestCase
         $response->assertStatus(200);
         $this->assertStringContainsString('wordprocessingml', $response->headers->get('content-type'));
     }
+
+    public function test_toggle_action_item_success(): void
+    {
+        $rapat = $this->createSampleRapat([
+            'tindakLanjut' => json_encode([
+                ['tugas' => 'Siapkan bahan rapat paripurna', 'pic' => 'Bidang Litbang', 'deadline' => '10 Nov 2026', 'selesai' => false],
+                ['tugas' => 'Kirim undangan koordinasi OPD', 'pic' => 'Sekretariat', 'deadline' => '12 Nov 2026', 'selesai' => false],
+            ]),
+        ]);
+
+        // Toggle index 0 dari false ke true
+        $res = $this->patchJson("/api/rapat/{$rapat->id}/action-items/0/toggle", [
+            'selesai' => true,
+        ]);
+
+        $res->assertStatus(200)
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.index', 0)
+            ->assertJsonPath('data.selesai', true)
+            ->assertJsonPath('data.total', 2)
+            ->assertJsonPath('data.selesai_count', 1);
+
+        $rapat->refresh();
+        $items = Rapat::parseTindakLanjut($rapat->tindakLanjut);
+        $this->assertTrue($items[0]['selesai']);
+        $this->assertNotNull($items[0]['selesai_at']);
+
+        // Toggle kembali index 0 ke false
+        $res2 = $this->patchJson("/api/rapat/{$rapat->id}/action-items/0/toggle", [
+            'selesai' => false,
+        ]);
+        $res2->assertStatus(200)
+             ->assertJsonPath('data.selesai', false)
+             ->assertJsonPath('data.selesai_count', 0);
+
+        $rapat->refresh();
+        $items2 = Rapat::parseTindakLanjut($rapat->tindakLanjut);
+        $this->assertFalse($items2[0]['selesai']);
+    }
+
+    public function test_toggle_action_item_invalid_index(): void
+    {
+        $rapat = $this->createSampleRapat([
+            'tindakLanjut' => json_encode([
+                ['tugas' => 'Tugas tunggal', 'pic' => 'Staf A', 'deadline' => '10 Nov 2026'],
+            ]),
+        ]);
+
+        $res = $this->patchJson("/api/rapat/{$rapat->id}/action-items/99/toggle");
+        $res->assertStatus(422)
+            ->assertJsonPath('success', false);
+    }
 }

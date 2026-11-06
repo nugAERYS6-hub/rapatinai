@@ -14,6 +14,7 @@ export const STATE = {
   anggotaForm: [],
   isEditing: false,
   editId: null,
+  isFormDirty: false,
   draftStorageKey: "rapatinai_draft_v3",
   instansi: null,
 };
@@ -116,6 +117,12 @@ export const el = {
   btnBatalForm: document.getElementById("tombol-batal-form"),
   btnSimpanSubmit: document.getElementById("tombol-simpan-submit"),
   labelSimpanSubmit: document.getElementById("label-simpan-submit"),
+  drafStatusPill: document.getElementById("draf-status-pill"),
+  drafStatusText: document.getElementById("draf-status-text"),
+  bannerPulihkanDraf: document.getElementById("banner-pulihkan-draf"),
+  teksWaktuDraf: document.getElementById("teks-waktu-draf"),
+  btnPulihkanDraf: document.getElementById("btn-pulihkan-draf"),
+  btnBuangDraf: document.getElementById("btn-buang-draf"),
 
   // Modal Anggota
   modalAnggota: document.getElementById("modal-anggota"),

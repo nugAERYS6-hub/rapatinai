@@ -7,7 +7,7 @@
 // └── pengaturan/     (backup, tema)
 // ==========================================================================
 
-import { el } from "./shared/state.js";
+import { STATE, el } from "./shared/state.js";
 import { initSidebarEvents, toggleSidebar, initInteractiveBackground, updateSidebarGlider } from "./shared/ui.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
 import { initRiwayatEvents, muatStats, muatDaftarRapat, bukaRiwayat } from "./riwayat/riwayat.js";
@@ -22,6 +22,15 @@ import { initTemaEvents } from "./pengaturan/tema.js";
  */
 export async function handleRoute() {
   const hash = window.location.hash || "";
+
+  if (STATE.isFormDirty && !STATE.isEditing && !hash.startsWith("#/baru") && hash !== "#baru" && hash !== "") {
+    const konfirmasi = confirm("Perhatian: Ada catatan notulen yang belum disimpan ke database. Tinggalkan halaman formulir?");
+    if (!konfirmasi) {
+      window.location.hash = "#/baru";
+      return;
+    }
+    STATE.isFormDirty = false;
+  }
 
   if (hash.startsWith("#/detail/")) {
     const id = hash.replace("#/detail/", "").trim();

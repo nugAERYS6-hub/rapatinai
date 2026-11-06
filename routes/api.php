@@ -32,6 +32,7 @@ Route::middleware(['api.auth', 'throttle:api'])->group(function () {
         Route::delete('/rapat/{id}', [RapatController::class, 'destroy']);
         Route::post('/rapat/{id}/restore', [RapatController::class, 'restore']);
         Route::delete('/rapat/{id}/force', [RapatController::class, 'forceDelete']);
+        Route::patch('/rapat/{id}/action-items/{index}/toggle', [RapatController::class, 'toggleActionItem']);
     });
 
     // --- 2. Fitur AI Notulensi (Gemini Flash - Strict Rate Limited) ---
@@ -44,6 +45,7 @@ Route::middleware(['api.auth', 'throttle:api'])->group(function () {
     // --- 3. Lampiran Berkas Dokumen Pendukung Rapat ---
     Route::get('/rapat/{id}/lampiran', [LampiranController::class, 'index']);
     Route::get('/rapat/{id}/lampiran/{lampiranId}/download', [LampiranController::class, 'download']);
+    Route::get('/rapat/{id}/lampiran/{lampiranId}/preview', [LampiranController::class, 'preview']);
     Route::middleware(['throttle:crud'])->group(function () {
         Route::post('/rapat/{id}/lampiran', [LampiranController::class, 'store']);
         Route::delete('/rapat/{id}/lampiran/{lampiranId}', [LampiranController::class, 'destroy']);

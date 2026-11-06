@@ -589,6 +589,9 @@ export function bukaPreviewLampiran(item) {
   const downloadUrl = item.download_url
     ? `${item.download_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
     : (item.url ? `${item.url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}` : "#");
+  const previewUrl = item.preview_url
+    ? `${item.preview_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
+    : downloadUrl;
 
   if (el.modalPreviewNama) el.modalPreviewNama.textContent = nama;
   if (el.modalPreviewMeta) {
@@ -603,12 +606,12 @@ export function bukaPreviewLampiran(item) {
   if (mime.includes("image") || ["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) {
     el.modalPreviewBody.innerHTML = `
       <div class="preview-img-container">
-        <img src="${downloadUrl}" alt="${escapeHtml(nama)}" class="preview-img-full" />
+        <img src="${previewUrl}" alt="${escapeHtml(nama)}" class="preview-img-full" />
       </div>
     `;
   } else if (mime.includes("pdf") || ext === "pdf") {
     el.modalPreviewBody.innerHTML = `
-      <iframe src="${downloadUrl}" class="preview-pdf-iframe" title="${escapeHtml(nama)}"></iframe>
+      <iframe src="${previewUrl}" class="preview-pdf-iframe" title="${escapeHtml(nama)}"></iframe>
     `;
   } else {
     let iconLabel = ext.toUpperCase() || "FILE";

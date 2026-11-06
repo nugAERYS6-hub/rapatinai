@@ -167,8 +167,11 @@ class Rapat extends Model
                     $out[] = [
                         'tugas' => $t['tugas'] ?? ($t['isi'] ?? ''),
                         'pic' => $t['pic'] ?? '-',
-                        'deadline' => $t['deadline'] ?? '-',
+                        'deadline' => $t['deadline'] ?? ($t['estimasi'] ?? '-'),
+                        'estimasi' => $t['estimasi'] ?? ($t['deadline'] ?? '-'),
+                        'prioritas' => $t['prioritas'] ?? 'Normal',
                         'selesai' => (bool)($t['selesai'] ?? false),
+                        'selesai_at' => $t['selesai_at'] ?? null,
                     ];
                 }
             }

@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('FILESYSTEM_DISK', 'local'),
+    'lampiran_disk' => env('LAMPIRAN_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------

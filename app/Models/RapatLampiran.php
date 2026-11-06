@@ -60,8 +60,10 @@ class RapatLampiran extends Model
             'tipe_mime'        => (string)$this->tipe_mime,
             'kategori'         => (string)($this->kategori ?: 'dokumen'),
             'keterangan'       => $this->keterangan,
-            'url'              => asset('storage/' . $this->path),
+            'preview_url'      => url("/api/rapat/{$this->rapat_id}/lampiran/{$this->id}/preview"),
             'download_url'     => url("/api/rapat/{$this->rapat_id}/lampiran/{$this->id}/download"),
+            'url'              => url("/api/rapat/{$this->rapat_id}/lampiran/{$this->id}/preview"),
+            'is_private'       => true,
             'created_at'       => $this->created_at ? (string)$this->created_at : null,
         ];
     }

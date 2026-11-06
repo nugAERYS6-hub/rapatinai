@@ -335,4 +335,52 @@ class RapatController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Memperbarui status selesai/belum pada butir penugasan (Action Items) di database
+     */
+    public function toggleActionItem(Request $request, $id, $index)
+    {
+        try {
+            $rapat = Rapat::find($id);
+            if (!$rapat) {
+                return response()->json(['success' => false, 'pesan' => 'Notulen rapat tidak ditemukan'], 404);
+            }
+
+            $idx = (int)$index;
+            $items = Rapat::parseTindakLanjut($rapat->tindakLanjut);
+
+            if (!isset($items[$idx])) {
+                return response()->json(['success' => false, 'pesan' => 'Indeks penugasan tidak valid'], 422);
+            }
+
+            $currentStatus = !empty($items[$idx]['selesai']);
+            $newStatus = $request->has('selesai') ? (bool)$request->input('selesai') : !$currentStatus;
+
+            $items[$idx]['selesai'] = $newStatus;
+            $items[$idx]['selesai_at'] = $newStatus ? now()->toIso8601String() : null;
+
+            $rapat->tindakLanjut = json_encode($items, JSON_UNESCAPED_UNICODE);
+            $rapat->save();
+
+            $total = count($items);
+            $selesaiCount = count(array_filter($items, fn($it) => !empty($it['selesai'])));
+
+            return response()->json([
+                'success' => true,
+                'pesan' => $newStatus ? 'Tugas ditandai selesai' : 'Tugas ditandai belum selesai',
+                'data' => [
+                    'index' => $idx,
+                    'selesai' => $newStatus,
+                    'selesai_at' => $items[$idx]['selesai_at'],
+                    'total' => $total,
+                    'selesai_count' => $selesaiCount,
+                    'item' => $items[$idx],
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("Error toggle action item rapat {$id} index {$index}: " . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
 }

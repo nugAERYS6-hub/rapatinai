@@ -12,7 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
-  <link rel="stylesheet" href="css/app.css?v=1.3.0" />
+  <link rel="stylesheet" href="css/app.css?v=1.4.0" />
 </head>
 
 <body>
@@ -740,6 +740,31 @@
                 <h1 class="form-title" id="judul-form">Notulen Rapat Baru</h1>
                 <p class="form-subtitle">Susun catatan rapat.</p>
               </div>
+              <div id="draf-status-pill" class="draf-status-pill tersembunyi" title="Status penyimpanan draf otomatis">
+                <span class="draf-status-dot"></span>
+                <span id="draf-status-text">Draf tersimpan otomatis</span>
+              </div>
+            </div>
+
+            <!-- BANNER PEMULIHAN DRAF (JIKA ADA DRAF TERSIMPAN) -->
+            <div id="banner-pulihkan-draf" class="banner-pulihkan-draf tersembunyi">
+              <div class="banner-draf-info">
+                <div class="banner-draf-icon">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <h4 style="margin: 0; font-size: 13.5px; font-weight: 700; color: #f59e0b;">Draf Notulen Belum Tersimpan Ditemukan</h4>
+                  <p id="teks-waktu-draf" style="margin: 2px 0 0; font-size: 12px; color: #94a3b8;">Ditemukan draf dari sesi sebelumnya yang belum disimpan ke database.</p>
+                </div>
+              </div>
+              <div class="banner-draf-actions">
+                <button type="button" id="btn-pulihkan-draf" class="btn-draf-action btn-draf-pulihkan">
+                  ↺ Pulihkan Draf
+                </button>
+                <button type="button" id="btn-buang-draf" class="btn-draf-action btn-draf-buang" title="Abaikan dan hapus draf lama">
+                  ✕ Buang Draf
+                </button>
+              </div>
             </div>
 
             <!-- FORM UTAMA -->
@@ -940,7 +965,7 @@
   <!-- TOAST CONTAINER -->
   <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-  <script type="module" src="js/app.js?v=1.3.0"></script>
+  <script type="module" src="js/app.js?v=1.4.0"></script>
 </body>
 
 </html>

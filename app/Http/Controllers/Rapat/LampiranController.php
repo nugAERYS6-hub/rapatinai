@@ -37,6 +37,20 @@ class LampiranController extends Controller
     }
 
     /**
+     * Menemukan disk penyimpanan fisik berkas ('local' privat atau fallback 'public')
+     */
+    private function resolveDisk(string $path): ?string
+    {
+        if (Storage::disk('local')->exists($path)) {
+            return 'local';
+        }
+        if (Storage::disk('public')->exists($path)) {
+            return 'public';
+        }
+        return null;
+    }
+
+    /**
      * Mengunggah berkas lampiran baru ke rapat
      */
     public function store(Request $request, $id)
@@ -69,8 +83,9 @@ class LampiranController extends Controller
             $extension = $file->getClientOriginalExtension() ?: 'bin';
             $storedName = time() . '_' . Str::random(10) . '.' . $extension;
 
-            // Simpan ke disk public pada direktori lampiran/{rapat_id}
-            $path = $file->storeAs("lampiran/{$rapat->id}", $storedName, 'public');
+            // Simpan ke disk privat local (atau sesuai konfigurasi env)
+            $disk = config('filesystems.lampiran_disk', 'local');
+            $path = $file->storeAs("lampiran/{$rapat->id}", $storedName, $disk);
 
             $lampiran = RapatLampiran::create([
                 'id'         => (string) Str::ulid(),
@@ -106,18 +121,68 @@ class LampiranController extends Controller
     public function download($rapatId, $lampiranId)
     {
         try {
+            $rapat = Rapat::find($rapatId);
+            if (!$rapat) {
+                return response()->json(['success' => false, 'pesan' => 'Rapat tidak ditemukan atau telah dihapus'], 404);
+            }
+
             $lampiran = RapatLampiran::where('rapat_id', $rapatId)->where('id', $lampiranId)->first();
             if (!$lampiran) {
                 return response()->json(['success' => false, 'pesan' => 'Berkas lampiran tidak ditemukan'], 404);
             }
 
-            if (!Storage::disk('public')->exists($lampiran->path)) {
+            $disk = $this->resolveDisk($lampiran->path);
+            if (!$disk) {
                 return response()->json(['success' => false, 'pesan' => 'Fisik berkas tidak ditemukan di media penyimpanan'], 404);
             }
 
-            return Storage::disk('public')->download($lampiran->path, $lampiran->nama_file);
+            return Storage::disk($disk)->download(
+                $lampiran->path,
+                $lampiran->nama_file,
+                [
+                    'X-Content-Type-Options' => 'nosniff',
+                ]
+            );
         } catch (\Throwable $e) {
             Log::error("Error download lampiran {$lampiranId}: " . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Mengalirkan (stream inline) berkas lampiran untuk pratinjau modal (PDF / Foto)
+     */
+    public function preview($rapatId, $lampiranId)
+    {
+        try {
+            $rapat = Rapat::find($rapatId);
+            if (!$rapat) {
+                return response()->json(['success' => false, 'pesan' => 'Rapat tidak ditemukan atau telah dihapus'], 404);
+            }
+
+            $lampiran = RapatLampiran::where('rapat_id', $rapatId)->where('id', $lampiranId)->first();
+            if (!$lampiran) {
+                return response()->json(['success' => false, 'pesan' => 'Berkas lampiran tidak ditemukan'], 404);
+            }
+
+            $disk = $this->resolveDisk($lampiran->path);
+            if (!$disk) {
+                return response()->json(['success' => false, 'pesan' => 'Fisik berkas tidak ditemukan di media penyimpanan'], 404);
+            }
+
+            $mime = $lampiran->tipe_mime ?: 'application/octet-stream';
+
+            return Storage::disk($disk)->response(
+                $lampiran->path,
+                $lampiran->nama_file,
+                [
+                    'Content-Type' => $mime,
+                    'Content-Disposition' => 'inline; filename="' . addslashes($lampiran->nama_file) . '"',
+                    'X-Content-Type-Options' => 'nosniff',
+                ]
+            );
+        } catch (\Throwable $e) {
+            Log::error("Error preview lampiran {$lampiranId}: " . $e->getMessage());
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
@@ -133,9 +198,10 @@ class LampiranController extends Controller
                 return response()->json(['success' => false, 'pesan' => 'Berkas lampiran tidak ditemukan'], 404);
             }
 
-            // Hapus fisik berkas dari penyimpanan jika ada
-            if (Storage::disk('public')->exists($lampiran->path)) {
-                Storage::disk('public')->delete($lampiran->path);
+            // Hapus fisik berkas dari disk penyimpanan jika ada
+            $disk = $this->resolveDisk($lampiran->path);
+            if ($disk) {
+                Storage::disk($disk)->delete($lampiran->path);
             }
 
             $lampiran->delete();

@@ -84,6 +84,9 @@ class AiController extends Controller
             }
 
             $items = GeminiService::mintaActionItemsAI($rapat);
+            $rapat->tindakLanjut = json_encode($items, JSON_UNESCAPED_UNICODE);
+            $rapat->save();
+
             return response()->json(['success' => true, 'actionItems' => $items]);
         } catch (\Throwable $e) {
             Log::error("Error action items rapat {$id}: " . $e->getMessage());
