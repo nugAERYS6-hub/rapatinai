@@ -58,6 +58,7 @@ export const el = {
   statAiReady: document.getElementById("stat-ai-ready"),
 
   // Views & Breadcrumb
+  breadcrumbRoot: document.getElementById("breadcrumb-root"),
   breadcrumbCurrent: document.getElementById("breadcrumb-current"),
   breadcrumbMiddle: document.getElementById("breadcrumb-middle"),
   breadcrumbSepMiddle: document.getElementById("breadcrumb-sep-middle"),

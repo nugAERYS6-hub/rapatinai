@@ -18,16 +18,149 @@
 .beranda-hero {
   position: relative;
   border-radius: 20px;
-  padding: 44px 40px;
+  padding: 40px 44px;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(9, 14, 28, 0.95) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
+}
+
+.beranda-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 36px;
+  align-items: center;
+}
+
+.beranda-hero-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   ELEMEN PENA 3D INTERAKTIF KEDINASAN
+   ========================================================================== */
+.beranda-hero-3d-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 380px;
+  min-height: 340px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pen-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#canvas-pena-3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.6));
+}
+
+#canvas-pena-3d:active {
+  cursor: grabbing;
+}
+
+/* Bayangan ambien lembut di bawah pena */
+.pen-3d-shadow {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.16) 0%, rgba(0, 0, 0, 0.65) 45%, transparent 75%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Petunjuk Interaksi Geser Kanan/Kiri/Atas/Bawah */
+.pen-3d-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #94a3b8;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
+}
+
+.pen-3d-hint svg {
+  color: #38bdf8;
+  animation: hintPulse 2.4s infinite ease-in-out;
+}
+
+@keyframes hintPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+.pen-3d-hint.fade-out {
+  opacity: 0;
+  transform: translate(-50%, 8px);
+}
+
+/* Tombol Reset Posisi Pena */
+.pen-3d-reset-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 3;
+  padding: 0;
+}
+
+.pen-3d-reset-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: rotate(-45deg);
 }
 
 /* (Ambient glow removed for clean executive theme) */
@@ -684,9 +817,25 @@ body.tema-terang .beranda-step-desc {
   }
 }
 
+@media (max-width: 960px) {
+  .beranda-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .beranda-hero-3d-wrap {
+    height: 300px;
+    max-width: 340px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .beranda-hero {
     padding: 28px 20px;
+  }
+  .beranda-hero-3d-wrap {
+    height: 250px;
   }
   .beranda-hero-actions {
     flex-direction: column;

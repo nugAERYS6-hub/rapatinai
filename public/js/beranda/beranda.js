@@ -4,6 +4,8 @@
 
 import { STATE, el } from "../shared/state.js";
 import { tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
+import { initPen3D } from "./pen3d.js";
+
 
 let berandaObserver = null;
 
@@ -96,9 +98,12 @@ export function bukaBeranda(syncHash = true) {
 
   updateBerandaStats();
 
-  // Jalankan scroll reveal animation
+  // Jalankan scroll reveal animation & inisialisasi pena 3D
   requestAnimationFrame(() => {
     initBerandaScrollReveal();
+    try {
+      initPen3D();
+    } catch (_) {}
   });
 }
 
@@ -106,6 +111,15 @@ export function bukaBeranda(syncHash = true) {
  * Inisialisasi event navigasi kartu dan tombol aksi pada halaman Beranda
  */
 export function initBerandaEvents() {
+  // Breadcrumb NIPW -> Navigasi ke Beranda
+  const breadcrumbRoot = el.breadcrumbRoot || document.getElementById("breadcrumb-root");
+  if (breadcrumbRoot) {
+    breadcrumbRoot.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.location.hash = "#/beranda";
+    });
+  }
+
   // Tombol Hero Utama
   const btnHeroMulai = document.getElementById("btn-hero-mulai-rapat");
   if (btnHeroMulai) {
@@ -175,6 +189,9 @@ export function initBerandaEvents() {
     );
   }
 
-  // Inisialisasi awal animasi
+  // Inisialisasi awal animasi & Pena 3D interaktif
   initBerandaScrollReveal();
+  try {
+    initPen3D();
+  } catch (_) {}
 }

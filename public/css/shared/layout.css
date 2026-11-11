@@ -941,7 +941,8 @@ body.tema-terang .theme-toggle-desc {
   color: #64748b !important;
 }
 
-body.tema-terang .breadcrumb-root { color: #64748b !important; }
+body.tema-terang .breadcrumb-root { color: #64748b !important; }
+body.tema-terang .breadcrumb-root:hover { color: #0284c7 !important; }
 body.tema-terang .breadcrumb-separator { color: #94a3b8 !important; }
 body.tema-terang .breadcrumb-middle { color: #475569 !important; }
 body.tema-terang .breadcrumb-middle:hover { color: #0284c7 !important; }
@@ -1160,7 +1161,15 @@ body.tema-terang .item-rapat-sidebar::after {
 
 .breadcrumb-root {
   color: #64748b;
-  font-weight: 500;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-root:hover {
+  color: #38bdf8;
+  text-decoration: none;
 }
 
 .breadcrumb-separator {
@@ -1443,4 +1452,4 @@ body.tema-terang .item-rapat-sidebar::after {
     padding: 16px 12px max(100px, env(safe-area-inset-bottom, 28px) + 80px);
   }
 }
-
+

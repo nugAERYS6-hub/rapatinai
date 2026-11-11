@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=1.7.5" />
+  <link rel="stylesheet" href="css/app.css?v=1.7.6" />
 </head>
 
 <body>
@@ -47,7 +47,7 @@
       <header class="top-command-bar" data-dock-frame>
         <div class="command-bar-left">
           <div class="breadcrumb" id="breadcrumb-area">
-            <span class="breadcrumb-root">Notulensi</span>
+            <a href="#/beranda" class="breadcrumb-root" id="breadcrumb-root" title="Kembali ke Beranda (NIPW)">NIPW</a>
             <span class="breadcrumb-separator">/</span>
             <span class="breadcrumb-middle tersembunyi" id="breadcrumb-middle"
               style="cursor: pointer; transition: color 0.2s;">Riwayat Rapat</span>
@@ -110,26 +110,51 @@
 
             <!-- HERO INTRODUCING NOTULENSI -->
             <div class="beranda-hero reveal-fade-up revealed">
-              <h1 class="beranda-hero-title">
-                Tata Kelola Dokumentasi Rapat Bidang Infrastruktur dan Pengembangan Wilayah yang Terstruktur, Cepat &amp; Berbasis AI
-              </h1>
-              <p class="beranda-hero-desc">
-                Selamat datang di sistem <strong>Notulensi Infrastruktur dan Pengembangan Wilayah</strong> (<strong>NIPW</strong>). Dirancang khusus bagi aparatur dan staf perangkat daerah untuk menyusun notula resmi berstandar kedinasan (lengkap dengan format NIP 18-digit dan jabatan resmi), mendokumentasikan kehadiran pimpinan secara akurat, mengamankan catatan lewat auto-save draf lokal, mengarsipkan risalah rapat dengan filter rentang tanggal presisi, mengekspor dokumen siap cetak PDF dan Word, serta mempercepat perumusan hasil rapat dengan bantuan kecerdasan buatan dalam satu platform terpadu yang aman dan mandiri.
-              </p>
-              <div class="beranda-hero-actions">
-                <a href="#/baru" id="btn-hero-mulai-rapat" class="btn-hero-primary" title="Mulai pencatatan rapat baru">
-                  <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  <span>Mulai Buat Notulen</span>
-                </a>
-                <a href="#/riwayat" id="btn-hero-buka-riwayat" class="btn-hero-secondary" title="Buka daftar arsip riwayat rapat">
-                  <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="2"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M8 7h.01M12 7h.01"/>
-                  </svg>
-                  <span>Lihat Riwayat Rapat</span>
-                </a>
+              <div class="beranda-hero-grid">
+                <!-- Sisi Kiri: Teks & Aksi -->
+                <div class="beranda-hero-content">
+                  <h1 class="beranda-hero-title">
+                    Tata Kelola Dokumentasi Rapat Bidang Infrastruktur dan Pengembangan Wilayah yang Terstruktur, Cepat &amp; Berbasis AI
+                  </h1>
+                  <p class="beranda-hero-desc">
+                    Selamat datang di sistem <strong>Notulensi Infrastruktur dan Pengembangan Wilayah</strong> (<strong>NIPW</strong>). Dirancang khusus bagi aparatur dan staf perangkat daerah untuk menyusun notula resmi berstandar kedinasan (lengkap dengan format NIP 18-digit dan jabatan resmi), mendokumentasikan kehadiran pimpinan secara akurat, mengamankan catatan lewat auto-save draf lokal, mengarsipkan risalah rapat dengan filter rentang tanggal presisi, mengekspor dokumen siap cetak PDF dan Word, serta mempercepat perumusan hasil rapat dengan bantuan kecerdasan buatan dalam satu platform terpadu yang aman dan mandiri.
+                  </p>
+                  <div class="beranda-hero-actions">
+                    <a href="#/baru" id="btn-hero-mulai-rapat" class="btn-hero-primary" title="Mulai pencatatan rapat baru">
+                      <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span>Mulai Buat Notulen</span>
+                    </a>
+                    <a href="#/riwayat" id="btn-hero-buka-riwayat" class="btn-hero-secondary" title="Buka daftar arsip riwayat rapat">
+                      <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M8 7h.01M12 7h.01"/>
+                      </svg>
+                      <span>Lihat Riwayat Rapat</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Sisi Kanan: Elemen Interaktif Pena 3D Kedinasan -->
+                <div class="beranda-hero-3d-wrap" id="beranda-pen-wrap">
+                  <div class="pen-canvas-container" id="pen-canvas-container">
+                    <canvas id="canvas-pena-3d" aria-label="Elemen Pena 3D Interaktif Kedinasan" role="img"></canvas>
+                    <div class="pen-3d-shadow"></div>
+                    <div class="pen-3d-hint" id="pen-3d-hint">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span>Geser untuk memutar pena 3D</span>
+                    </div>
+                    <button type="button" class="pen-3d-reset-btn" id="btn-reset-pena-3d" title="Reset posisi pena" aria-label="Reset posisi pena">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 3v5h5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
