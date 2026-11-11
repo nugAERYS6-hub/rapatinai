@@ -32,6 +32,9 @@ export function tampilkanFormBaru(syncHash = true) {
 
   if (el.formRapat) el.formRapat.reset();
   if (el.editIdRapat) el.editIdRapat.value = "";
+  if (el.inputPimpinanJabatan) el.inputPimpinanJabatan.value = "";
+  if (el.inputPimpinanNip) el.inputPimpinanNip.value = "";
+  if (el.inputNotulisNip) el.inputNotulisNip.value = "";
   if (el.inputWaktu) el.inputWaktu.value = "";
   if (el.inputWaktuSelesai) el.inputWaktuSelesai.value = "";
   if (el.inputTempat) el.inputTempat.value = "";
@@ -79,7 +82,10 @@ export function bukaEditRapat() {
   if (el.inputTanggal) el.inputTanggal.value = r.tanggal || "";
   if (el.inputTopik) el.inputTopik.value = r.topik || "";
   if (el.inputPimpinan) el.inputPimpinan.value = r.pimpinanRapat || "";
+  if (el.inputPimpinanJabatan) el.inputPimpinanJabatan.value = r.pimpinan_jabatan || r.pimpinanJabatan || "";
+  if (el.inputPimpinanNip) el.inputPimpinanNip.value = r.pimpinan_nip || r.pimpinanNip || "";
   if (el.inputNotulis) el.inputNotulis.value = r.notulis || "";
+  if (el.inputNotulisNip) el.inputNotulisNip.value = r.notulis_nip || r.notulisNip || "";
 
   const waktuMulai = r.waktu_mulai || (r.waktu && r.waktu.includes('-') ? r.waktu.split('-')[0].trim() : (r.waktu || ""));
   const waktuSelesai = r.waktu_selesai || (r.waktu && r.waktu.includes('-') ? r.waktu.split('-')[1].trim() : "");
@@ -178,7 +184,10 @@ export function initFormEvents() {
       const tanggal = el.inputTanggal?.value;
       const topik = el.inputTopik?.value.trim();
       const pimpinan = el.inputPimpinan?.value.trim();
+      const pimpinanJabatan = el.inputPimpinanJabatan ? el.inputPimpinanJabatan.value.trim() : "";
+      const pimpinanNip = el.inputPimpinanNip ? el.inputPimpinanNip.value.trim() : "";
       const notulis = el.inputNotulis?.value.trim();
+      const notulisNip = el.inputNotulisNip ? el.inputNotulisNip.value.trim() : "";
       const waktu = el.inputWaktu ? el.inputWaktu.value.trim() : "";
       const waktuSelesai = el.inputWaktuSelesai ? el.inputWaktuSelesai.value.trim() : "";
       const tempat = el.inputTempat ? el.inputTempat.value.trim() : "";
@@ -196,7 +205,10 @@ export function initFormEvents() {
         tanggal,
         topik,
         pimpinanRapat: pimpinan,
+        pimpinan_jabatan: pimpinanJabatan,
+        pimpinan_nip: pimpinanNip,
         notulis,
+        notulis_nip: notulisNip,
         waktu,
         waktu_selesai: waktuSelesai,
         tempat,

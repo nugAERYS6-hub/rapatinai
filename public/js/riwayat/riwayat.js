@@ -61,6 +61,8 @@ export async function muatDaftarRapat(page = 1) {
         filter: STATE.filter,
       });
       if (STATE.searchQuery) params.set("q", STATE.searchQuery);
+      if (STATE.startDate) params.set("start_date", STATE.startDate);
+      if (STATE.endDate) params.set("end_date", STATE.endDate);
       res = await fetch(`/api/rapat?${params.toString()}`);
     }
 
@@ -271,11 +273,74 @@ export function initRiwayatEvents() {
   if (el.filterPills) {
     el.filterPills.querySelectorAll(".pill").forEach((pill) => {
       pill.addEventListener("click", () => {
-        el.filterPills.querySelectorAll(".pill").forEach((p) => p.classList.remove("aktif"));
+        if (pill.id === "pill-filter-tanggal") {
+          // Toggle date filter panel
+          if (el.panelFilterTanggal) {
+            el.panelFilterTanggal.classList.toggle("tersembunyi");
+          }
+          return;
+        }
+
+        el.filterPills.querySelectorAll(".pill").forEach((p) => {
+          if (p.id !== "pill-filter-tanggal") p.classList.remove("aktif");
+        });
         pill.classList.add("aktif");
         STATE.filter = pill.dataset.filter;
         muatDaftarRapat(1);
       });
+    });
+  }
+
+  // Terapkan filter rentang tanggal
+  if (el.btnTerapkanTanggal) {
+    el.btnTerapkanTanggal.addEventListener("click", () => {
+      const tglMulai = el.filterTglMulai?.value || "";
+      const tglSelesai = el.filterTglSelesai?.value || "";
+
+      if (!tglMulai && !tglSelesai) {
+        tampilkanToast("Pilih setidaknya salah satu batas tanggal", "info");
+        return;
+      }
+
+      if (tglMulai && tglSelesai && tglMulai > tglSelesai) {
+        tampilkanToast("Tanggal mulai tidak boleh melebihi tanggal selesai", "error");
+        return;
+      }
+
+      STATE.startDate = tglMulai;
+      STATE.endDate = tglSelesai;
+
+      if (el.pillFilterTanggal) el.pillFilterTanggal.classList.add("aktif");
+      if (el.labelPillTanggal) {
+        if (tglMulai && tglSelesai) {
+          el.labelPillTanggal.textContent = `${tglMulai.slice(5)} - ${tglSelesai.slice(5)}`;
+        } else if (tglMulai) {
+          el.labelPillTanggal.textContent = `≥ ${tglMulai.slice(5)}`;
+        } else {
+          el.labelPillTanggal.textContent = `≤ ${tglSelesai.slice(5)}`;
+        }
+      }
+
+      tampilkanToast("Filter rentang tanggal diterapkan");
+      muatDaftarRapat(1);
+    });
+  }
+
+  // Reset filter rentang tanggal
+  if (el.btnResetTanggal) {
+    el.btnResetTanggal.addEventListener("click", () => {
+      if (el.filterTglMulai) el.filterTglMulai.value = "";
+      if (el.filterTglSelesai) el.filterTglSelesai.value = "";
+
+      STATE.startDate = "";
+      STATE.endDate = "";
+
+      if (el.pillFilterTanggal) el.pillFilterTanggal.classList.remove("aktif");
+      if (el.labelPillTanggal) el.labelPillTanggal.textContent = "Rentang Tanggal";
+      if (el.panelFilterTanggal) el.panelFilterTanggal.classList.add("tersembunyi");
+
+      tampilkanToast("Filter rentang tanggal dibersihkan", "info");
+      muatDaftarRapat(1);
     });
   }
 

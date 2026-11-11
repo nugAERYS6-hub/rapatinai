@@ -108,7 +108,12 @@
         }
         .sign-name {
             font-weight: bold;
+            text-decoration: underline;
             margin-top: 60px;
+        }
+        .sign-nip {
+            font-size: 10pt;
+            margin-top: 2px;
         }
         .page-break {
             page-break-before: always;
@@ -244,12 +249,18 @@
     <table class="sign-table">
         <tr>
             <td style="text-align: left; padding-left: 20px;">
-                Pemimpin rapat,<br/>
+                {{ $rapat->pimpinan_jabatan ?: 'Pemimpin rapat' }},<br/>
                 <div class="sign-name">{{ $rapat->pimpinanRapat ?: '-' }}</div>
+                @if(!empty($rapat->pimpinan_nip))
+                    <div class="sign-nip">NIP. {{ $rapat->pimpinan_nip }}</div>
+                @endif
             </td>
             <td style="text-align: left; padding-left: 20px;">
                 Notulen,<br/>
                 <div class="sign-name">{{ $rapat->notulis ?: '-' }}</div>
+                @if(!empty($rapat->notulis_nip))
+                    <div class="sign-nip">NIP. {{ $rapat->notulis_nip }}</div>
+                @endif
             </td>
         </tr>
     </table>

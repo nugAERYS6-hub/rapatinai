@@ -828,3 +828,119 @@ body.tema-terang .item-rapat-sidebar.trash-item {
   background: #fff5f5;
   border-color: #fecaca;
 }
+
+/* ==========================================================================
+   DATE RANGE FILTER PANEL
+   ========================================================================== */
+.date-filter-panel {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.date-inputs-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.date-range-sep {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.input-date-custom {
+  background: #0b132b;
+  border: 1px solid #1e293b;
+  color: #f8fafc;
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.input-date-custom:focus {
+  border-color: #38bdf8;
+}
+
+.date-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-date-apply {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-date-apply:hover {
+  background: #0369a1;
+}
+
+.btn-date-reset {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-date-reset:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.pill-date.aktif {
+  background: rgba(14, 165, 233, 0.2);
+  color: #38bdf8;
+  border-color: #38bdf8;
+}
+
+/* Light mode overrides */
+body.tema-terang .date-filter-panel {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.tema-terang .input-date-custom {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+body.tema-terang .btn-date-reset {
+  color: #64748b;
+  border-color: #cbd5e1;
+}

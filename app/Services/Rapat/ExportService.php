@@ -273,10 +273,17 @@ class ExportService
         $cellKiri->addText("Notulis,", ['size' => 10], ['alignment' => Jc::CENTER]);
         $cellKiri->addTextBreak(3);
         $cellKiri->addText($rapat->notulis, ['bold' => true, 'size' => 10, 'underline' => 'single'], ['alignment' => Jc::CENTER]);
+        if (!empty($rapat->notulis_nip)) {
+            $cellKiri->addText("NIP. " . $rapat->notulis_nip, ['size' => 10], ['alignment' => Jc::CENTER]);
+        }
 
-        $cellKanan->addText("Pimpinan Rapat,", ['size' => 10], ['alignment' => Jc::CENTER]);
+        $jabatanPimpinan = $rapat->pimpinan_jabatan ?: "Pimpinan Rapat";
+        $cellKanan->addText($jabatanPimpinan . ",", ['size' => 10], ['alignment' => Jc::CENTER]);
         $cellKanan->addTextBreak(3);
         $cellKanan->addText($rapat->pimpinanRapat, ['bold' => true, 'size' => 10, 'underline' => 'single'], ['alignment' => Jc::CENTER]);
+        if (!empty($rapat->pimpinan_nip)) {
+            $cellKanan->addText("NIP. " . $rapat->pimpinan_nip, ['size' => 10], ['alignment' => Jc::CENTER]);
+        }
 
         $safeTopic = preg_replace('/[^a-zA-Z0-9-_]/', '_', $rapat->topik);
         $tglStr = $rapat->tanggal instanceof \DateTimeInterface ? $rapat->tanggal->format('Y-m-d') : (string)$rapat->tanggal;

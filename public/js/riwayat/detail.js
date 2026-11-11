@@ -131,8 +131,14 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
       }
     }
 
-    if (el.detailPimpinan) el.detailPimpinan.textContent = rapat.pimpinanRapat || "-";
-    if (el.detailNotulis) el.detailNotulis.textContent = rapat.notulis || "-";
+    if (el.detailPimpinan) {
+      const nipPimpinan = rapat.pimpinan_nip ? ` (NIP. ${rapat.pimpinan_nip})` : "";
+      el.detailPimpinan.textContent = (rapat.pimpinanRapat || "-") + nipPimpinan;
+    }
+    if (el.detailNotulis) {
+      const nipNotulis = rapat.notulis_nip ? ` (NIP. ${rapat.notulis_nip})` : "";
+      el.detailNotulis.textContent = (rapat.notulis || "-") + nipNotulis;
+    }
     if (el.detailTotalPeserta) el.detailTotalPeserta.textContent = `${rapat.anggota?.length || 0} Orang Hadir`;
 
     if (el.avatarPimpinan) {
@@ -366,14 +372,16 @@ export function renderPaperPreview(rapat) {
         ${poinHtml}
       </div>
 
-      <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11pt;">
-        <div style="text-align: center; width: 220px;">
-          Pemimpin rapat,<br><br><br><br><br>
-          <b>${pimpinanStr}</b>
+      <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11pt; page-break-inside: avoid;">
+        <div style="text-align: center; width: 250px;">
+          ${escapeHtml(rapat.pimpinan_jabatan || "Pemimpin rapat")},<br><br><br><br><br>
+          <b style="text-decoration: underline;">${pimpinanStr}</b>
+          ${rapat.pimpinan_nip ? `<div style="font-size: 9.5pt; margin-top: 2px;">NIP. ${escapeHtml(rapat.pimpinan_nip)}</div>` : ""}
         </div>
-        <div style="text-align: center; width: 220px;">
+        <div style="text-align: center; width: 250px;">
           Notulen,<br><br><br><br><br>
-          <b>${notulisStr}</b>
+          <b style="text-decoration: underline;">${notulisStr}</b>
+          ${rapat.notulis_nip ? `<div style="font-size: 9.5pt; margin-top: 2px;">NIP. ${escapeHtml(rapat.notulis_nip)}</div>` : ""}
         </div>
       </div>
 

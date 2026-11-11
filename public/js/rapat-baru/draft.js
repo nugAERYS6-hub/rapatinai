@@ -33,7 +33,7 @@ export function cekDrafTersimpan() {
       return txt.trim().length > 0;
     });
     const hasTugas = Array.isArray(d.tindakLanjut) && d.tindakLanjut.length > 0;
-    const hasText = !!(d.topik?.trim() || d.pimpinan?.trim() || d.notulis?.trim() || hasPoin || hasTugas);
+    const hasText = !!(d.topik?.trim() || d.pimpinan?.trim() || d.pimpinan_jabatan?.trim() || d.pimpinan_nip?.trim() || d.notulis?.trim() || d.notulis_nip?.trim() || hasPoin || hasTugas);
 
     return hasText ? d : null;
   } catch (e) {
@@ -60,10 +60,13 @@ function eksekusiSimpanDraf() {
   const tindakLanjut = ambilDataTindakLanjutForm();
   const topik = el.inputTopik?.value || "";
   const pimpinan = el.inputPimpinan?.value || "";
+  const pimpinanJabatan = el.inputPimpinanJabatan?.value || "";
+  const pimpinanNip = el.inputPimpinanNip?.value || "";
   const notulis = el.inputNotulis?.value || "";
+  const notulisNip = el.inputNotulisNip?.value || "";
 
   const hasPoin = poin.some((p) => (typeof p === "string" ? p : (p?.isi || "")).trim().length > 0);
-  const hasContent = topik.trim().length > 0 || pimpinan.trim().length > 0 || notulis.trim().length > 0 || hasPoin || tindakLanjut.length > 0;
+  const hasContent = topik.trim().length > 0 || pimpinan.trim().length > 0 || pimpinanJabatan.trim().length > 0 || pimpinanNip.trim().length > 0 || notulis.trim().length > 0 || notulisNip.trim().length > 0 || hasPoin || tindakLanjut.length > 0;
 
   if (!hasContent) {
     STATE.isFormDirty = false;
@@ -78,7 +81,10 @@ function eksekusiSimpanDraf() {
     tanggal: el.inputTanggal?.value || "",
     topik,
     pimpinan,
+    pimpinan_jabatan: pimpinanJabatan,
+    pimpinan_nip: pimpinanNip,
     notulis,
+    notulis_nip: notulisNip,
     waktu: el.inputWaktu ? el.inputWaktu.value : "",
     waktu_selesai: el.inputWaktuSelesai ? el.inputWaktuSelesai.value : "",
     tempat: el.inputTempat ? el.inputTempat.value : "",
@@ -133,7 +139,10 @@ export function pulihkanDrafOtomatis() {
     if (el.inputTanggal && d.tanggal) el.inputTanggal.value = d.tanggal;
     if (el.inputTopik) el.inputTopik.value = d.topik || "";
     if (el.inputPimpinan) el.inputPimpinan.value = d.pimpinan || "";
+    if (el.inputPimpinanJabatan) el.inputPimpinanJabatan.value = d.pimpinan_jabatan || "";
+    if (el.inputPimpinanNip) el.inputPimpinanNip.value = d.pimpinan_nip || "";
     if (el.inputNotulis) el.inputNotulis.value = d.notulis || "";
+    if (el.inputNotulisNip) el.inputNotulisNip.value = d.notulis_nip || "";
     if (el.inputWaktu) el.inputWaktu.value = d.waktu || "";
     if (el.inputWaktuSelesai) el.inputWaktuSelesai.value = d.waktu_selesai || "";
     if (el.inputTempat) el.inputTempat.value = d.tempat || "";

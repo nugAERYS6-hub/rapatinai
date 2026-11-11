@@ -12,7 +12,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
-  <link rel="stylesheet" href="css/app.css?v=1.4.0" />
+  <link rel="stylesheet" href="css/app.css?v=1.5.0" />
 </head>
 
 <body>
@@ -140,8 +140,32 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                   <span>Tempat Sampah</span>
-                  <span class="badge-trash-count tersembunyi" id="badge-trash-count">0</span>
+                                    <span class="badge-trash-count tersembunyi" id="badge-trash-count">0</span>
                 </button>
+                <button type="button" class="pill pill-date" id="pill-filter-tanggal" title="Filter berdasarkan rentang tanggal">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right:3px;vertical-align:-1px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span id="label-pill-tanggal">Rentang Tanggal</span>
+                </button>
+              </div>
+              <!-- KOTAK FILTER RENTANG TANGGAL -->
+              <div class="date-filter-panel tersembunyi" id="panel-filter-tanggal">
+                <div class="date-inputs-row">
+                  <div class="date-field">
+                    <label for="filter-tgl-mulai">Mulai:</label>
+                    <input type="date" id="filter-tgl-mulai" class="input-date-custom" />
+                  </div>
+                  <span class="date-range-sep">s/d</span>
+                  <div class="date-field">
+                    <label for="filter-tgl-selesai">Sampai:</label>
+                    <input type="date" id="filter-tgl-selesai" class="input-date-custom" />
+                  </div>
+                </div>
+                <div class="date-actions-row">
+                  <button type="button" id="btn-terapkan-tanggal" class="btn-micro-action btn-date-apply">Terapkan</button>
+                  <button type="button" id="btn-reset-tanggal" class="btn-micro-action btn-date-reset" title="Hapus filter rentang tanggal">Reset</button>
+                </div>
               </div>
             </div>
 
@@ -790,13 +814,41 @@
 
                 <div class="form-grid-2">
                   <div class="input-field-group">
-                    <label for="pimpinan">Pimpinan Rapat <span class="req">*</span></label>
+                    <label for="pimpinan">Nama Pimpinan Rapat <span class="req">*</span></label>
                     <input type="text" id="pimpinan" placeholder="Nama dan gelar pimpinan" required />
                   </div>
 
                   <div class="input-field-group">
-                    <label for="notulis">Notulis Rapat <span class="req">*</span></label>
+                    <label for="pimpinan-jabatan">Jabatan Pimpinan</label>
+                    <input type="text" id="pimpinan-jabatan" placeholder="Contoh: Kepala Dinas / Kabid Perencanaan" />
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="input-field-group">
+                    <label for="pimpinan-nip">NIP Pimpinan</label>
+                    <input type="text" id="pimpinan-nip" placeholder="Contoh: 19800101 200501 1 001" maxlength="30" />
+                  </div>
+
+                  <div class="input-field-group">
+                    <label for="notulis">Nama Notulis Rapat <span class="req">*</span></label>
                     <input type="text" id="notulis" placeholder="Nama notulis yang mencatat" required />
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="input-field-group">
+                    <label for="notulis-nip">NIP Notulis (Opsional)</label>
+                    <input type="text" id="notulis-nip" placeholder="Contoh: 19920315 201802 2 002" maxlength="30" />
+                  </div>
+
+                  <div class="input-field-group">
+                    <label for="status-rapat">Status Rapat</label>
+                    <select id="status-rapat">
+                      <option value="Selesai">Selesai</option>
+                      <option value="Berlangsung">Berlangsung</option>
+                      <option value="Dijadwalkan">Dijadwalkan</option>
+                    </select>
                   </div>
                 </div>
 
@@ -813,17 +865,6 @@
                   <div class="input-field-group">
                     <label for="tempat">Tempat Pelaksanaan</label>
                     <input type="text" id="tempat" placeholder="Ruang Rapat / Tautan Virtual" />
-                  </div>
-                </div>
-
-                <div class="form-grid-2">
-                  <div class="input-field-group">
-                    <label for="status-rapat">Status Rapat</label>
-                    <select id="status-rapat">
-                      <option value="Selesai">Selesai</option>
-                      <option value="Berlangsung">Berlangsung</option>
-                      <option value="Dijadwalkan">Dijadwalkan</option>
-                    </select>
                   </div>
                 </div>
               </div>
@@ -965,7 +1006,7 @@
   <!-- TOAST CONTAINER -->
   <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-  <script type="module" src="js/app.js?v=1.4.0"></script>
+  <script type="module" src="js/app.js?v=1.5.0"></script>
 </body>
 
 </html>

@@ -210,4 +210,72 @@ class RapatApiTest extends TestCase
         $res->assertStatus(422)
             ->assertJsonPath('success', false);
     }
+
+    public function test_filter_by_date_range(): void
+    {
+        $this->createSampleRapat(['tanggal' => '2026-09-15', 'topik' => 'Rapat September']);
+        $this->createSampleRapat(['tanggal' => '2026-10-10', 'topik' => 'Rapat Oktober']);
+        $this->createSampleRapat(['tanggal' => '2026-11-05', 'topik' => 'Rapat November']);
+
+        // Rentang Oktober saja
+        $res = $this->getJson('/api/rapat?start_date=2026-10-01&end_date=2026-10-31');
+        $res->assertStatus(200)
+            ->assertJsonPath('pagination.total', 1)
+            ->assertJsonPath('data.0.topik', 'Rapat Oktober');
+
+        // Mulai dari 1 Oktober ke depan
+        $res2 = $this->getJson('/api/rapat?start_date=2026-10-01');
+        $res2->assertStatus(200)
+             ->assertJsonPath('pagination.total', 2);
+
+        // Sampai akhir September
+        $res3 = $this->getJson('/api/rapat?end_date=2026-09-30');
+        $res3->assertStatus(200)
+             ->assertJsonPath('pagination.total', 1)
+             ->assertJsonPath('data.0.topik', 'Rapat September');
+    }
+
+    public function test_nip_and_jabatan_in_crud_flow(): void
+    {
+        $payload = [
+            'tanggal' => '2026-11-12',
+            'topik' => 'Rapat Koordinasi Evaluasi OPD Triwulan IV',
+            'pimpinanRapat' => 'Drs. H. Mulyadi, M.Si',
+            'pimpinan_nip' => '19750815 199803 1 004',
+            'pimpinan_jabatan' => 'Kepala Badan Perencanaan Pembangunan Daerah',
+            'notulis' => 'Rina Wijaya, S.Kom',
+            'notulis_nip' => '19920420 201802 2 001',
+            'waktu' => '09:00',
+            'waktu_selesai' => '12:00',
+            'tempat' => 'Ruang Pola Kantor Bupati',
+            'status' => 'Selesai',
+        ];
+
+        // 1. Create
+        $res = $this->postJson('/api/rapat', $payload);
+        $res->assertStatus(201)
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.pimpinan_nip', '19750815 199803 1 004')
+            ->assertJsonPath('data.pimpinan_jabatan', 'Kepala Badan Perencanaan Pembangunan Daerah')
+            ->assertJsonPath('data.notulis_nip', '19920420 201802 2 001');
+
+        $id = $res->json('data.id');
+
+        // 2. Read detail
+        $resDetail = $this->getJson("/api/rapat/{$id}");
+        $resDetail->assertStatus(200)
+                  ->assertJsonPath('pimpinan_nip', '19750815 199803 1 004')
+                  ->assertJsonPath('pimpinan_jabatan', 'Kepala Badan Perencanaan Pembangunan Daerah')
+                  ->assertJsonPath('notulis_nip', '19920420 201802 2 001');
+
+        // 3. Update
+        $updatePayload = [
+            'pimpinan_jabatan' => 'Plt. Sekretaris Daerah',
+            'pimpinan_nip' => '19750815 199803 1 005',
+        ];
+        $resUpdate = $this->putJson("/api/rapat/{$id}", $updatePayload);
+        $resUpdate->assertStatus(200)
+                  ->assertJsonPath('data.pimpinan_jabatan', 'Plt. Sekretaris Daerah')
+                  ->assertJsonPath('data.pimpinan_nip', '19750815 199803 1 005');
+    }
 }

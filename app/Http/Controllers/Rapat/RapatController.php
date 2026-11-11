@@ -78,13 +78,13 @@ class RapatController extends Controller
                         ->orWhere('poinPembahasan', 'like', "%{$q}%")
                         ->orWhere('ringkasanAI', 'like', "%{$q}%");
                 });
-            } else {
-                if ($filter === 'bulan_ini') {
-                    $query->whereYear('tanggal', (int)date('Y'))
-                        ->whereMonth('tanggal', (int)date('m'));
-                } elseif ($filter === 'ada_ai') {
-                    $query->whereNotNull('ringkasanAI')->where('ringkasanAI', '!=', '');
-                }
+            }
+
+            if ($filter === 'bulan_ini') {
+                $query->whereYear('tanggal', (int)date('Y'))
+                    ->whereMonth('tanggal', (int)date('m'));
+            } elseif ($filter === 'ada_ai') {
+                $query->whereNotNull('ringkasanAI')->where('ringkasanAI', '!=', '');
             }
 
             $totalCount = $query->count();
@@ -170,7 +170,10 @@ class RapatController extends Controller
                 'tanggal'        => $request->input('tanggal'),
                 'topik'          => $request->input('topik'),
                 'pimpinanRapat'  => $request->input('pimpinanRapat'),
+                'pimpinan_nip'   => $request->input('pimpinan_nip'),
+                'pimpinan_jabatan' => $request->input('pimpinan_jabatan'),
                 'notulis'        => $request->input('notulis'),
+                'notulis_nip'    => $request->input('notulis_nip'),
                 'waktu'          => $waktuMulai,
                 'waktu_selesai'  => $waktuSelesai,
                 'tempat'         => $request->input('tempat', ''),
@@ -208,7 +211,10 @@ class RapatController extends Controller
             if ($request->has('tanggal')) $rapat->tanggal = $request->input('tanggal');
             if ($request->has('topik')) $rapat->topik = $request->input('topik');
             if ($request->has('pimpinanRapat')) $rapat->pimpinanRapat = $request->input('pimpinanRapat');
+            if ($request->has('pimpinan_nip')) $rapat->pimpinan_nip = $request->input('pimpinan_nip');
+            if ($request->has('pimpinan_jabatan')) $rapat->pimpinan_jabatan = $request->input('pimpinan_jabatan');
             if ($request->has('notulis')) $rapat->notulis = $request->input('notulis');
+            if ($request->has('notulis_nip')) $rapat->notulis_nip = $request->input('notulis_nip');
 
             if ($request->has('waktu') || $request->has('waktu_selesai')) {
                 $waktuInput = $request->has('waktu') ? $request->input('waktu') : $rapat->waktu;
