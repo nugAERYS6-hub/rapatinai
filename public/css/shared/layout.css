@@ -8,6 +8,16 @@
   overflow: hidden;
 }
 
+/* Sidebar removed — main panel takes full width */
+.sidebar { display: none !important; }
+.sidebar-overlay { display: none !important; }
+.tombol-hamburger-top,
+.tombol-hamburger-sidebar,
+.icon-menu.tombol-hamburger-top,
+.icon-menu.tombol-hamburger-sidebar { display: none !important; }
+body.sidebar-collapsed .main-panel { width: 100%; margin-left: 0; }
+
+
 /* ==========================================================================
    SIDEBAR EKSEKUTIF
    ========================================================================== */

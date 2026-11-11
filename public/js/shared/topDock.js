@@ -7,8 +7,6 @@
 // ==========================================================================
 
 import { createTopDockController, ANIMATED_TOP_DOCK_DEFAULTS } from "./topDockController.js";
-import { STATE } from "./state.js";
-import { tampilkanToast } from "./ui.js";
 
 let topDockCleanup = null;
 
@@ -56,71 +54,27 @@ export function initAnimatedTopDock() {
   // Bangun spring physics controller dari exact ThreeUI source
   topDockCleanup = createTopDockController(root, () => TOP_DOCK_CONFIG);
 
-  // Logo button (Home)
-  const btnLogo = document.getElementById("dock-btn-logo");
-  if (btnLogo) {
-    btnLogo.addEventListener("click", () => {
-      window.location.hash = "#/riwayat";
-    });
-  }
-
-  // SYSTEM -> Notulen Rapat Baru
-  const btnSystem = document.getElementById("dock-btn-system");
-  if (btnSystem) {
-    btnSystem.addEventListener("click", () => {
+  // Tab 1: Rapat Baru
+  const btnRapatBaru = document.getElementById("dock-btn-rapat-baru");
+  if (btnRapatBaru) {
+    btnRapatBaru.addEventListener("click", () => {
       window.location.hash = "#/baru";
     });
   }
 
-  // METHOD -> AI Intelligence Suite (Ringkasan, Ide, Action Items)
-  const btnMethod = document.getElementById("dock-btn-method");
-  if (btnMethod) {
-    btnMethod.addEventListener("click", () => {
-      if (STATE.rapatAktif && STATE.rapatAktif.id) {
-        window.location.hash = `#/detail/${STATE.rapatAktif.id}`;
-        setTimeout(() => {
-          const aiSuite = document.querySelector(".ai-suite-container, .card-ai-suite");
-          if (aiSuite) {
-            aiSuite.scrollIntoView({ behavior: "smooth", block: "center" });
-            aiSuite.classList.add("highlight-pulse");
-            setTimeout(() => aiSuite.classList.remove("highlight-pulse"), 1500);
-          }
-        }, 300);
-      } else {
-        window.location.hash = "#/riwayat";
-        tampilkanToast("Pilih salah satu rapat untuk mengakses modul AI Intelligence", "info");
-      }
-      syncTopDockActive("method");
-    });
-  }
-
-  // WORK -> Riwayat Rapat & Arsip
-  const btnWork = document.getElementById("dock-btn-work");
-  if (btnWork) {
-    btnWork.addEventListener("click", () => {
+  // Tab 2: Riwayat Rapat
+  const btnRiwayat = document.getElementById("dock-btn-riwayat");
+  if (btnRiwayat) {
+    btnRiwayat.addEventListener("click", () => {
       window.location.hash = "#/riwayat";
     });
   }
 
-  // ACCESS -> Pengaturan Instansi & Tema
-  const btnAccess = document.getElementById("dock-btn-access");
-  if (btnAccess) {
-    btnAccess.addEventListener("click", () => {
+  // Tab 3: Pengaturan
+  const btnPengaturan = document.getElementById("dock-btn-pengaturan");
+  if (btnPengaturan) {
+    btnPengaturan.addEventListener("click", () => {
       window.location.hash = "#/pengaturan";
     });
   }
-
-  // NOTES -> Detail Notulen Rapat Aktif
-  const btnNotes = document.getElementById("dock-btn-notes");
-  if (btnNotes) {
-    btnNotes.addEventListener("click", () => {
-      if (STATE.rapatAktif && STATE.rapatAktif.id) {
-        window.location.hash = `#/detail/${STATE.rapatAktif.id}`;
-      } else {
-        window.location.hash = "#/riwayat";
-        tampilkanToast("Pilih rapat dari daftar riwayat terlebih dahulu untuk melihat catatan", "info");
-      }
-    });
-  }
 }
-

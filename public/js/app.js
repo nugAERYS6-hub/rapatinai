@@ -1,14 +1,14 @@
 // ==========================================================================
 // RAPATINAI - MASTER CLIENT APPLICATION JAVASCRIPT ENTRYPOINT
 // Struktur modular dipisahkan berdasarkan fungsi dan menu:
-// ├── shared/         (state, utils, ui, sidebar)
+// ├── shared/         (state, utils, ui, topDock)
 // ├── rapat-baru/     (form, peserta, dinamis, draft)
 // ├── riwayat/        (riwayat, detail, ai, export)
 // └── pengaturan/     (backup, tema)
 // ==========================================================================
 
 import { STATE, el } from "./shared/state.js";
-import { initSidebarEvents, toggleSidebar, initInteractiveBackground, updateSidebarGlider } from "./shared/ui.js";
+import { initInteractiveBackground } from "./shared/ui.js";
 import { initAnimatedTopDock, syncTopDockActive } from "./shared/topDock.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
 import { initRiwayatEvents, muatStats, muatDaftarRapat, bukaRiwayat } from "./riwayat/riwayat.js";
@@ -36,48 +36,39 @@ export async function handleRoute() {
   if (hash.startsWith("#/detail/")) {
     const id = hash.replace("#/detail/", "").trim();
     if (id) {
-      syncTopDockActive("notes");
+      syncTopDockActive("riwayat");
       await tampilkanDetailRapat(id, false);
-      requestAnimationFrame(updateSidebarGlider);
       return;
     }
   }
 
   if (hash === "#/pengaturan" || hash === "#pengaturan") {
-    syncTopDockActive("access");
+    syncTopDockActive("pengaturan");
     bukaPengaturan(false);
-    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/riwayat" || hash === "#riwayat") {
-    syncTopDockActive("work");
+    syncTopDockActive("riwayat");
     bukaRiwayat(false);
-    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/baru" || hash === "#baru") {
-    syncTopDockActive("system");
+    syncTopDockActive("rapat-baru");
     tampilkanFormBaru(false);
-    requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
-  syncTopDockActive("system");
+  syncTopDockActive("rapat-baru");
   tampilkanFormBaru(false);
-  requestAnimationFrame(updateSidebarGlider);
 }
 
 /**
- * Inisialisasi pintasan keyboard (Ctrl+B, Ctrl+N, '/')
+ * Inisialisasi pintasan keyboard (Ctrl+N, '/')
  */
 function initKeyboardShortcuts() {
   document.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
-      e.preventDefault();
-      toggleSidebar();
-    }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
       e.preventDefault();
       window.location.hash = "#/baru";
@@ -95,7 +86,6 @@ function initKeyboardShortcuts() {
 export async function inisialisasiApp() {
   // 1. Inisialisasi komponen dasar, latar interaktif & event
   initInteractiveBackground();
-  initSidebarEvents();
   initAnimatedTopDock();
   initFormEvents();
   initRiwayatEvents();
