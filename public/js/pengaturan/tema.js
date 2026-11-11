@@ -31,8 +31,8 @@ export function terapkanTema(tema) {
   }
   if (badgeSub) {
     badgeSub.textContent = isGelap
-      ? "Mode malam aktif — kontras tinggi dan nyaman di mata."
-      : "Mode terang aktif — tampilan jernih dan cerah di kondisi terang.";
+      ? "Mode malam aktif, kontras tinggi dan nyaman di mata."
+      : "Mode terang aktif, tampilan jernih dan cerah di kondisi terang.";
   }
 
   try {
