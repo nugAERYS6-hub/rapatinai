@@ -54,6 +54,14 @@ export function initAnimatedTopDock() {
   // Bangun spring physics controller dari exact ThreeUI source
   topDockCleanup = createTopDockController(root, () => TOP_DOCK_CONFIG);
 
+  // Tab 0: Beranda (Landing Page)
+  const btnBeranda = document.getElementById("dock-btn-beranda");
+  if (btnBeranda) {
+    btnBeranda.addEventListener("click", () => {
+      window.location.hash = "#/beranda";
+    });
+  }
+
   // Tab 1: Rapat Baru
   const btnRapatBaru = document.getElementById("dock-btn-rapat-baru");
   if (btnRapatBaru) {

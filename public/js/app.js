@@ -10,6 +10,7 @@
 import { STATE, el } from "./shared/state.js";
 import { initInteractiveBackground } from "./shared/ui.js";
 import { initAnimatedTopDock, syncTopDockActive } from "./shared/topDock.js";
+import { initBerandaEvents, bukaBeranda, updateBerandaStats } from "./beranda/beranda.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
 import { initRiwayatEvents, muatStats, muatDaftarRapat, bukaRiwayat } from "./riwayat/riwayat.js";
 import { initDetailEvents, tampilkanDetailRapat } from "./riwayat/detail.js";
@@ -42,6 +43,12 @@ export async function handleRoute() {
     }
   }
 
+  if (hash === "#/beranda" || hash === "#beranda" || hash === "" || hash === "#/" || hash === "#") {
+    syncTopDockActive("beranda");
+    bukaBeranda(false);
+    return;
+  }
+
   if (hash === "#/pengaturan" || hash === "#pengaturan") {
     syncTopDockActive("pengaturan");
     bukaPengaturan(false);
@@ -60,8 +67,8 @@ export async function handleRoute() {
     return;
   }
 
-  syncTopDockActive("rapat-baru");
-  tampilkanFormBaru(false);
+  syncTopDockActive("beranda");
+  bukaBeranda(false);
 }
 
 /**
@@ -87,6 +94,7 @@ export async function inisialisasiApp() {
   // 1. Inisialisasi komponen dasar, latar interaktif & event
   initInteractiveBackground();
   initAnimatedTopDock();
+  initBerandaEvents();
   initFormEvents();
   initRiwayatEvents();
   initDetailEvents();
@@ -99,6 +107,7 @@ export async function inisialisasiApp() {
   // 2. Muat data awal
   await muatStats();
   await muatDaftarRapat(1);
+  updateBerandaStats();
   renderRiwayatBackup();
 
   // 3. Router hash listener
@@ -108,7 +117,7 @@ export async function inisialisasiApp() {
   if (window.location.hash) {
     await handleRoute();
   } else {
-    window.location.hash = "#/baru";
+    window.location.hash = "#/beranda";
   }
 }
 

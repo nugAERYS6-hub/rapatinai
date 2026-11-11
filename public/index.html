@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=1.7.2" />
+  <link rel="stylesheet" href="css/app.css?v=1.7.3" />
 </head>
 
 <body>
@@ -29,7 +29,8 @@
       <div id="sidebar-overlay" style="display:none" aria-hidden="true"></div>
       <div id="sidebar-menu" style="display:none" aria-hidden="true">
         <div id="sidebar-active-glider" aria-hidden="true"></div>
-        <button type="button" id="menu-rapat-baru" class="menu-item aktif"></button>
+        <button type="button" id="menu-beranda" class="menu-item aktif"></button>
+        <button type="button" id="menu-rapat-baru" class="menu-item"></button>
         <button type="button" id="menu-riwayat-rapat" class="menu-item"></button>
         <button type="button" id="menu-pengaturan" class="menu-item"></button>
       </div>
@@ -51,7 +52,7 @@
             <span class="breadcrumb-middle tersembunyi" id="breadcrumb-middle"
               style="cursor: pointer; transition: color 0.2s;">Riwayat Rapat</span>
             <span class="breadcrumb-separator tersembunyi" id="breadcrumb-sep-middle">/</span>
-            <span class="breadcrumb-current" id="breadcrumb-current">Buat Notulen Baru</span>
+            <span class="breadcrumb-current" id="breadcrumb-current">Beranda</span>
           </div>
         </div>
 
@@ -59,7 +60,15 @@
         <div class="top-dock-container-wrapper shader-frame">
           <div class="animated-top-dock-component">
             <nav id="animated-top-dock-nav" class="animated-top-dock__nav" aria-label="Navigasi utama" data-dock-state="idle" data-dock-max="0.00">
-              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-rapat-baru" data-dock-item data-dock-id="rapat-baru" type="button" aria-pressed="true" title="Rapat Baru — Buat Notulen Rapat Baru">
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-beranda" data-dock-item data-dock-id="beranda" type="button" aria-pressed="true" title="Beranda — Pengenalan & Panduan Notulensi">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <path d="M2.5 7L8 2.5L13.5 7V13.5H10V9.5H6V13.5H2.5V7Z" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Beranda</span>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-rapat-baru" data-dock-item data-dock-id="rapat-baru" type="button" aria-pressed="false" title="Rapat Baru — Buat Notulen Rapat Baru">
                 <span class="animated-top-dock__icon" aria-hidden="true">
                   <svg viewBox="0 0 16 16">
                     <path d="M8 2.5v11M2.5 8h11" stroke-width="1.8" stroke-linecap="round"/>
@@ -93,10 +102,282 @@
       </header>
 
       <div class="main-scrollable-content">
+                <!-- ============================================== -->
+        <!-- VIEW: BERANDA & LANDING PAGE EKSEKUTIF         -->
+        <!-- ============================================== -->
+        <section id="tampilan-beranda" class="view-section">
+          <div class="beranda-container">
+
+            <!-- HERO INTRODUCING NOTULENSI -->
+            <div class="beranda-hero">
+              <div class="beranda-hero-badge">
+                <span class="beranda-hero-badge-dot"></span>
+                <span>Platform Notulensi Kedinasan Digital</span>
+              </div>
+              <h1 class="beranda-hero-title">
+                Tata Kelola Dokumentasi Rapat Kedinasan yang <span class="gradient-text">Terstruktur, Cepat &amp; Berbasis AI</span>
+              </h1>
+              <p class="beranda-hero-desc">
+                Selamat datang di sistem <strong>Notulensi</strong> (RapatinAI). Dirancang khusus bagi staf dan aparatur perangkat daerah untuk menyusun notula resmi, mendokumentasikan kehadiran pimpinan, mengelola tindak lanjut rapat, serta memanfaatkan ringkasan kecerdasan buatan dalam satu platform terintegrasi.
+              </p>
+              <div class="beranda-hero-actions">
+                <a href="#/baru" id="btn-hero-mulai-rapat" class="btn-hero-primary" title="Mulai pencatatan rapat baru">
+                  <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Mulai Buat Notulen</span>
+                </a>
+                <a href="#/riwayat" id="btn-hero-buka-riwayat" class="btn-hero-secondary" title="Buka daftar arsip riwayat rapat">
+                  <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="2"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M8 7h.01M12 7h.01"/>
+                  </svg>
+                  <span>Lihat Riwayat Rapat</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- METRIK STATUS KEDINASAN -->
+            <div class="beranda-stats-row">
+              <div class="beranda-stat-card">
+                <div class="beranda-stat-icon beranda-stat-icon--total">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <div class="beranda-stat-content">
+                  <span class="beranda-stat-value" id="stat-beranda-total">-</span>
+                  <span class="beranda-stat-label">Total Notulen Terdata</span>
+                </div>
+              </div>
+
+              <div class="beranda-stat-card">
+                <div class="beranda-stat-icon beranda-stat-icon--bulan">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div class="beranda-stat-content">
+                  <span class="beranda-stat-value" id="stat-beranda-bulan">-</span>
+                  <span class="beranda-stat-label">Rapat Bulan Ini</span>
+                </div>
+              </div>
+
+              <div class="beranda-stat-card">
+                <div class="beranda-stat-icon beranda-stat-icon--ai">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div class="beranda-stat-content">
+                  <span class="beranda-stat-value" id="stat-beranda-ai">-</span>
+                  <span class="beranda-stat-label">Notulen AI Ready</span>
+                </div>
+              </div>
+
+              <div class="beranda-stat-card">
+                <div class="beranda-stat-icon beranda-stat-icon--secure">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div class="beranda-stat-content">
+                  <span class="beranda-stat-value">Aktif</span>
+                  <span class="beranda-stat-label">Draf Otomatis &amp; Backup</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEKSI PENJELASAN TAB-TAB MENU UTAMA -->
+            <div class="beranda-section-header">
+              <span class="beranda-section-badge">Panduan Navigasi</span>
+              <h2 class="beranda-section-title">Modul &amp; Fungsi Menu Utama</h2>
+              <p class="beranda-section-subtitle">Pelajari kegunaan masing-masing tab menu pada navbar atas untuk mendukung operasional rapat Anda:</p>
+            </div>
+
+            <div class="beranda-menu-grid">
+              <!-- KARTU 1: RAPAT BARU -->
+              <div class="beranda-menu-card beranda-menu-card--rapat">
+                <div>
+                  <div class="beranda-menu-top">
+                    <div class="beranda-menu-icon-wrap beranda-menu-icon--rapat">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <span class="beranda-tab-badge">TAB MENU 1</span>
+                  </div>
+                  <h3 class="beranda-menu-name">Rapat Baru</h3>
+                  <p class="beranda-menu-desc">Formulir terpadu untuk mendokumentasikan rapat kedinasan dari awal hingga akhir secara detail dan sistematis.</p>
+                  
+                  <ul class="beranda-menu-features">
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Pimpinan &amp; Notulis Resmi:</strong> Dukungan kolom NIP 18-digit dan jabatan resmi untuk format dokumen sah.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Daftar Peserta Rapat:</strong> Pencatatan nama, jabatan, dan instansi peserta secara interaktif.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Poin Pembahasan Dinamis:</strong> Tambah butir pembahasan, kesepakatan, dan tindak lanjut tanpa batas.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Auto-Save Draf Lokal:</strong> Draf tersimpan otomatis di perangkat agar ketikan tidak hilang jika halaman tertutup.</span>
+                    </li>
+                  </ul>
+                </div>
+                <a href="#/baru" id="btn-card-rapat-baru" class="btn-card-action">Buka Formulir Rapat Baru →</a>
+              </div>
+
+              <!-- KARTU 2: RIWAYAT RAPAT -->
+              <div class="beranda-menu-card beranda-menu-card--riwayat">
+                <div>
+                  <div class="beranda-menu-top">
+                    <div class="beranda-menu-icon-wrap beranda-menu-icon--riwayat">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M8 7h.01M12 7h.01"/>
+                      </svg>
+                    </div>
+                    <span class="beranda-tab-badge">TAB MENU 2</span>
+                  </div>
+                  <h3 class="beranda-menu-name">Riwayat Rapat</h3>
+                  <p class="beranda-menu-desc">Pusat arsip dan penelusuran seluruh notula yang pernah dilaksanakan oleh instansi dengan fitur pencarian cepat.</p>
+                  
+                  <ul class="beranda-menu-features">
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Pencarian &amp; Filter Tanggal:</strong> Filter notulen berdasarkan topik, bulan ini, atau rentang tanggal spesifik.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Kecerdasan Buatan (AI):</strong> Ringkasan eksekutif instan, usulan ide strategis, dan identifikasi penugasan.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Ekspor PDF &amp; Word (.docx):</strong> Unduh dokumen notulen resmi siap cetak dan tanda tangan.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Tempat Sampah (*Soft Delete*):</strong> Notulen terhapus tersimpan aman dan dapat dipulihkan kembali sewaktu-waktu.</span>
+                    </li>
+                  </ul>
+                </div>
+                <a href="#/riwayat" id="btn-card-riwayat-rapat" class="btn-card-action">Jelajahi Riwayat Notulen →</a>
+              </div>
+
+              <!-- KARTU 3: PENGATURAN -->
+              <div class="beranda-menu-card beranda-menu-card--pengaturan">
+                <div>
+                  <div class="beranda-menu-top">
+                    <div class="beranda-menu-icon-wrap beranda-menu-icon--pengaturan">
+                      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" stroke-width="2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                      </svg>
+                    </div>
+                    <span class="beranda-tab-badge">TAB MENU 3</span>
+                  </div>
+                  <h3 class="beranda-menu-name">Pengaturan</h3>
+                  <p class="beranda-menu-desc">Pusat pemeliharaan data, pencadangan database mandiri, dan personalisasi antarmuka kerja Anda.</p>
+                  
+                  <ul class="beranda-menu-features">
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Pencadangan Database (.sql):</strong> Unduh salinan data notulen secara utuh sebagai arsip cadangan resmi.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Pemulihan Aman (*Restore*):</strong> Validasi ketat file backup untuk mencegah kesalahan struktur database.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Riwayat Log Unduhan:</strong> Rekam jejak pencadangan lokal untuk pemantauan kepatuhan SOP TI.</span>
+                    </li>
+                    <li>
+                      <span class="beranda-check-icon">✓</span>
+                      <span><strong>Tema Tampilan:</strong> Pilih preferensi tampilan Gelap (*Executive Dark*) atau Terang (*Clean Light Gov*).</span>
+                    </li>
+                  </ul>
+                </div>
+                <a href="#/pengaturan" id="btn-card-pengaturan" class="btn-card-action">Buka Pengaturan Sistem →</a>
+              </div>
+            </div>
+
+            <!-- HIGHLIGHT FITUR AI -->
+            <div class="beranda-ai-banner">
+              <div class="beranda-ai-header">
+                <div class="beranda-ai-badge-group">
+                  <span class="beranda-ai-pill">✨ Fitur Cerdas Terintegrasi</span>
+                  <span style="font-size: 14px; font-weight: 700; color: #ffffff;">AI Intelligence Suite</span>
+                </div>
+                <span style="font-size: 12.5px; color: #94a3b8;">Membantu staf menyelesaikan laporan notulensi dalam hitungan detik</span>
+              </div>
+              <div class="beranda-ai-cards-row">
+                <div class="beranda-ai-mini-card">
+                  <div class="beranda-ai-mini-title">
+                    <span>⚡</span>
+                    <span>Ringkasan Eksekutif</span>
+                  </div>
+                  <p class="beranda-ai-mini-desc">Menyusun ringkasan naratif formal untuk disampaikan kepada pimpinan instansi tanpa perlu merangkum manual.</p>
+                </div>
+                <div class="beranda-ai-mini-card">
+                  <div class="beranda-ai-mini-title">
+                    <span>💡</span>
+                    <span>Ide Strategis Kebijakan</span>
+                  </div>
+                  <p class="beranda-ai-mini-desc">Memberikan alternatif solusi kreatif dan rekomendasi kebijakan operasional berdasarkan poin-poin yang dibahas.</p>
+                </div>
+                <div class="beranda-ai-mini-card">
+                  <div class="beranda-ai-mini-title">
+                    <span>📋</span>
+                    <span>Ekstraksi Action Items</span>
+                  </div>
+                  <p class="beranda-ai-mini-desc">Mendeteksi instruksi penugasan, pejabat penanggung jawab (PIC), serta tenggat waktu secara otomatis dan tersinkronisasi.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ALUR KERJA 4 LANGKAH -->
+            <div class="beranda-section-header" style="margin-top: 6px;">
+              <span class="beranda-section-badge">Alur Operasional</span>
+              <h2 class="beranda-section-title">4 Langkah Alur Kerja Notulensi</h2>
+              <p class="beranda-section-subtitle">Standar operasional sederhana dari awal rapat hingga dokumen tersimpan rapi:</p>
+            </div>
+
+            <div class="beranda-workflow-grid">
+              <div class="beranda-step-card">
+                <span class="beranda-step-number">LANGKAH 01</span>
+                <h4 class="beranda-step-title">Buka Rapat Baru</h4>
+                <p class="beranda-step-desc">Isi topik, tanggal, pimpinan rapat, serta daftar peserta yang hadir.</p>
+              </div>
+              <div class="beranda-step-card">
+                <span class="beranda-step-number">LANGKAH 02</span>
+                <h4 class="beranda-step-title">Catat Poin Rapat</h4>
+                <p class="beranda-step-desc">Masukkan poin pembahasan, rencana tindak lanjut, dan unggah lampiran berkas.</p>
+              </div>
+              <div class="beranda-step-card">
+                <span class="beranda-step-number">LANGKAH 03</span>
+                <h4 class="beranda-step-title">Proses AI Cerdas</h4>
+                <p class="beranda-step-desc">Gunakan modul AI untuk menyusun ringkasan naratif dan daftar action items instan.</p>
+              </div>
+              <div class="beranda-step-card">
+                <span class="beranda-step-number">LANGKAH 04</span>
+                <h4 class="beranda-step-title">Ekspor &amp; Arsipkan</h4>
+                <p class="beranda-step-desc">Unduh dokumen resmi PDF/Word dan simpan cadangan database berkala.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
         <!-- ============================================== -->
         <!-- VIEW 0: TAMPILAN RIWAYAT RAPAT (MAIN PANEL)    -->
         <!-- ============================================== -->
-        <section id="tampilan-riwayat" class="view-section">
+        <section id="tampilan-riwayat" class="view-section tersembunyi">
           <div class="riwayat-panel-container">
 
             <!-- SEARCH & FILTER BAR -->

@@ -12,6 +12,9 @@
 @import './shared/components.css';
 @import './shared/animated-top-dock.css';
 
+/* Menu: Beranda (Landing Page) */
+@import './beranda/beranda.css';
+
 /* Menu: Rapat Baru */
 @import './rapat-baru/form.css';
 

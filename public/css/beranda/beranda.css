@@ -1,0 +1,671 @@
+/* ==========================================================================
+   RAPATINAI - MENU BERANDA & LANDING PAGE EKSEKUTIF
+   Gaya: Modern Executive Glassmorphism & Obsidian Dark Aesthetic
+   ========================================================================== */
+
+.beranda-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding-bottom: 48px;
+}
+
+/* ==========================================================================
+   HERO BANNER SECTION
+   ========================================================================== */
+.beranda-hero {
+  position: relative;
+  border-radius: 20px;
+  padding: 44px 40px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(9, 14, 28, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Ambient glow accent inside hero */
+.beranda-hero::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 75%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.beranda-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #38bdf8;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.beranda-hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.beranda-hero-title {
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 820px;
+}
+
+.beranda-hero-title .gradient-text {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.beranda-hero-desc {
+  font-size: 15.5px;
+  color: #94a3b8;
+  line-height: 1.7;
+  max-width: 760px;
+  margin: 0;
+}
+
+.beranda-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -4px rgba(37, 99, 235, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+  color: #ffffff;
+}
+
+.btn-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-hero-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   METRICS LIVE STRIP
+   ========================================================================== */
+.beranda-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.beranda-stat-card {
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.beranda-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.beranda-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.beranda-stat-icon--total {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+}
+
+.beranda-stat-icon--bulan {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.24);
+}
+
+.beranda-stat-icon--ai {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.24);
+}
+
+.beranda-stat-icon--secure {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.24);
+}
+
+.beranda-stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.beranda-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.beranda-stat-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   SEKSI PENJELASAN TAB MENU UTAMA
+   ========================================================================== */
+.beranda-section-header {
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+.beranda-section-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #38bdf8;
+  margin-bottom: 6px;
+}
+
+.beranda-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+
+.beranda-section-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.beranda-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.beranda-menu-card {
+  position: relative;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px 26px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.beranda-menu-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45);
+}
+
+.beranda-menu-card--rapat:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(56, 189, 248, 0.12);
+}
+
+.beranda-menu-card--riwayat:hover {
+  border-color: rgba(168, 85, 247, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(168, 85, 247, 0.12);
+}
+
+.beranda-menu-card--pengaturan:hover {
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(52, 211, 153, 0.12);
+}
+
+.beranda-menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.beranda-menu-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.beranda-menu-icon--rapat {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+.beranda-menu-icon--riwayat {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.28);
+}
+
+.beranda-menu-icon--pengaturan {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.28);
+}
+
+.beranda-tab-badge {
+  font-family: "ThreeUI Fragment Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.beranda-menu-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.beranda-menu-desc {
+  font-size: 13.5px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.beranda-menu-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.beranda-menu-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.beranda-check-icon {
+  color: #38bdf8;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.btn-card-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-card-action:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   AI INTELLIGENCE SHOWCASE ROW
+   ========================================================================== */
+.beranda-ai-banner {
+  position: relative;
+  border-radius: 16px;
+  padding: 32px 34px;
+  background: linear-gradient(135deg, rgba(20, 24, 45, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.24);
+  box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.beranda-ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.beranda-ai-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.beranda-ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.beranda-ai-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.beranda-ai-mini-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.beranda-ai-mini-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.beranda-ai-mini-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ==========================================================================
+   WORKFLOW STEPS
+   ========================================================================== */
+.beranda-workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.beranda-step-card {
+  padding: 22px 20px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.beranda-step-number {
+  font-family: "ThreeUI Fragment Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.1em;
+}
+
+.beranda-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.beranda-step-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ==========================================================================
+   TEMA TERANG (LIGHT THEME) OVERRIDES
+   ========================================================================== */
+body.tema-terang .beranda-hero {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border-color: #e2e8f0;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+body.tema-terang .beranda-hero-title {
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-hero-desc {
+  color: #475569;
+}
+
+body.tema-terang .btn-hero-secondary {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+body.tema-terang .btn-hero-secondary:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-stat-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+body.tema-terang .beranda-stat-value {
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-section-title {
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-section-subtitle {
+  color: #64748b;
+}
+
+body.tema-terang .beranda-menu-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+body.tema-terang .beranda-menu-name {
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-menu-desc {
+  color: #475569;
+}
+
+body.tema-terang .beranda-menu-features li {
+  color: #334155;
+}
+
+body.tema-terang .btn-card-action {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+body.tema-terang .btn-card-action:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-ai-banner {
+  background: linear-gradient(135deg, #f8fafc 0%, #ede9fe 100%);
+  border-color: #c7d2fe;
+}
+
+body.tema-terang .beranda-ai-mini-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.tema-terang .beranda-ai-mini-title {
+  color: #1e1b4b;
+}
+
+body.tema-terang .beranda-step-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.tema-terang .beranda-step-title {
+  color: #0f172a;
+}
+
+body.tema-terang .beranda-step-desc {
+  color: #64748b;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .beranda-menu-grid {
+    grid-template-columns: 1fr;
+  }
+  .beranda-ai-cards-row {
+    grid-template-columns: 1fr;
+  }
+  .beranda-workflow-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .beranda-hero {
+    padding: 28px 20px;
+  }
+  .beranda-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .beranda-workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}

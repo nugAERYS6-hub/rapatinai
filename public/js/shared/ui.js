@@ -36,6 +36,7 @@ export function tampilkanToast(pesan, tipe = "sukses") {
  * Menyembunyikan seluruh tampilan (views) utama
  */
 export function tutupSemuaView() {
+  if (el.viewBeranda) el.viewBeranda.classList.add("tersembunyi");
   if (el.viewRiwayat) el.viewRiwayat.classList.add("tersembunyi");
   if (el.viewDetail) el.viewDetail.classList.add("tersembunyi");
   if (el.viewForm) el.viewForm.classList.add("tersembunyi");
@@ -46,7 +47,7 @@ export function tutupSemuaView() {
  * Menghapus status 'aktif' dari seluruh menu sidebar
  */
 export function resetSemuaMenuAktif() {
-  [el.menuRapatBaru, el.menuRiwayatRapat, elPengaturan.menuPengaturan].forEach((m) => {
+  [el.menuBeranda, el.menuRapatBaru, el.menuRiwayatRapat, elPengaturan.menuPengaturan].forEach((m) => {
     if (m) m.classList.remove("aktif");
   });
 }
