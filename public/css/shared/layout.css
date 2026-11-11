@@ -17,6 +17,22 @@
 .icon-menu.tombol-hamburger-sidebar { display: none !important; }
 body.sidebar-collapsed .main-panel { width: 100%; margin-left: 0; }
 
+/* Header container box removed — frameless and transparent */
+.top-command-bar {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.tema-terang .top-command-bar { 
+  background: transparent !important; 
+  border-bottom: none !important; 
+  box-shadow: none !important;
+  backdrop-filter: none !important; 
+  -webkit-backdrop-filter: none !important; 
+}
+
 
 /* ==========================================================================
    SIDEBAR EKSEKUTIF
@@ -457,10 +473,11 @@ body.tema-terang {
 
 body.tema-terang .main-panel { background: #f8fafc; }
 body.tema-terang .top-command-bar { 
-  background: rgba(255, 255, 255, 0.88); 
-  border-bottom: 1px solid #e2e8f0; 
-  backdrop-filter: blur(12px); 
-  -webkit-backdrop-filter: blur(12px); 
+  background: transparent !important; 
+  border-bottom: none !important; 
+  box-shadow: none !important;
+  backdrop-filter: none !important; 
+  -webkit-backdrop-filter: none !important; 
 }
 
 /* SIDEBAR TEMA TERANG DENGAN TEKSTUR PALET TERANG */
@@ -1116,8 +1133,11 @@ body.tema-terang .item-rapat-sidebar::after {
 .top-command-bar {
   height: 64px;
   padding: 0 36px;
-  background: #050811;
-  border-bottom: 1px solid var(--border-sidebar);
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
