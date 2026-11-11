@@ -12,7 +12,10 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
-  <link rel="stylesheet" href="css/app.css?v=1.5.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css?v=1.6.0" />
 </head>
 
 <body>
@@ -34,43 +37,21 @@
       </div>
 
       <!-- SIDEBAR MENU UTAMA -->
-      <div class="sidebar-menu" id="sidebar-menu">
-        <div class="sidebar-active-glider" id="sidebar-active-glider" aria-hidden="true"></div>
-        <button type="button" id="menu-rapat-baru" class="menu-item aktif">
-          <span class="menu-icon">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-            </svg>
-          </span>
-          <span class="menu-text">Rapat Baru</span>
-        </button>
-        <button type="button" id="menu-riwayat-rapat" class="menu-item">
-          <span class="menu-icon">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-              </path>
-            </svg>
-          </span>
-          <span class="menu-text">Riwayat Rapat</span>
-        </button>
-        <button type="button" id="menu-pengaturan" class="menu-item">
-          <span class="menu-icon">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-              </path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-          </span>
-          <span class="menu-text">Pengaturan</span>
-        </button>
+      <div class="sidebar-top-dock-hint">
+        <div class="dock-hint-badge">
+          <span class="dock-hint-dot"></span>
+          <span>SABLE TOP DOCK</span>
+        </div>
+        <p class="dock-hint-desc">Navigasi utama berada di dock atas layar.</p>
       </div>
 
-
-
-
+      <!-- COMPATIBILITY PROXIES (Hidden) -->
+      <div class="sidebar-menu" id="sidebar-menu" style="display: none;">
+        <div class="sidebar-active-glider" id="sidebar-active-glider" aria-hidden="true"></div>
+        <button type="button" id="menu-rapat-baru" class="menu-item aktif"><span class="menu-text">Rapat Baru</span></button>
+        <button type="button" id="menu-riwayat-rapat" class="menu-item"><span class="menu-text">Riwayat Rapat</span></button>
+        <button type="button" id="menu-pengaturan" class="menu-item"><span class="menu-text">Pengaturan</span></button>
+      </div>
     </aside>
 
     <!-- OVERLAY UNTUK MOBILE -->
@@ -87,7 +68,7 @@
       </div>
 
       <!-- TOP COMMAND BAR -->
-      <header class="top-command-bar">
+      <header class="top-command-bar" data-dock-frame>
         <div class="command-bar-left">
           <!-- From Uiverse.io by Creatlydev -->
           <input hidden class="check-icon" id="check-icon-top" name="check-icon-top" type="checkbox">
@@ -104,6 +85,71 @@
               style="cursor: pointer; transition: color 0.2s;">Riwayat Rapat</span>
             <span class="breadcrumb-separator tersembunyi" id="breadcrumb-sep-middle">/</span>
             <span class="breadcrumb-current" id="breadcrumb-current">Buat Notulen Baru</span>
+          </div>
+        </div>
+
+        <!-- THREEUI ANIMATED TOP DOCK (SABLE DOCK) -->
+        <div class="top-dock-container-wrapper shader-frame">
+          <div class="animated-top-dock-component">
+            <nav id="animated-top-dock-nav" class="animated-top-dock__nav" aria-label="Animated top dock" data-dock-state="idle" data-dock-max="0.00">
+              <button class="animated-top-dock__item animated-top-dock__logo" id="dock-btn-logo" data-dock-item type="button" aria-label="Home" title="Beranda Notulensi">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect width="24" height="24" rx="4.5" fill="#E8E8E3" />
+                  <path d="M6 6h8.6L18 9.35v8.15H9.15L6 14.35V6Z" fill="#111" />
+                  <path d="M9 9h5.15L15 9.85V15H9.85L9 14.15V9Z" fill="#E8E8E3" />
+                  <path d="M12 9v6M9 12h6" stroke="#111" stroke-width=".7" />
+                </svg>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-system" data-dock-item data-dock-id="system" type="button" aria-pressed="true" title="SYSTEM — Notulen Rapat Baru">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <rect x="2.25" y="2.25" width="4.5" height="4.5" rx=".8" />
+                    <rect x="9.25" y="2.25" width="4.5" height="4.5" rx=".8" />
+                    <rect x="2.25" y="9.25" width="4.5" height="4.5" rx=".8" />
+                    <rect x="9.25" y="9.25" width="4.5" height="4.5" rx=".8" />
+                  </svg>
+                </span>
+                <span>SYSTEM</span>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-method" data-dock-item data-dock-id="method" type="button" aria-pressed="false" title="METHOD — AI Suite & Analisis">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <circle cx="3" cy="8" r="1.5" />
+                    <circle cx="12.5" cy="3.5" r="1.5" />
+                    <circle cx="12.5" cy="12.5" r="1.5" />
+                    <path d="M4.5 7.3 11 4.2M4.5 8.7l6.5 3.1" />
+                  </svg>
+                </span>
+                <span>METHOD</span>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-work" data-dock-item data-dock-id="work" type="button" aria-pressed="false" title="WORK — Riwayat Rapat & Arsip">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <rect x="2" y="3" width="12" height="10" rx="1.5" />
+                    <path d="M2 6h12M5 4.5h.01M7 4.5h.01" />
+                  </svg>
+                </span>
+                <span>WORK</span>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-access" data-dock-item data-dock-id="access" type="button" aria-pressed="false" title="ACCESS — Pengaturan & Keamanan">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <circle cx="5.2" cy="6.2" r="2.7" />
+                    <path d="m7.2 8.2 5.9 5.1M10.2 10.8l1.5-1.5M12 12.4l1.4-1.4" />
+                  </svg>
+                </span>
+                <span>ACCESS</span>
+              </button>
+              <button class="animated-top-dock__item animated-top-dock__link" id="dock-btn-notes" data-dock-item data-dock-id="notes" type="button" aria-pressed="false" title="NOTES — Detail Notulen">
+                <span class="animated-top-dock__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16">
+                    <path d="M4 2.25h5.4L12 4.85v8.9H4z" />
+                    <path d="M9.25 2.25V5h2.7M6 8h4M6 10.5h4" />
+                  </svg>
+                </span>
+                <span>NOTES</span>
+              </button>
+            </nav>
           </div>
         </div>
 
@@ -1006,7 +1052,7 @@
   <!-- TOAST CONTAINER -->
   <div id="kontainer-toast" class="kontainer-toast" aria-live="polite"></div>
 
-  <script type="module" src="js/app.js?v=1.5.0"></script>
+  <script type="module" src="js/app.js?v=1.6.0"></script>
 </body>
 
 </html>

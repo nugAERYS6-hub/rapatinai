@@ -9,6 +9,7 @@
 
 import { STATE, el } from "./shared/state.js";
 import { initSidebarEvents, toggleSidebar, initInteractiveBackground, updateSidebarGlider } from "./shared/ui.js";
+import { initAnimatedTopDock, syncTopDockActive } from "./shared/topDock.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
 import { initRiwayatEvents, muatStats, muatDaftarRapat, bukaRiwayat } from "./riwayat/riwayat.js";
 import { initDetailEvents, tampilkanDetailRapat } from "./riwayat/detail.js";
@@ -35,6 +36,7 @@ export async function handleRoute() {
   if (hash.startsWith("#/detail/")) {
     const id = hash.replace("#/detail/", "").trim();
     if (id) {
+      syncTopDockActive("notes");
       await tampilkanDetailRapat(id, false);
       requestAnimationFrame(updateSidebarGlider);
       return;
@@ -42,23 +44,27 @@ export async function handleRoute() {
   }
 
   if (hash === "#/pengaturan" || hash === "#pengaturan") {
+    syncTopDockActive("access");
     bukaPengaturan(false);
     requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/riwayat" || hash === "#riwayat") {
+    syncTopDockActive("work");
     bukaRiwayat(false);
     requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
   if (hash === "#/baru" || hash === "#baru") {
+    syncTopDockActive("system");
     tampilkanFormBaru(false);
     requestAnimationFrame(updateSidebarGlider);
     return;
   }
 
+  syncTopDockActive("system");
   tampilkanFormBaru(false);
   requestAnimationFrame(updateSidebarGlider);
 }
@@ -90,6 +96,7 @@ export async function inisialisasiApp() {
   // 1. Inisialisasi komponen dasar, latar interaktif & event
   initInteractiveBackground();
   initSidebarEvents();
+  initAnimatedTopDock();
   initFormEvents();
   initRiwayatEvents();
   initDetailEvents();

@@ -10,6 +10,7 @@
 @import './shared/variables.css';
 @import './shared/layout.css';
 @import './shared/components.css';
+@import './shared/animated-top-dock.css';
 
 /* Menu: Rapat Baru */
 @import './rapat-baru/form.css';
