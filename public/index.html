@@ -187,7 +187,7 @@
               <div class="beranda-stat-card reveal-fade-up">
                 <div class="beranda-stat-icon beranda-stat-icon--ai">
                   <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <div class="beranda-stat-content">
@@ -283,7 +283,7 @@
                     </li>
                     <li>
                       <span class="beranda-check-icon">✓</span>
-                      <span><strong>Tempat Sampah (*Soft Delete*):</strong> Notulen terhapus tersimpan aman dan dapat dipulihkan kembali sewaktu-waktu.</span>
+                      <span><strong>Tempat Sampah (Soft Delete):</strong> Notulen terhapus tersimpan aman dan dapat dipulihkan kembali sewaktu-waktu.</span>
                     </li>
                   </ul>
                 </div>
@@ -312,7 +312,7 @@
                     </li>
                     <li>
                       <span class="beranda-check-icon">✓</span>
-                      <span><strong>Pemulihan Aman (*Restore*):</strong> Validasi ketat file backup untuk mencegah kesalahan struktur database.</span>
+                      <span><strong>Pemulihan Aman (Restore):</strong> Validasi ketat file backup untuk mencegah kesalahan struktur database.</span>
                     </li>
                     <li>
                       <span class="beranda-check-icon">✓</span>
@@ -320,7 +320,7 @@
                     </li>
                     <li>
                       <span class="beranda-check-icon">✓</span>
-                      <span><strong>Tema Tampilan:</strong> Pilih preferensi tampilan Gelap (*Executive Dark*) atau Terang (*Clean Light Gov*).</span>
+                      <span><strong>Tema Tampilan:</strong> Pilih preferensi tampilan Gelap (Executive Dark) atau Terang (Clean Light Gov).</span>
                     </li>
                   </ul>
                 </div>
@@ -490,7 +490,7 @@
             <div id="trash-notice-banner" class="trash-notice-banner tersembunyi">
               <div class="trash-notice-icon">🗑️</div>
               <div class="trash-notice-text">
-                <strong>Mode Tempat Sampah:</strong> Menampilkan notulen rapat yang telah dihapus sementara. Anda dapat memulihkan (*restore*) data kembali ke daftar aktif atau menghapusnya secara permanen.
+                <strong>Mode Tempat Sampah:</strong> Menampilkan notulen rapat yang telah dihapus sementara. Anda dapat memulihkan (restore) data kembali ke daftar aktif atau menghapusnya secara permanen.
               </div>
             </div>
 
@@ -583,7 +583,7 @@
               <div class="action-group ai-group">
                 <button type="button" id="btn-ai-ringkasan" class="btn-ai-action btn-ai-ringkasan" title="Buat Ringkasan Eksekutif Otomatis dengan AI">
                   <svg class="btn-svg-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.286L13 21l-2.286-6.857L5 12l5.714-2.286L13 3z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10" />
                   </svg>
                   <span>Ringkasan AI</span>
                 </button>
@@ -650,7 +650,7 @@
             <div class="card-luxury ai-intelligence-card" id="kotak-ai-container">
               <div class="card-header">
                 <div class="card-title-group">
-                  <h2>AI</h2>
+                  <h2>Asistensi Notulensi AI</h2>
                 </div>
               </div>
 
@@ -912,7 +912,7 @@
                   </div>
                   <div class="backup-stat-info">
                     <span class="backup-stat-label">Backup Terakhir</span>
-                    <span class="backup-stat-val backup-stat-val--muted" id="backup-stat-terakhir">—</span>
+                    <span class="backup-stat-val backup-stat-val--muted" id="backup-stat-terakhir">Belum ada</span>
                   </div>
                 </div>
               </div>
@@ -1200,6 +1200,112 @@
             </form>
           </div>
         </section>
+
+        <!-- ============================================== -->
+        <!-- FOOTER RESMI HAK CIPTA NIPW                     -->
+        <!-- ============================================== -->
+        <footer class="nipw-app-footer">
+          <div class="nipw-footer-container">
+            <!-- 1. GRID 5 KOLOM (SESUAI REFERENSI, STRICTLY NIPW) -->
+            <div class="nipw-footer-grid">
+              <div class="nipw-footer-col">
+                <h4 class="nipw-footer-heading">Navigasi Utama</h4>
+                <ul class="nipw-footer-links">
+                  <li><a href="#/beranda">Beranda</a></li>
+                  <li><a href="#/baru">Buat Notulen Baru</a></li>
+                  <li><a href="#/riwayat">Riwayat Notulen</a></li>
+                  <li><a href="#/pengaturan">Pengaturan Sistem</a></li>
+                </ul>
+              </div>
+
+              <div class="nipw-footer-col">
+                <h4 class="nipw-footer-heading">Fitur Notulen</h4>
+                <ul class="nipw-footer-links">
+                  <li><a href="#/baru">Pencatatan Rapat</a></li>
+                  <li><a href="#/baru">Draf Otomatis</a></li>
+                  <li><a href="#/baru">Daftar Hadir Peserta</a></li>
+                  <li><a href="#/riwayat">Tempat Sampah</a></li>
+                </ul>
+              </div>
+
+              <div class="nipw-footer-col">
+                <h4 class="nipw-footer-heading">Asistensi Cerdas AI</h4>
+                <ul class="nipw-footer-links">
+                  <li><a href="#/riwayat">Ringkasan Eksekutif</a></li>
+                  <li><a href="#/riwayat">Ide Rekomendasi</a></li>
+                  <li><a href="#/riwayat">Action Items Rapat</a></li>
+                  <li><a href="#/riwayat">Filter Notulen AI</a></li>
+                </ul>
+              </div>
+
+              <div class="nipw-footer-col">
+                <h4 class="nipw-footer-heading">Format &amp; Arsip</h4>
+                <ul class="nipw-footer-links">
+                  <li><a href="#/riwayat">Unduh Berkas PDF</a></li>
+                  <li><a href="#/riwayat">Unduh Dokumen Word</a></li>
+                  <li><a href="#/pengaturan">Pencadangan Database</a></li>
+                  <li><a href="#/pengaturan">Pemulihan (Restore)</a></li>
+                </ul>
+              </div>
+
+              <div class="nipw-footer-col">
+                <h4 class="nipw-footer-heading">Unit Kerja Kedinasan</h4>
+                <ul class="nipw-footer-links">
+                  <li><span class="nipw-footer-static">Bidang Infrastruktur &amp; Kewilayahan</span></li>
+                  <li><span class="nipw-footer-static">Sistem Notulensi Resmi</span></li>
+                  <li><span class="nipw-footer-static">SOP Dokumentasi Rapat</span></li>
+                  <li><span class="nipw-footer-static">Integritas Basis Data</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 2. GARIS PEMISAH HALUS (DIVIDER) -->
+            <div class="nipw-footer-divider"></div>
+
+            <!-- 3. BARIS IDENTITAS, HAK CIPTA & IKON BULAT -->
+            <div class="nipw-footer-subbar">
+              <div class="nipw-footer-subbar-left">
+                <p class="nipw-footer-location">
+                  Bidang Infrastruktur dan Kewilayahan, Notulensi Infrastruktur dan Pengembangan Wilayah.
+                </p>
+                <p class="nipw-footer-copyright">
+                  &copy; 2026 NIPW. All rights reserved.
+                </p>
+              </div>
+
+              <div class="nipw-footer-subbar-right">
+                <div class="nipw-footer-socials">
+                  <a href="#/beranda" class="nipw-footer-circle-btn" title="Beranda NIPW" aria-label="Beranda">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                  </a>
+                  <a href="#/baru" class="nipw-footer-circle-btn" title="Buat Notulen Baru" aria-label="Buat Notulen Baru">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                  </a>
+                  <a href="#/riwayat" class="nipw-footer-circle-btn" title="Riwayat Notulen" aria-label="Riwayat Notulen">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </a>
+                  <a href="#/pengaturan" class="nipw-footer-circle-btn" title="Pengaturan Sistem" aria-label="Pengaturan">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. WATERMARK TIPOGRAFI RAKSASA "NIPW" (REPLIKA REFERENSI) -->
+            <div class="nipw-footer-watermark-row" aria-hidden="true">
+              <span class="nipw-footer-big-text">NIPW</span>
+            </div>
+          </div>
+        </footer>
       </div>
     </main>
   </div>

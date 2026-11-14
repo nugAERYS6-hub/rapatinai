@@ -76,7 +76,7 @@ export function bukaEditRapat() {
   if (el.labelSimpanSubmit) el.labelSimpanSubmit.textContent = "Perbarui Notulen Rapat";
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
-  if (el.breadcrumbCurrent) el.breadcrumbCurrent.textContent = `Edit — ${r.topik}`;
+  if (el.breadcrumbCurrent) el.breadcrumbCurrent.textContent = `Edit: ${r.topik}`;
 
   if (el.editIdRapat) el.editIdRapat.value = r.id;
   if (el.inputTanggal) el.inputTanggal.value = r.tanggal || "";

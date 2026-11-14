@@ -47,7 +47,7 @@ export function renderRiwayatBackup() {
   if (statTotal) statTotal.textContent = log.length;
   if (statSukses) statSukses.textContent = totalSukses;
   if (statTerakhir) {
-    statTerakhir.textContent = log.length > 0 ? formatWaktuBackup(log[0].waktu) : "—";
+    statTerakhir.textContent = log.length > 0 ? formatWaktuBackup(log[0].waktu) : "Belum ada";
   }
 
   if (log.length === 0) {
@@ -66,12 +66,12 @@ export function renderRiwayatBackup() {
     const badgeClass = item.status === "sukses" ? "backup-badge--sukses" : "backup-badge--gagal";
     const badgeLabel = item.status === "sukses" ? "✓ Berhasil" : "✕ Gagal";
 
-    const namaAman = escapeHtml(item.nama || "—");
+    const namaAman = escapeHtml(item.nama || "Belum ada");
     const aksiHtml = item.status === "sukses"
       ? `<button class="btn-unduh-ulang" title="Unduh file backup database" data-nama="${namaAman}">
            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
          </button>`
-      : `<span style="color:#475569;font-size:12px;">—</span>`;
+      : `<span style="color:#475569;font-size:12px;">Belum ada</span>`;
 
     tr.innerHTML = `
       <td>${log.length - idx}</td>
@@ -213,7 +213,7 @@ export function initBackupEvents() {
 
       const ukuranFormatted = formatUkuranFile(file.size);
       const konfirmasi = confirm(
-        `⚠️ PERHATIAN — RESTORE DATABASE\n\n` +
+        `⚠️ PERHATIAN: RESTORE DATABASE\n\n` +
         `File yang dipilih:\n  ${file.name} (${ukuranFormatted})\n\n` +
         `Proses restore akan menimpa seluruh data rapat yang saat ini ada di database.\n` +
         `Pastikan Anda telah membuat backup terbaru sebelum melanjutkan!\n\n` +

@@ -78,7 +78,7 @@ export function formatHariTanggal(tglStr) {
  * Format ukuran file ke format B / KB / MB
  */
 export function formatUkuranFile(bytes) {
-  if (!bytes || bytes === 0) return "—";
+  if (!bytes || bytes === 0) return "-";
   if (bytes < 1024) return bytes + " B";
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / (1024 * 1024)).toFixed(2) + " MB";
@@ -88,7 +88,7 @@ export function formatUkuranFile(bytes) {
  * Format waktu ISO ke format tanggal & waktu Indonesia
  */
 export function formatWaktuBackup(isoStr) {
-  if (!isoStr) return "—";
+  if (!isoStr) return "-";
   try {
     const d = new Date(isoStr);
     const tgl = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });

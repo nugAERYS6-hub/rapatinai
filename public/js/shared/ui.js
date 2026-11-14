@@ -3,6 +3,7 @@
 // ==========================================================================
 
 import { el, elPengaturan } from "./state.js";
+import { cleanupPen3D } from "../beranda/pen3d.js";
 
 /**
  * Menampilkan Toast notifikasi di pojok layar
@@ -41,6 +42,10 @@ export function tutupSemuaView() {
   if (el.viewDetail) el.viewDetail.classList.add("tersembunyi");
   if (el.viewForm) el.viewForm.classList.add("tersembunyi");
   if (elPengaturan.viewPengaturan) elPengaturan.viewPengaturan.classList.add("tersembunyi");
+
+  try {
+    cleanupPen3D();
+  } catch (_) {}
 }
 
 /**

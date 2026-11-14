@@ -866,6 +866,7 @@ body.tema-terang .beranda-step-desc {
 .reveal-fade-up.revealed {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 /* Staggered transition delays for natural cascading motion */

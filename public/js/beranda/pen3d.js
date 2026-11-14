@@ -775,6 +775,13 @@ let rendererInstance = null;
 function animatePen() {
   if (!isModuleRunning) return;
 
+  // Optimasi Rendering: jika tab di background atau Beranda tersembunyi, jangan render WebGL
+  const berandaEl = document.getElementById("tampilan-beranda");
+  if (document.hidden || (berandaEl && berandaEl.classList.contains("tersembunyi"))) {
+    animationFrameId = requestAnimationFrame(animatePen);
+    return;
+  }
+
   penState.time += 0.024;
 
   // 1. Hitung ayunan mengapung lembut (Idle Floating Oscillation)

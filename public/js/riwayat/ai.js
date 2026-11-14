@@ -36,9 +36,11 @@ export function formatRingkasanHTML(text, indent = false) {
     .map((p) => p.trim())
     .filter(Boolean)
     .map((p) => {
-      const aman = escapeHtml(p);
-      const denganBold = aman.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-      return `<p style="margin-bottom: 8px; ${indent ? "text-indent: 28px;" : ""}">${denganBold}</p>`;
+      let aman = escapeHtml(p);
+      aman = aman.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+      aman = aman.replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+      aman = aman.replace(/(^|\n)\s*\*\s+/g, "$1• ");
+      return `<p style="margin-bottom: 8px; ${indent ? "text-indent: 28px;" : ""}">${aman}</p>`;
     })
     .join("");
 }

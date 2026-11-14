@@ -23,7 +23,7 @@ export function renderAnggotaChips() {
   el.daftarAnggotaChips.innerHTML = STATE.anggotaForm
     .map((a, idx) => `
       <div class="chip-attendee">
-        <span><b>${escapeHtml(a.nama)}</b> — ${escapeHtml(a.jabatan || "-")} (${escapeHtml(a.asalInstansi || "-")})</span>
+        <span><b>${escapeHtml(a.nama)}</b>, ${escapeHtml(a.jabatan || "-")} (${escapeHtml(a.asalInstansi || "-")})</span>
         <button type="button" class="chip-remove-btn" data-index="${idx}" aria-label="Hapus">×</button>
       </div>
     `)

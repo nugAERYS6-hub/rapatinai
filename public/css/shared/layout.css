@@ -1017,14 +1017,13 @@ body.tema-terang .item-tanggal, body.tema-terang .item-row-meta { color: #64748b
     transparent 75%
   );
   transition: opacity 0.3s ease;
-  will-change: background;
 }
 
 /* 3. Ambient slow-drifting aurora glow orbs */
 .bg-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(130px);
+  filter: blur(60px);
   will-change: transform;
   opacity: 0.6;
 }
@@ -1450,6 +1449,263 @@ body.tema-terang .item-rapat-sidebar::after {
 
   .main-scrollable-content {
     padding: 16px 12px max(100px, env(safe-area-inset-bottom, 28px) + 80px);
+  }
+}
+
+/* ==========================================================================
+   FOOTER RESMI HAK CIPTA NIPW (REFERENSI MINIMALIS PREMIUM DENGAN WATERMARK)
+   ========================================================================== */
+.nipw-app-footer {
+  margin-top: 56px;
+  padding: 48px 36px 0 36px;
+  border-top: 1px solid rgba(56, 189, 248, 0.14);
+  background: linear-gradient(180deg, #091224 0%, #060b17 55%, #03060f 100%);
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.nipw-footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* 1. Grid 5 Kolom */
+.nipw-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px 24px;
+  margin-bottom: 40px;
+}
+
+.nipw-footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.nipw-footer-heading {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 18px 0;
+  letter-spacing: -0.01em;
+}
+
+.nipw-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nipw-footer-links li a {
+  font-size: 13.5px;
+  color: #94a3b8;
+  text-decoration: none;
+  line-height: 1.4;
+  display: inline-block;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nipw-footer-links li a:hover {
+  color: #38bdf8;
+  transform: translateX(3px);
+}
+
+.nipw-footer-static {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+  display: inline-block;
+}
+
+/* 2. Garis Pemisah (Divider) */
+.nipw-footer-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 28px;
+}
+
+/* 3. Sub-baris Lokasi & Ikon */
+.nipw-footer-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.nipw-footer-subbar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nipw-footer-location {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.nipw-footer-copyright {
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin: 0;
+  font-weight: 400;
+}
+
+.nipw-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nipw-footer-circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nipw-footer-circle-btn:hover {
+  background: #38bdf8;
+  color: #030712;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+}
+
+/* 4. Tipografi Raksasa Watermark NIPW */
+.nipw-footer-watermark-row {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  line-height: 0.74;
+  margin-top: 10px;
+  margin-bottom: -4px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.nipw-footer-big-text {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  font-size: clamp(80px, 18.5vw, 250px);
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.16) 0%, rgba(37, 99, 235, 0.05) 55%, rgba(3, 6, 15, 0.01) 95%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Light Theme Overrides */
+body.tema-terang .nipw-app-footer {
+  border-top: 1px solid #bae6fd;
+  background: linear-gradient(180deg, #f0f7ff 0%, #e2eefb 55%, #dbeafe 100%);
+  box-shadow: 0 -8px 30px rgba(2, 132, 199, 0.06);
+}
+
+body.tema-terang .nipw-footer-heading {
+  color: #0f172a;
+}
+
+body.tema-terang .nipw-footer-links li a {
+  color: #475569;
+}
+
+body.tema-terang .nipw-footer-links li a:hover {
+  color: #0284c7;
+}
+
+body.tema-terang .nipw-footer-static {
+  color: #64748b;
+}
+
+body.tema-terang .nipw-footer-divider {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+body.tema-terang .nipw-footer-location {
+  color: #1e293b;
+}
+
+body.tema-terang .nipw-footer-copyright {
+  color: #64748b;
+}
+
+body.tema-terang .nipw-footer-circle-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0369a1;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+body.tema-terang .nipw-footer-circle-btn:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+}
+
+body.tema-terang .nipw-footer-big-text {
+  background: linear-gradient(180deg, rgba(2, 132, 199, 0.15) 0%, rgba(14, 165, 233, 0.04) 55%, rgba(219, 234, 254, 0.01) 95%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .nipw-footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nipw-app-footer {
+    padding: 36px 20px 0 20px;
+  }
+
+  .nipw-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+    margin-bottom: 30px;
+  }
+
+  .nipw-footer-subbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nipw-footer-big-text {
+    font-size: clamp(60px, 20vw, 120px);
+  }
+}
+
+@media (max-width: 440px) {
+  .nipw-footer-grid {
+    grid-template-columns: 1fr;
   }
 }
 
