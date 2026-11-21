@@ -8,7 +8,7 @@
 // ==========================================================================
 
 import { STATE, el } from "./shared/state.js";
-import { initInteractiveBackground } from "./shared/ui.js";
+import { initInteractiveBackground, tampilkanToast } from "./shared/ui.js";
 import { initAnimatedTopDock, syncTopDockActive } from "./shared/topDock.js";
 import { initBerandaEvents, bukaBeranda, updateBerandaStats } from "./beranda/beranda.js";
 import { initFormEvents, tampilkanFormBaru } from "./rapat-baru/form.js";
@@ -83,6 +83,14 @@ function initKeyboardShortcuts() {
     if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
       e.preventDefault();
       el.inputCari?.focus();
+    }
+    // Pintasan Cetak Dokumen (Ctrl+P / Cmd+P)
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
+      const isDetailActive = el.viewDetail && !el.viewDetail.classList.contains("tersembunyi");
+      if (!isDetailActive) {
+        e.preventDefault();
+        tampilkanToast("Buka salah satu riwayat rapat untuk mencetak dokumen resmi (Ctrl+P).", "info");
+      }
     }
   });
 }

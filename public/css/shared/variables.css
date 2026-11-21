@@ -121,6 +121,14 @@ body {
   display: none !important;
 }
 
+@media print {
+  .tersembunyi,
+  [hidden] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
 
 /* ==========================================================================
    OPTIMASI TEMA TERANG: KONTEN, KARTU STATISTIK, TABEL, DAN BADGE
@@ -884,4 +892,4 @@ body.tema-terang .tema-check-icon { color: #2563eb; }
     background-position: -200% 0;
   }
 }
-
+

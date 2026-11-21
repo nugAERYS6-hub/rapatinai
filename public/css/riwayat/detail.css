@@ -577,50 +577,108 @@
    CETAK DOKUMEN RESMI (PRINT PREVIEW STYLES)
    ========================================================================== */
 @media print {
+  /* 1. Pengaturan Halaman Cetak Standar Kedinasan (A4 Portrait) */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 20mm 15mm 20mm;
+  }
 
-  body,
-  html {
+  /* 2. Reset Layout Root & Canvas */
+  html,
+  body {
     background: #ffffff !important;
     color: #000000 !important;
     font-size: 11pt !important;
+    font-family: "Times New Roman", Times, serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
   }
 
+  /* 3. Sembunyikan Seluruh Elemen Navigasi, Chrome UI, Footer, Modal, Toast & Background */
   .sidebar,
+  #sidebar,
+  .sidebar-overlay,
+  #sidebar-overlay,
+  #sidebar-menu,
   .top-command-bar,
+  .top-dock-container-wrapper,
+  .animated-top-dock-component,
+  #animated-top-dock-nav,
+  .interactive-bg-canvas,
+  .nipw-app-footer,
+  footer,
+  dialog,
+  .luxury-modal,
+  #modal-anggota,
+  #modal-preview-lampiran,
+  .kontainer-toast,
+  .toast,
+  .card-action-bar,
+  .card-action-bar-top,
+  .btn-action-primary,
+  .export-group {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 4. Sembunyikan Seluruh Tampilan (View Sections) Lain Selain Detail Rapat */
+  #tampilan-beranda,
+  #tampilan-riwayat,
+  #tampilan-form,
+  #tampilan-pengaturan,
+  .view-section:not(#tampilan-detail),
+  .tersembunyi,
+  .view-section.tersembunyi {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 5. Di Dalam #tampilan-detail: Sembunyikan Kartu & Widget yang Bukan Dokumen Cetak */
   .detail-hero-card,
   .ai-intelligence-card,
-  .card-luxury:not(.document-preview-card),
+  #kotak-ai-container,
+  #kotak-lampiran-container,
+  .lampiran-card,
+  .detail-cards-container > .card-luxury:not(.document-preview-card),
   .card-header,
   .btn-print-action,
-  .sidebar-overlay,
-  #tampilan-form,
-  #tampilan-riwayat,
-  #tampilan-pengaturan {
+  .detail-action-ribbon,
+  .detail-officials-grid,
+  .grid-peserta-cards,
+  .poin-pembahasan-list,
+  .empty-state-hint {
     display: none !important;
+    visibility: hidden !important;
   }
 
-  /* Sembunyikan pseudo-element yang mungkin masih memakan ruang */
+  /* Sembunyikan pseudo-element dekoratif */
   .detail-hero-card::before,
-  .detail-hero-card::after {
+  .detail-hero-card::after,
+  .interactive-bg-canvas::before,
+  .interactive-bg-canvas::after {
     display: none !important;
     content: none !important;
   }
 
-  /* Reset semua container layout agar tidak ada ruang kosong */
-  html, body,
+  /* 6. Buka Bebas Semua Kontainer Induk Pratinjau Dokumen */
   .app-layout,
   .main-panel,
   .main-scrollable-content,
   #tampilan-detail,
-  .view-section,
   .detail-cards-container,
   .document-preview-card {
     display: block !important;
+    position: static !important;
     overflow: visible !important;
     height: auto !important;
     min-height: unset !important;
-    max-width: unset !important;
+    max-height: none !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -628,35 +686,149 @@
     background: transparent !important;
     gap: 0 !important;
     animation: none !important;
+    transform: none !important;
   }
 
-  .paper-preview {
+  /* 7. Kertas Dokumen Resmi & Format Cetak */
+  .paper-preview,
+  #paper-preview-content {
+    display: block !important;
+    background: #ffffff !important;
+    color: #000000 !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    max-width: 100% !important;
     font-family: "Times New Roman", Times, serif !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  .kop-surat-wrapper,
-  .kop-logo-img,
-  .kop-garis-tebal,
-  .kop-garis-tipis {
+  #paper-preview-content > div {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Kop Surat Resmi Bappeda: Tetap Sejajar Horizontal Saat Cetak */
+  .kop-surat-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-bottom: 8px !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
+  .kop-logo-box {
+    width: 90px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+
+  .kop-logo-img {
+    width: 82px !important;
+    height: 82px !important;
+    object-fit: contain !important;
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .kop-text-box {
+    flex: 1 !important;
+    text-align: center !important;
+    color: #000000 !important;
+    font-family: "Times New Roman", Times, serif !important;
+  }
+
+  .kop-instansi-prov {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    line-height: 1.25 !important;
+  }
+
+  .kop-nama-dinas {
+    font-size: 14.5pt !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    line-height: 1.25 !important;
+    margin-top: 3px !important;
+  }
+
+  .kop-alamat {
+    font-size: 9pt !important;
+    line-height: 1.35 !important;
+    margin-top: 4px !important;
+    color: #000000 !important;
+  }
+
+  .kop-kontak {
+    font-size: 8.5pt !important;
+    line-height: 1.35 !important;
+    color: #000000 !important;
+  }
+
+  .kop-spacer {
+    width: 90px !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+  }
+
+  .kop-garis-tebal {
+    border-top: 2.5px solid #000000 !important;
+    margin-bottom: 2px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .kop-garis-tipis {
+    border-top: 1px solid #000000 !important;
+    margin-bottom: 20px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 8. Pencegahan Pemotongan Halaman (Page-Break Rules) */
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid !important;
     break-after: avoid !important;
   }
 
-  table, tr, td, th {
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr, td, th {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+
+  #paper-preview-content th,
+  #paper-preview-content td {
+    border-color: #64748b !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #paper-preview-content th {
+    background-color: #f1f5f9 !important;
+    color: #000000 !important;
   }
 
   p, div {
@@ -664,78 +836,18 @@
     widows: 3;
   }
 
-  @page {
-    size: A4 portrait;
-    margin: 20mm 20mm 20mm 20mm;
-  }
-}
-
-
-/* ==========================================================================
-   PRINT STYLESHEET (@media print)
-   ========================================================================== */
-@media print {
-  /* Sembunyikan elemen UI chrome saat cetak */
-  .sidebar,
-  .sidebar-overlay,
-  .app-header,
-  .hero-top-row,
-  .detail-hero-card,
-  .card-action-bar,
-  .detail-officials-grid,
-  .tabs-nav-bar,
-  .ai-suite-wrapper,
-  .grid-peserta-cards,
-  .poin-pembahasan-list,
-  .toast,
-  .kontainer-toast,
-  #tampilan-riwayat,
-  #tampilan-form,
-  #tampilan-pengaturan,
-  #modal-anggota,
-  .btn-action-primary,
-  .export-group,
-  .btn-print-action,
-  .card-action-bar-top {
-    display: none !important;
+  /* Pastikan elemen pemisah lampiran selalu mulai di halaman baru tanpa garis sisa */
+  [style*="page-break-before: always"] {
+    break-before: page !important;
+    page-break-before: always !important;
+    border-top: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-    font-size: 11pt !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .app-layout {
-    display: block !important;
-  }
-
-  .main-content {
-    margin: 0 !important;
-    padding: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-
-  .paper-sheet-document,
-  .document-preview-card,
-  #paper-preview-content {
-    background: #ffffff !important;
-    box-shadow: none !important;
-    border: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .kop-surat-wrapper,
-  .kop-garis-tebal,
-  .kop-garis-tipis {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+  [style*="page-break-inside: avoid"] {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }
 
