@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagram Computational Thinking - NIPW (Pemrograman Terstruktur)</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      margin: 0;
+      padding: 30px 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .header {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-left: 5px solid #0284c7;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+      color: #0f172a;
+    }
+    p.meta {
+      margin: 0;
+      font-size: 14px;
+      color: #64748b;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      page-break-inside: avoid;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #0369a1;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      background: #ffffff;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+    .btn-bar {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background: #0369a1;
+    }
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .btn-bar, .header {
+        display: none;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #cbd5e1;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Diagram Computational Thinking — Proyek NIPW</h1>
+      <p class="meta">Mata Kuliah: <strong>Pemrograman Terstruktur [+Praktikum] (4 SKS)</strong></p>
+      <div class="btn-bar">
+        <button class="btn" onclick="window.print()">🖨️ Cetak / Simpan ke PDF</button>
+      </div>
+    </div>
+
+    <!-- DIAGRAM 1 -->
+    <div class="card">
+      <h2 class="card-title">1. Diagram Kerangka Kerja 4 Pilar Computational Thinking</h2>
+      <div class="mermaid">
+flowchart TD
+    subgraph Problem["MASALAH NYATA KEDINASAN"]
+        P1["Catatan rapat tidak terstruktur, tercecer, & rawan hilang"]
+        P2["Penyusunan ringkasan dan tindak lanjut memakan waktu lama"]
+    end
+
+    subgraph Core["COMPUTATIONAL THINKING PADA NIPW"]
+        direction TB
+
+        subgraph D1["1. Dekomposisi (Decomposition)"]
+            M1["Modul Entri & Form Rapat"]
+            M2["Modul Manajemen Peserta"]
+            M3["Modul AI Summarization & Action Items"]
+            M4["Modul Ekspor PDF & DOCX"]
+            M5["Modul Backup & Parser Restore SQL"]
+        end
+
+        subgraph D2["2. Pengenalan Pola (Pattern Recognition)"]
+            PT1["Pola Siklus Hidup CRUD Notulen"]
+            PT2["Pola Relasi Master-Detail (1:N)"]
+            PT3["Standardisasi JSON Response API"]
+            PT4["Format Template Dokumen Kedinasan"]
+        end
+
+        subgraph D3["3. Abstraksi (Abstraction)"]
+            AB1["Entitas Esensial: Rapat, Peserta, Action Items"]
+            AB2["Mekanisme Soft Delete (deleted_at)"]
+            AB3["Penyaringan Query Aman pada SQL Parser"]
+            AB4["Abstraksi State Management (Vanilla JS SPA)"]
+        end
+
+        subgraph D4["4. Perancangan Algoritma (Algorithm Design)"]
+            AL1["Algoritma Validasi & DB Transaction"]
+            AL2["Algoritma Debounce Autosave Draf"]
+            AL3["Algoritma Parsing Output AI ke Schema JSON"]
+            AL4["Algoritma Ekspor & Compiling Dokumen"]
+        end
+    end
+
+    subgraph Solution["HASIL & LUARAN SISTEM"]
+        S1["Sistem NIPW Terstruktur, Modular, dan Teruji"]
+        S2["Dokumen Notulen Resmi Standar Pemerintah"]
+    end
+
+    Problem --> Core
+    D1 --> Solution
+    D2 --> Solution
+    D3 --> Solution
+    D4 --> Solution
+      </div>
+    </div>
+
+    <!-- DIAGRAM 2 -->
+    <div class="card">
+      <h2 class="card-title">2. Diagram Dekomposisi Arsitektur Sistem Terstruktur</h2>
+      <div class="mermaid">
+flowchart TD
+    App["SISTEM INFORMASI NIPW"]
+
+    App --> UI["Lapisan Antarmuka (Presentation Layer)"]
+    App --> Logic["Lapisan Logika Terstruktur (Logic/Controller Layer)"]
+    App --> Data["Lapisan Data & Persistensi (Data Layer)"]
+    App --> Service["Lapisan Layanan Eksternal (Service Layer)"]
+
+    UI --> U1["Beranda & Statistik Kedinasan"]
+    UI --> U2["Formulir Notulen & Draf Otomatis"]
+    UI --> U3["Riwayat Rapat & Tempat Sampah"]
+    UI --> U4["Panel Backup & Restore Database"]
+
+    Logic --> L1["RapatController (CRUD & Validasi)"]
+    Logic --> L2["AiController (Pipeline Gemini API)"]
+    Logic --> L3["LampiranController (I/O File Storage)"]
+    Logic --> L4["BackupController (SQL Dump & Restore Parser)"]
+
+    Data --> D_Rapat[("Tabel rapats")]
+    Data --> D_Peserta[("Tabel pesertas")]
+    Data --> D_Lampiran[("Tabel lampirans")]
+    Data --> D_Action[("Tabel action_items")]
+    Data --> D_Backup[("Tabel riwayat_backups")]
+
+    Service --> S_AI["Google Gemini AI API"]
+    Service --> S_PDF["DomPDF Engine"]
+    Service --> S_Word["PHPWord Engine"]
+      </div>
+    </div>
+
+    <!-- DIAGRAM 3 -->
+    <div class="card">
+      <h2 class="card-title">3. Diagram Alir Algoritma Penyimpanan Rapat Terstruktur (Database Transaction)</h2>
+      <div class="mermaid">
+flowchart TD
+    Start(["Mulai"]) --> Input["Input Data Rapat & Peserta"]
+    Input --> Validasi{"Apakah field wajib lengkap?<br/>(Topik, Tanggal, dll)"}
+
+    Validasi -- "Tidak" --> ErrVal["Kembalikan Pesan Error Validasi (HTTP 422)"]
+    ErrVal --> EndFail(["Selesai (Gagal)"])
+
+    Validasi -- "Ya" --> BeginTx["Buka Transaksi Basis Data<br/>(DB::beginTransaction)"]
+    BeginTx --> InsertRapat["Insert Data Utama ke Tabel rapats"]
+    InsertRapat --> GetId["Ambil Generated rapat_id"]
+
+    GetId --> LoopPeserta{"Ada data peserta<br/>dalam antrean?"}
+
+    LoopPeserta -- "Ya" --> InsertPeserta["Insert Peserta dengan rapat_id terkait"]
+    InsertPeserta --> LoopPeserta
+
+    LoopPeserta -- "Selesai / Kosong" --> CekTx{"Apakah seluruh eksekusi<br/>kueri berhasil?"}
+
+    CekTx -- "Ya" --> Commit["Komit Transaksi Basis Data<br/>(DB::commit)"]
+    Commit --> ResponSukses["Kembalikan JSON Sukses (HTTP 201)"]
+    ResponSukses --> EndSuccess(["Selesai (Berhasil)"])
+
+    CekTx -- "Terjadi Eksepsi" --> Rollback["Batalkan Seluruh Perubahan<br/>(DB::rollBack)"]
+    Rollback --> ResponError["Kembalikan Pesan Error Sistem (HTTP 500)"]
+    ResponError --> EndFail
+      </div>
+    </div>
+
+    <!-- DIAGRAM 4 -->
+    <div class="card">
+      <h2 class="card-title">4. Entity-Relationship Diagram (ERD Basis Data Relasional)</h2>
+      <div class="mermaid">
+erDiagram
+    RAPAT ||--o{ PESERTA : "memiliki (1:N)"
+    RAPAT ||--o{ LAMPIRAN : "memiliki (1:N)"
+    RAPAT ||--o{ ACTION_ITEM : "menghasilkan (1:N)"
+    PENGGUNA ||--o{ RIWAYAT_BACKUP : "mencatat (1:N)"
+
+    RAPAT {
+        bigint id PK
+        string topik
+        date tanggal
+        time waktu_mulai
+        time waktu_selesai
+        string pimpinan_rapat
+        string notulis
+        text catatan_rapat
+        text ringkasan_ai
+        timestamp deleted_at "Soft Delete"
+    }
+
+    PESERTA {
+        bigint id PK
+        bigint rapat_id FK
+        string nama
+        string jabatan
+        string asal_instansi
+    }
+
+    LAMPIRAN {
+        bigint id PK
+        bigint rapat_id FK
+        string nama_asli
+        string path_file
+        bigint ukuran_bytes
+    }
+
+    ACTION_ITEM {
+        bigint id PK
+        bigint rapat_id FK
+        string tugas
+        string pic
+        date batas_waktu
+        enum prioritas
+    }
+
+    RIWAYAT_BACKUP {
+        bigint id PK
+        string nama_file
+        string status
+        bigint ukuran_bytes
+        timestamp waktu_backup
+    }
+
+    PENGGUNA {
+        bigint id PK
+        string nama
+        string email
+    }
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+</body>
+</html>
