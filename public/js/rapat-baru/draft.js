@@ -10,9 +10,20 @@ import { tampilkanToast } from "../shared/ui.js";
 let timerAutoSave = null;
 
 /**
+ * Mengambil key localStorage aktif untuk penyimpanan draf:
+ * Mode Rapat Baru -> 'draft_rapat_baru'
+ * Mode Edit Rapat -> 'draft_rapat_edit_{id}'
+ */
+export function getActiveDraftKey() {
+  return STATE.isEditing && STATE.editId
+    ? `draft_rapat_edit_${STATE.editId}`
+    : STATE.draftStorageKey;
+}
+
+/**
  * Format timestamp milidetik ke teks tanggal & jam yang ramah
  */
-function formatWaktuDraf(ts) {
+export function formatWaktuDraf(ts) {
   if (!ts) return "beberapa saat yang lalu";
   const d = new Date(ts);
   const tgl = d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
@@ -23,9 +34,10 @@ function formatWaktuDraf(ts) {
 /**
  * Memeriksa apakah ada draf tersimpan di localStorage
  */
-export function cekDrafTersimpan() {
+export function cekDrafTersimpan(customKey = null) {
   try {
-    const raw = localStorage.getItem(STATE.draftStorageKey);
+    const key = customKey || getActiveDraftKey();
+    const raw = localStorage.getItem(key);
     if (!raw) return null;
     const d = JSON.parse(raw);
     const hasPoin = Array.isArray(d.poin) && d.poin.some((p) => {
@@ -43,10 +55,9 @@ export function cekDrafTersimpan() {
 
 /**
  * Menyimpan draf formulir secara otomatis ke localStorage (Debounced)
+ * Berfungsi untuk Mode Rapat Baru maupun Mode Edit Rapat
  */
 export function simpanDrafOtomatis() {
-  if (STATE.isEditing) return;
-
   clearTimeout(timerAutoSave);
   timerAutoSave = setTimeout(() => {
     eksekusiSimpanDraf();
@@ -54,8 +65,6 @@ export function simpanDrafOtomatis() {
 }
 
 function eksekusiSimpanDraf() {
-  if (STATE.isEditing) return;
-
   const poin = ambilDataPoinForm();
   const tindakLanjut = ambilDataTindakLanjutForm();
   const topik = el.inputTopik?.value || "";
@@ -93,14 +102,18 @@ function eksekusiSimpanDraf() {
     poin,
     tindakLanjut,
     timestamp: now,
+    isEditing: !!STATE.isEditing,
+    editId: STATE.editId || null,
   };
 
   try {
-    localStorage.setItem(STATE.draftStorageKey, JSON.stringify(draftData));
+    const storageKey = getActiveDraftKey();
+    localStorage.setItem(storageKey, JSON.stringify(draftData));
 
     if (el.drafStatusPill) {
       const jamStr = new Date(now).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      if (el.drafStatusText) el.drafStatusText.textContent = `Draf tersimpan (${jamStr})`;
+      const labelTeks = STATE.isEditing ? `Draf edit tersimpan (${jamStr})` : `Draf tersimpan (${jamStr})`;
+      if (el.drafStatusText) el.drafStatusText.textContent = labelTeks;
       el.drafStatusPill.classList.remove("tersembunyi");
     }
   } catch (e) {
@@ -111,16 +124,13 @@ function eksekusiSimpanDraf() {
 /**
  * Menampilkan banner pemulihan jika ditemukan draf notulen dari sesi sebelumnya
  */
-export function tampilkanBannerDrafJikaAda() {
-  if (STATE.isEditing) {
-    if (el.bannerPulihkanDraf) el.bannerPulihkanDraf.classList.add("tersembunyi");
-    return;
-  }
-
-  const draf = cekDrafTersimpan();
+export function tampilkanBannerDrafJikaAda(customDraf = null) {
+  const draf = customDraf || cekDrafTersimpan();
   if (draf && el.bannerPulihkanDraf) {
     if (el.teksWaktuDraf) {
-      el.teksWaktuDraf.textContent = `Draf notulen "${draf.topik || "Tanpa Judul"}" tersimpan pada ${formatWaktuDraf(draf.timestamp)}. Ingin memulihkan catatan ini?`;
+      const judul = draf.topik || "Tanpa Judul";
+      const tipe = draf.isEditing ? "perubahan notulen" : "notulen baru";
+      el.teksWaktuDraf.textContent = `Draf ${tipe} "${judul}" tersimpan pada ${formatWaktuDraf(draf.timestamp)}. Ingin memulihkan catatan ini?`;
     }
     el.bannerPulihkanDraf.classList.remove("tersembunyi");
   } else if (el.bannerPulihkanDraf) {
@@ -131,9 +141,9 @@ export function tampilkanBannerDrafJikaAda() {
 /**
  * Memulihkan draf formulir yang tersimpan di localStorage
  */
-export function pulihkanDrafOtomatis() {
+export function pulihkanDrafOtomatis(customKey = null) {
   try {
-    const d = cekDrafTersimpan();
+    const d = cekDrafTersimpan(customKey);
     if (!d) return;
 
     if (el.inputTanggal && d.tanggal) el.inputTanggal.value = d.tanggal;
@@ -182,8 +192,9 @@ export function pulihkanDrafOtomatis() {
 /**
  * Menghapus draf formulir yang tersimpan
  */
-export function hapusDrafOtomatis() {
-  localStorage.removeItem(STATE.draftStorageKey);
+export function hapusDrafOtomatis(customKey = null) {
+  const key = customKey || getActiveDraftKey();
+  localStorage.removeItem(key);
   STATE.isFormDirty = false;
   if (el.drafStatusPill) el.drafStatusPill.classList.add("tersembunyi");
   if (el.bannerPulihkanDraf) el.bannerPulihkanDraf.classList.add("tersembunyi");
@@ -204,14 +215,14 @@ export function initDraftEvents() {
       const konfirmasi = confirm("Yakin ingin menghapus draf yang belum tersimpan ini? Catatan lama tidak dapat dikembalikan.");
       if (konfirmasi) {
         hapusDrafOtomatis();
-        tampilkanToast("Draf lama telah dihapus", "info");
+        tampilkanToast("Draf telah dihapus", "info");
       }
     });
   }
 
-  // Guard: Peringatkan jika tab ditutup / direfresh saat ada perubahan belum tersimpan
+  // Guard: Peringatkan jika tab ditutup / direfresh saat ada perubahan belum tersimpan (Mode Baru maupun Edit)
   window.addEventListener("beforeunload", (e) => {
-    if (STATE.isFormDirty && !STATE.isEditing) {
+    if (STATE.isFormDirty) {
       e.preventDefault();
       e.returnValue = "Ada catatan notulen yang belum disimpan ke database. Yakin ingin meninggalkan halaman?";
       return e.returnValue;

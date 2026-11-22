@@ -47,6 +47,19 @@ class Rapat extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * Model booted hooks
+     */
+    protected static function booted()
+    {
+        // Saat rapat dihapus permanen (forceDelete), hapus seluruh berkas lampiran fisik
+        static::forceDeleting(function ($rapat) {
+            foreach ($rapat->lampiran()->get() as $lampiran) {
+                $lampiran->hapusBerkasFisik();
+            }
+        });
+    }
+
     public static function parseAnggota($nilai): array
     {
         if (empty($nilai)) {

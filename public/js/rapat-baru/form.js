@@ -6,7 +6,7 @@ import { STATE, el } from "../shared/state.js";
 import { tampilkanToast, tutupSemuaView, resetSemuaMenuAktif } from "../shared/ui.js";
 import { renderAnggotaChips, initPesertaEvents } from "./peserta.js";
 import { tambahBarisPoin, tambahBarisTindakLanjut, ambilDataPoinForm, ambilDataTindakLanjutForm, initDinamisEvents } from "./dinamis.js";
-import { pulihkanDrafOtomatis, hapusDrafOtomatis, simpanDrafOtomatis, tampilkanBannerDrafJikaAda, initDraftEvents } from "./draft.js";
+import { pulihkanDrafOtomatis, hapusDrafOtomatis, simpanDrafOtomatis, tampilkanBannerDrafJikaAda, cekDrafTersimpan, getActiveDraftKey, formatWaktuDraf, initDraftEvents } from "./draft.js";
 import { muatStats, muatDaftarRapat, bukaRiwayat } from "../riwayat/riwayat.js";
 import { tampilkanDetailRapat } from "../riwayat/detail.js";
 
@@ -119,6 +119,14 @@ export function bukaEditRapat() {
 
   if (el.viewDetail) el.viewDetail.classList.add("tersembunyi");
   if (el.viewForm) el.viewForm.classList.remove("tersembunyi");
+
+  // Periksa apakah ada draf edit lokal yang tersimpan untuk rapat ini
+  const drafEdit = cekDrafTersimpan(`draft_rapat_edit_${r.id}`);
+  if (drafEdit) {
+    tampilkanBannerDrafJikaAda(drafEdit);
+  } else if (el.bannerPulihkanDraf) {
+    el.bannerPulihkanDraf.classList.add("tersembunyi");
+  }
 }
 
 /**
@@ -154,6 +162,7 @@ export function initFormEvents() {
       STATE.isFormDirty = false;
 
       if (sedangEdit && STATE.rapatAktif) {
+        hapusDrafOtomatis(`draft_rapat_edit_${STATE.rapatAktif.id}`);
         if (el.viewForm) el.viewForm.classList.add("tersembunyi");
         if (el.viewDetail) el.viewDetail.classList.remove("tersembunyi");
         window.location.hash = `#/detail/${STATE.rapatAktif.id}`;
@@ -196,6 +205,16 @@ export function initFormEvents() {
       if (!tanggal || !topik || !pimpinan || !notulis) {
         tampilkanToast("Mohon lengkapi tanggal, topik, pimpinan, dan notulis", "error");
         return;
+      }
+
+      // Validasi logika waktu: waktu selesai tidak boleh sebelum waktu mulai
+      if (waktu && waktuSelesai) {
+        const cleanMulai = waktu.replace(".", ":");
+        const cleanSelesai = waktuSelesai.replace(".", ":");
+        if (cleanSelesai < cleanMulai) {
+          tampilkanToast("Waktu selesai rapat tidak boleh lebih awal dari waktu mulai.", "error");
+          return;
+        }
       }
 
       const poinPembahasan = ambilDataPoinForm();

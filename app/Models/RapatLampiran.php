@@ -32,6 +32,43 @@ class RapatLampiran extends Model
     }
 
     /**
+     * Hook model: pastikan fisik berkas di storage terhapus saat baris lampiran dihapus
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($lampiran) {
+            $lampiran->hapusBerkasFisik();
+        });
+    }
+
+    /**
+     * Menghapus fisik berkas dari media penyimpanan ('local' atau 'public')
+     */
+    public function hapusBerkasFisik(): bool
+    {
+        try {
+            $path = (string)$this->path;
+            if (empty($path)) {
+                return false;
+            }
+
+            if (Storage::disk('local')->exists($path)) {
+                Storage::disk('local')->delete($path);
+                return true;
+            }
+
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+                return true;
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("Gagal menghapus berkas fisik lampiran {$this->id}: " . $e->getMessage());
+        }
+
+        return false;
+    }
+
+    /**
      * Format ukuran berkas dalam representasi byte yang mudah dibaca (KB / MB)
      */
     public function formatUkuran(): string

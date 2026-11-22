@@ -71,6 +71,25 @@ class StoreRapatRequest extends FormRequest
     }
 
     /**
+     * Validasi logika tambahan: waktu selesai harus sama atau setelah waktu mulai
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->getData();
+            $waktuInput = $data['waktu'] ?? $this->input('waktu');
+            $waktuSelesaiInput = $data['waktu_selesai'] ?? $this->input('waktu_selesai');
+
+            if (!empty($waktuInput) && !empty($waktuSelesaiInput)) {
+                [$mulai, $selesai] = \App\Models\Rapat::parseWaktuInput($waktuInput, $waktuSelesaiInput);
+                if ($mulai && $selesai && $selesai < $mulai) {
+                    $validator->errors()->add('waktu_selesai', 'Waktu selesai rapat tidak boleh lebih awal dari waktu mulai.');
+                }
+            }
+        });
+    }
+
+    /**
      * Kembalikan JSON error agar konsisten dengan respons API.
      */
     protected function failedValidation(Validator $validator): never

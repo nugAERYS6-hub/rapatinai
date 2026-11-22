@@ -331,10 +331,16 @@ class RapatController extends Controller
             if (!$rapat) {
                 return response()->json(['success' => false, 'pesan' => 'Rapat di tempat sampah tidak ditemukan'], 404);
             }
+
+            // Bersihkan seluruh berkas fisik lampiran sebelum baris database dihapus
+            foreach ($rapat->lampiran()->get() as $lampiran) {
+                $lampiran->hapusBerkasFisik();
+            }
+
             $rapat->forceDelete();
             return response()->json([
                 'success' => true,
-                'pesan' => 'Notulen rapat berhasil dihapus secara permanen',
+                'pesan' => 'Notulen rapat berhasil dihapus secara permanen beserta seluruh berkas lampirannya',
             ]);
         } catch (\Throwable $e) {
             Log::error("Error DELETE /api/rapat/{$id}/force: " . $e->getMessage());
