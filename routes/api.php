@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 |   Pembatasan frekuensi permintaan untuk mencegah penyalahgunaan
 */
 
+// --- 0. Endpoint CSRF Token untuk SPA Internal ---
+Route::get('/csrf-token', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'success'    => true,
+        'csrf_token' => csrf_token(),
+    ]);
+});
+
 Route::middleware(['api.auth', 'throttle:api'])->group(function () {
 
     // --- 1. Manajemen Rapat (Baca Data & Statistik) ---

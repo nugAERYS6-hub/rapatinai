@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'api_key' => env('RAPATIN_API_KEY', 'rapatin-secure-key-malut-2026'),
+    'api_key' => env('RAPATIN_API_KEY', null),
 
     /*
     |--------------------------------------------------------------------------

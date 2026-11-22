@@ -148,8 +148,8 @@ export async function tampilkanDetailRapat(id, syncHash = true) {
       el.avatarNotulis.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>`;
     }
 
-    if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`;
-    if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`;
+    if (el.btnUnduhPdf) el.btnUnduhPdf.href = `/api/rapat/${rapat.id}/export-pdf`;
+    if (el.btnUnduhWord) el.btnUnduhWord.href = `/api/rapat/${rapat.id}/export-word`;
 
     await muatKonfigInstansi();
     renderAiContent(rapat);
@@ -498,9 +498,7 @@ export function renderLampiranGrid(lampiranList = []) {
       iconClass = "lampiran-icon-excel";
     }
 
-    const downloadUrl = item.download_url
-      ? `${item.download_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
-      : (item.url ? `${item.url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}` : "#");
+    const downloadUrl = item.download_url || item.url || "#";
 
     return `
       <div class="card-lampiran-item" data-lampiran-id="${escapeHtml(item.id)}">
@@ -594,12 +592,8 @@ export function bukaPreviewLampiran(item) {
   const nama = item.nama_file || "Berkas";
   const mime = (item.tipe_mime || "").toLowerCase();
   const ext = nama.split(".").pop().toLowerCase();
-  const downloadUrl = item.download_url
-    ? `${item.download_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
-    : (item.url ? `${item.url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}` : "#");
-  const previewUrl = item.preview_url
-    ? `${item.preview_url}?api_key=${encodeURIComponent(RAPATIN_API_KEY)}`
-    : downloadUrl;
+  const downloadUrl = item.download_url || item.url || "#";
+  const previewUrl = item.preview_url || downloadUrl;
 
   if (el.modalPreviewNama) el.modalPreviewNama.textContent = nama;
   if (el.modalPreviewMeta) {

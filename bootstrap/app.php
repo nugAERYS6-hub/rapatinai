@@ -19,6 +19,17 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.auth' => EnsureApiAuthorized::class,
         ]);
 
+        // Aktifkan sesi dan enkripsi cookie pada grup rute API
+        // untuk mendukung autentikasi sesi SPA berbasis CSRF
+        $middleware->api(prepend: [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        ]);
+
+        // Pengecualian validasi CSRF global Laravel hanya untuk rute API eksternal;
+        // verifikasi CSRF untuk browser SPA dikelola secara selektif oleh EnsureApiAuthorized
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);
@@ -27,7 +38,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Respons JSON seragam untuk error rute API saat APP_DEBUG=false
         $exceptions->render(function (\Throwable $e, Request $request) {
             if ($request->is('api/*')) {
-                // Jika exception sudah membungkus respons HTTP langsung (misal RateLimiter response)
                 if ($e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
                     return $e->getResponse();
                 }
@@ -36,8 +46,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     ? $e->getStatusCode()
                     : 500;
                 
-                // Jika error 429 Rate Limit bawaan atau validasi 422, biarkan format spesifiknya
-                if ($status === 429 || $status === 422) {
+                if ($status === 429 || $status === 422 || $status === 419 || $status === 403 || $status === 401) {
                     return null;
                 }
 
