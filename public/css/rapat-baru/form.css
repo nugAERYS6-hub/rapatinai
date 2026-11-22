@@ -330,6 +330,36 @@ body.tema-terang .dynamic-row-poin textarea.input-poin-teks:focus {
   animation: fadeInScale 0.2s ease;
 }
 
+.dynamic-row-tl .tl-field-tugas {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dynamic-row-tl .badge-tl-status.selesai {
+  position: absolute;
+  right: 10px;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.tema-terang .dynamic-row-tl .badge-tl-status.selesai {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.dynamic-row-tl.tl-sudah-selesai .input-tl-tugas {
+  padding-right: 80px;
+}
+
 @media (max-width: 860px) {
   .dynamic-row-tl {
     grid-template-columns: 1fr 1fr;

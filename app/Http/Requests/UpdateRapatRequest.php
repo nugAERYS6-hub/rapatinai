@@ -41,12 +41,15 @@ class UpdateRapatRequest extends FormRequest
             'poinPembahasan.*.isi'  => ['sometimes', 'nullable', 'string'],
 
             // tindak lanjut
-            'tindakLanjut'            => ['sometimes', 'nullable'],
-            'tindakLanjut.*.tugas'    => ['sometimes', 'nullable', 'string'],
-            'tindakLanjut.*.pic'      => ['sometimes', 'nullable', 'string', 'max:255'],
-            'tindakLanjut.*.deadline' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'tindakLanjut.*.selesai'  => ['sometimes', 'nullable'],
-            'tindakLanjut.*.teks'     => ['sometimes', 'nullable', 'string'],
+            'tindakLanjut'              => ['sometimes', 'nullable'],
+            'tindakLanjut.*.tugas'      => ['sometimes', 'nullable', 'string'],
+            'tindakLanjut.*.pic'        => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tindakLanjut.*.deadline'   => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tindakLanjut.*.estimasi'   => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tindakLanjut.*.prioritas'  => ['sometimes', 'nullable', 'string', 'max:50'],
+            'tindakLanjut.*.selesai'    => ['sometimes', 'nullable'],
+            'tindakLanjut.*.selesai_at' => ['sometimes', 'nullable'],
+            'tindakLanjut.*.teks'       => ['sometimes', 'nullable', 'string'],
 
             'created_by'              => ['sometimes', 'nullable', 'string', 'max:100'],
             'taskboard_id'            => ['sometimes', 'nullable', 'string', 'max:100'],

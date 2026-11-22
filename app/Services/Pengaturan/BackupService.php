@@ -3,6 +3,7 @@
 namespace App\Services\Pengaturan;
 
 use App\Models\Rapat;
+use App\Models\RapatLampiran;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -15,20 +16,21 @@ class BackupService
      */
     public function generateMysqlDump(): array
     {
-        $rows = Rapat::orderBy('created_at', 'desc')->get();
+        $rows = Rapat::withTrashed()->orderBy('created_at', 'desc')->get();
+        $lampiranRows = RapatLampiran::orderBy('created_at', 'asc')->get();
         $tanggalBackup = now()->format('Y-m-d H:i:s');
         $namaFile = 'backup_rapatinai_' . now()->format('Y-m-d') . '.sql';
 
         $sql = "-- ============================================\n";
         $sql .= "-- RapatinAI - Backup Database MySQL\n";
         $sql .= "-- Tanggal Backup: {$tanggalBackup}\n";
-        $sql .= "-- Total Data: {$rows->count()} rapat\n";
+        $sql .= "-- Total Data: {$rows->count()} rapat, {$lampiranRows->count()} lampiran\n";
         $sql .= "-- ============================================\n\n";
 
         $sql .= "SET NAMES utf8mb4;\n";
         $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
-        // DROP & CREATE TABLE
+        // DROP & CREATE TABLE: rapat
         $sql .= "-- -------------------------------------------\n";
         $sql .= "-- Struktur Tabel: rapat\n";
         $sql .= "-- -------------------------------------------\n";
@@ -38,8 +40,12 @@ class BackupService
         $sql .= "  `tanggal` VARCHAR(255) NOT NULL,\n";
         $sql .= "  `topik` TEXT NOT NULL,\n";
         $sql .= "  `pimpinanRapat` TEXT NOT NULL,\n";
+        $sql .= "  `pimpinan_nip` VARCHAR(50) DEFAULT NULL,\n";
+        $sql .= "  `pimpinan_jabatan` VARCHAR(150) DEFAULT NULL,\n";
         $sql .= "  `notulis` TEXT NOT NULL,\n";
+        $sql .= "  `notulis_nip` VARCHAR(50) DEFAULT NULL,\n";
         $sql .= "  `waktu` VARCHAR(255) DEFAULT NULL,\n";
+        $sql .= "  `waktu_selesai` VARCHAR(255) DEFAULT NULL,\n";
         $sql .= "  `tempat` TEXT DEFAULT NULL,\n";
         $sql .= "  `anggota` LONGTEXT DEFAULT NULL,\n";
         $sql .= "  `poinPembahasan` LONGTEXT DEFAULT NULL,\n";
@@ -47,12 +53,15 @@ class BackupService
         $sql .= "  `ringkasanAI` LONGTEXT DEFAULT NULL,\n";
         $sql .= "  `ideBaruAI` LONGTEXT DEFAULT NULL,\n";
         $sql .= "  `status` VARCHAR(50) DEFAULT 'Selesai',\n";
+        $sql .= "  `created_by` VARCHAR(100) DEFAULT NULL,\n";
+        $sql .= "  `taskboard_id` VARCHAR(100) DEFAULT NULL,\n";
         $sql .= "  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,\n";
         $sql .= "  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n";
+        $sql .= "  `deleted_at` DATETIME DEFAULT NULL,\n";
         $sql .= "  PRIMARY KEY (`id`)\n";
         $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n\n";
 
-        // INSERT DATA
+        // INSERT DATA: rapat
         if ($rows->count() > 0) {
             $sql .= "-- -------------------------------------------\n";
             $sql .= "-- Data Tabel: rapat ({$rows->count()} baris)\n";
@@ -60,10 +69,11 @@ class BackupService
             $sql .= "LOCK TABLES `rapat` WRITE;\n";
 
             $columns = [
-                'id', 'tanggal', 'topik', 'pimpinanRapat', 'notulis',
-                'waktu', 'tempat', 'anggota', 'poinPembahasan',
-                'tindakLanjut', 'ringkasanAI', 'ideBaruAI', 'status',
-                'created_at', 'updated_at'
+                'id', 'tanggal', 'topik', 'pimpinanRapat', 'pimpinan_nip',
+                'pimpinan_jabatan', 'notulis', 'notulis_nip', 'waktu', 'waktu_selesai',
+                'tempat', 'anggota', 'poinPembahasan', 'tindakLanjut',
+                'ringkasanAI', 'ideBaruAI', 'status', 'created_by', 'taskboard_id',
+                'created_at', 'updated_at', 'deleted_at'
             ];
 
             foreach ($rows as $row) {
@@ -86,8 +96,63 @@ class BackupService
             $sql .= "UNLOCK TABLES;\n\n";
         }
 
+        // DROP & CREATE TABLE: rapat_lampiran
+        $sql .= "-- -------------------------------------------\n";
+        $sql .= "-- Struktur Tabel: rapat_lampiran\n";
+        $sql .= "-- -------------------------------------------\n";
+        $sql .= "DROP TABLE IF EXISTS `rapat_lampiran`;\n";
+        $sql .= "CREATE TABLE `rapat_lampiran` (\n";
+        $sql .= "  `id` VARCHAR(64) NOT NULL,\n";
+        $sql .= "  `rapat_id` VARCHAR(64) NOT NULL,\n";
+        $sql .= "  `nama_file` VARCHAR(255) NOT NULL,\n";
+        $sql .= "  `path` VARCHAR(500) NOT NULL,\n";
+        $sql .= "  `ukuran` BIGINT UNSIGNED NOT NULL,\n";
+        $sql .= "  `tipe_mime` VARCHAR(100) NOT NULL,\n";
+        $sql .= "  `kategori` VARCHAR(50) NOT NULL DEFAULT 'dokumen',\n";
+        $sql .= "  `keterangan` VARCHAR(255) DEFAULT NULL,\n";
+        $sql .= "  `created_at` DATETIME DEFAULT NULL,\n";
+        $sql .= "  `updated_at` DATETIME DEFAULT NULL,\n";
+        $sql .= "  PRIMARY KEY (`id`),\n";
+        $sql .= "  KEY `rapat_lampiran_rapat_id_index` (`rapat_id`),\n";
+        $sql .= "  KEY `rapat_lampiran_kategori_index` (`kategori`),\n";
+        $sql .= "  KEY `rapat_lampiran_created_at_index` (`created_at`),\n";
+        $sql .= "  CONSTRAINT `rapat_lampiran_rapat_id_foreign` FOREIGN KEY (`rapat_id`) REFERENCES `rapat` (`id`) ON DELETE CASCADE\n";
+        $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n\n";
+
+        // INSERT DATA: rapat_lampiran
+        if ($lampiranRows->count() > 0) {
+            $sql .= "-- -------------------------------------------\n";
+            $sql .= "-- Data Tabel: rapat_lampiran ({$lampiranRows->count()} baris)\n";
+            $sql .= "-- -------------------------------------------\n";
+            $sql .= "LOCK TABLES `rapat_lampiran` WRITE;\n";
+
+            $columnsLampiran = [
+                'id', 'rapat_id', 'nama_file', 'path', 'ukuran',
+                'tipe_mime', 'kategori', 'keterangan', 'created_at', 'updated_at'
+            ];
+
+            foreach ($lampiranRows as $lampiran) {
+                $values = [];
+                foreach ($columnsLampiran as $col) {
+                    $val = $lampiran->{$col};
+                    if ($val === null) {
+                        $values[] = 'NULL';
+                    } else {
+                        $escaped = addslashes((string)$val);
+                        $escaped = str_replace("\n", "\\n", $escaped);
+                        $escaped = str_replace("\r", "\\r", $escaped);
+                        $escaped = str_replace("\t", "\\t", $escaped);
+                        $values[] = "'" . $escaped . "'";
+                    }
+                }
+                $sql .= "INSERT INTO `rapat_lampiran` (`" . implode('`, `', $columnsLampiran) . "`) VALUES (" . implode(', ', $values) . ");\n";
+            }
+
+            $sql .= "UNLOCK TABLES;\n\n";
+        }
+
         $sql .= "SET FOREIGN_KEY_CHECKS = 1;\n";
-        $sql .= "-- Backup selesai. {$rows->count()} data berhasil diekspor.\n";
+        $sql .= "-- Backup selesai. {$rows->count()} rapat dan {$lampiranRows->count()} lampiran berhasil diekspor.\n";
 
         return [
             'content'  => $sql,
@@ -123,6 +188,14 @@ class BackupService
             }
 
             DB::commit();
+
+            // Jalankan migrasi otomatis pasca-restore agar skema selalu mutakhir
+            // dan kompatibel jika file backup berasal dari versi lama
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            } catch (\Throwable $mEx) {
+                Log::warning("Migrasi otomatis pasca-restore: " . $mEx->getMessage());
+            }
 
             Log::info("Restore database berhasil: {$totalInsert} baris INSERT dari {$totalPernyataan} pernyataan.");
 

@@ -8,6 +8,7 @@ class SqlRestoreParser
      * Nama tabel target yang diizinkan untuk dipulihkan.
      */
     public const ALLOWED_TABLE = 'rapat';
+    public const ALLOWED_TABLES = ['rapat', 'rapat_lampiran'];
 
     /**
      * Awalan pernyataan yang diizinkan dengan validasi ketat.
@@ -286,7 +287,7 @@ class SqlRestoreParser
      */
     protected function validateAndClassifyStatement(string $stmt): string
     {
-        $targetTable = self::ALLOWED_TABLE;
+        $tablePattern = '(?:rapat|rapat_lampiran)';
 
         // 1. Pernyataan SET
         if (preg_match('/^SET\s+/i', $stmt)) {
@@ -306,24 +307,24 @@ class SqlRestoreParser
         }
 
         // 2. Pernyataan DROP TABLE
-        if (preg_match('/^DROP\s+TABLE\s+(?:IF\s+EXISTS\s+)?(?:`?' . $targetTable . '`?)\s*$/i', $stmt)) {
+        if (preg_match('/^DROP\s+TABLE\s+(?:IF\s+EXISTS\s+)?(?:`?' . $tablePattern . '`?)\s*$/i', $stmt)) {
             return 'TABLE_OP';
         } elseif (preg_match('/^DROP\s+TABLE/i', $stmt)) {
-            throw new \InvalidArgumentException("Pernyataan DROP TABLE hanya diizinkan untuk tabel '{$targetTable}'.");
+            throw new \InvalidArgumentException("Pernyataan DROP TABLE hanya diizinkan untuk tabel yang didukung ('rapat', 'rapat_lampiran').");
         }
 
         // 3. Pernyataan CREATE TABLE
-        if (preg_match('/^CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:`?' . $targetTable . '`?)\s*\(/i', $stmt)) {
+        if (preg_match('/^CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:`?' . $tablePattern . '`?)\s*\(/i', $stmt)) {
             return 'TABLE_OP';
         } elseif (preg_match('/^CREATE\s+TABLE/i', $stmt)) {
-            throw new \InvalidArgumentException("Pernyataan CREATE TABLE hanya diizinkan untuk tabel '{$targetTable}'.");
+            throw new \InvalidArgumentException("Pernyataan CREATE TABLE hanya diizinkan untuk tabel yang didukung ('rapat', 'rapat_lampiran').");
         }
 
         // 4. Pernyataan LOCK / UNLOCK TABLES
-        if (preg_match('/^LOCK\s+TABLES\s+(?:`?' . $targetTable . '`?)\s+WRITE\s*$/i', $stmt)) {
+        if (preg_match('/^LOCK\s+TABLES\s+(?:`?' . $tablePattern . '`?)\s+WRITE\s*$/i', $stmt)) {
             return 'SAFE_OP';
         } elseif (preg_match('/^LOCK\s+TABLES/i', $stmt)) {
-            throw new \InvalidArgumentException("Pernyataan LOCK TABLES hanya diizinkan untuk tabel '{$targetTable}'.");
+            throw new \InvalidArgumentException("Pernyataan LOCK TABLES hanya diizinkan untuk tabel yang didukung ('rapat', 'rapat_lampiran').");
         }
 
         if (preg_match('/^UNLOCK\s+TABLES\s*$/i', $stmt)) {
@@ -331,14 +332,14 @@ class SqlRestoreParser
         }
 
         // 5. Pernyataan INSERT INTO
-        if (preg_match('/^INSERT\s+INTO\s+(?:`?' . $targetTable . '`?)\s+/i', $stmt)) {
+        if (preg_match('/^INSERT\s+INTO\s+(?:`?' . $tablePattern . '`?)\s+/i', $stmt)) {
             return 'INSERT';
         } elseif (preg_match('/^INSERT\s+INTO/i', $stmt)) {
-            throw new \InvalidArgumentException("Pernyataan INSERT INTO hanya diizinkan untuk tabel '{$targetTable}'.");
+            throw new \InvalidArgumentException("Pernyataan INSERT INTO hanya diizinkan untuk tabel yang didukung ('rapat', 'rapat_lampiran').");
         }
 
         // Jika ada pernyataan lain di luar whitelist (misal UPDATE, DELETE, REPLACE, dll)
-        throw new \InvalidArgumentException("Pernyataan SQL tidak diizinkan: '" . substr($stmt, 0, 40) . "...'. Hanya operasi tabel '{$targetTable}' yang didukung.");
+        throw new \InvalidArgumentException("Pernyataan SQL tidak diizinkan: '" . substr($stmt, 0, 40) . "...'. Hanya operasi tabel yang didukung ('rapat', 'rapat_lampiran').");
     }
 }
 

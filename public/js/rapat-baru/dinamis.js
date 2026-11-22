@@ -65,12 +65,25 @@ export function tambahBarisTindakLanjut(data = {}) {
   const row = document.createElement("div");
   row.className = "dynamic-row-tl";
   const tugas = typeof data === "string" ? data : (data.tugas || data.isi || "");
-  const pic = data.pic || "";
-  const deadline = data.deadline || data.estimasi || "";
+  const pic = typeof data === "object" && data !== null ? (data.pic || "") : "";
+  const deadline = typeof data === "object" && data !== null ? (data.deadline || data.estimasi || "") : "";
+  const selesai = typeof data === "object" && data !== null ? Boolean(data.selesai) : false;
+  const selesaiAt = typeof data === "object" && data !== null ? (data.selesai_at || "") : "";
+  const prioritas = typeof data === "object" && data !== null ? (data.prioritas || "Normal") : "Normal";
+
+  row.dataset.selesai = selesai ? "true" : "false";
+  if (selesaiAt) row.dataset.selesaiAt = selesaiAt;
+  if (prioritas) row.dataset.prioritas = prioritas;
+  if (selesai) row.classList.add("tl-sudah-selesai");
+
+  const statusBadge = selesai 
+    ? `<span class="badge-tl-status selesai" title="Tugas ini sudah ditandai selesai">✓ Selesai</span>` 
+    : "";
 
   row.innerHTML = `
     <div class="tl-field-tugas">
       <input type="text" class="input-tl-tugas" placeholder="Deskripsi tugas / tindak lanjut" value="${escapeHtml(tugas)}" required />
+      ${statusBadge}
     </div>
     <div class="tl-field-pic">
       <input type="text" class="input-tl-pic" placeholder="PIC / Penanggung Jawab" value="${escapeHtml(pic)}" />
@@ -101,8 +114,20 @@ export function ambilDataTindakLanjutForm() {
     const tugas = r.querySelector(".input-tl-tugas")?.value.trim();
     const pic = r.querySelector(".input-tl-pic")?.value.trim() || "-";
     const deadline = r.querySelector(".input-tl-deadline")?.value.trim() || "-";
+    const selesai = r.dataset.selesai === "true";
+    const selesaiAt = r.dataset.selesaiAt || (selesai ? new Date().toISOString() : null);
+    const prioritas = r.dataset.prioritas || "Normal";
+
     if (tugas) {
-      hasil.push({ tugas, pic, deadline, selesai: false });
+      hasil.push({ 
+        tugas, 
+        pic, 
+        deadline, 
+        estimasi: deadline,
+        prioritas,
+        selesai,
+        selesai_at: selesai ? selesaiAt : null
+      });
     }
   });
   return hasil;

@@ -39,12 +39,15 @@ class StoreRapatRequest extends FormRequest
             'poinPembahasan.*.isi'  => ['nullable', 'string'],
 
             // tindak lanjut
-            'tindakLanjut'            => ['nullable'],
-            'tindakLanjut.*.tugas'    => ['nullable', 'string'],
-            'tindakLanjut.*.pic'      => ['nullable', 'string', 'max:255'],
-            'tindakLanjut.*.deadline' => ['nullable', 'string', 'max:255'],
-            'tindakLanjut.*.selesai'  => ['nullable'],
-            'tindakLanjut.*.teks'     => ['nullable', 'string'],
+            'tindakLanjut'              => ['nullable'],
+            'tindakLanjut.*.tugas'      => ['nullable', 'string'],
+            'tindakLanjut.*.pic'        => ['nullable', 'string', 'max:255'],
+            'tindakLanjut.*.deadline'   => ['nullable', 'string', 'max:255'],
+            'tindakLanjut.*.estimasi'   => ['nullable', 'string', 'max:255'],
+            'tindakLanjut.*.prioritas'  => ['nullable', 'string', 'max:50'],
+            'tindakLanjut.*.selesai'    => ['nullable'],
+            'tindakLanjut.*.selesai_at' => ['nullable'],
+            'tindakLanjut.*.teks'       => ['nullable', 'string'],
 
             'created_by'              => ['nullable', 'string', 'max:100'],
             'taskboard_id'            => ['nullable', 'string', 'max:100'],
