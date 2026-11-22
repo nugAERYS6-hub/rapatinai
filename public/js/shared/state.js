@@ -22,16 +22,7 @@ export const STATE = {
 };
 
 export const el = {
-  // Sidebar
-  sidebar: document.getElementById("sidebar"),
-  sidebarOverlay: document.getElementById("sidebar-overlay"),
-  btnToggleSidebar: document.getElementById("tombol-toggle-sidebar"),
-  btnBukaSidebar: document.getElementById("tombol-buka-sidebar"),
-  btnBukaMobile: document.getElementById("tombol-buka-sidebar-mobile"),
-  btnTutupMobile: document.getElementById("tombol-tutup-sidebar-mobile"),
-  menuBeranda: document.getElementById("menu-beranda"),
-  menuRapatBaru: document.getElementById("menu-rapat-baru"),
-  menuRiwayatRapat: document.getElementById("menu-riwayat-rapat"),
+  // Navigasi & Pencarian
   sidebarRiwayatContent: document.getElementById("sidebar-riwayat-content"),
   inputCari: document.getElementById("input-cari-rapat"),
   btnClearCari: document.getElementById("tombol-clear-cari"),
@@ -163,7 +154,7 @@ export const el = {
 
 export const elPengaturan = {
   viewPengaturan: document.getElementById("tampilan-pengaturan"),
-  menuPengaturan: document.getElementById("menu-pengaturan"),
+
   btnBackupDb: document.getElementById("btn-backup-db"),
   themeToggleCard: document.getElementById("theme-toggle-card"),
   themeToggleInput: document.getElementById("theme-toggle-input"),

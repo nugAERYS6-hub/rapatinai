@@ -85,7 +85,6 @@ export function bukaBeranda(syncHash = true) {
   }
 
   resetSemuaMenuAktif();
-  if (el.menuBeranda) el.menuBeranda.classList.add("aktif");
 
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");

@@ -28,7 +28,6 @@ export function tampilkanFormBaru(syncHash = true) {
   if (el.breadcrumbCurrent) el.breadcrumbCurrent.textContent = "Buat Notulen Baru";
 
   resetSemuaMenuAktif();
-  if (el.menuRapatBaru) el.menuRapatBaru.classList.add("aktif");
 
   if (el.formRapat) el.formRapat.reset();
   if (el.editIdRapat) el.editIdRapat.value = "";
@@ -137,16 +136,7 @@ export function initFormEvents() {
   initDinamisEvents();
   initDraftEvents();
 
-  // Menu sidebar Rapat Baru click
-  if (el.menuRapatBaru) {
-    el.menuRapatBaru.addEventListener("click", () => {
-      if (window.location.hash === "#/baru") {
-        tampilkanFormBaru(false);
-      } else {
-        window.location.hash = "#/baru";
-      }
-    });
-  }
+
 
   // Batal form
   if (el.btnBatalForm) {

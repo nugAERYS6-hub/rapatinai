@@ -941,7 +941,8 @@ body.tema-terang .theme-toggle-desc {
   color: #64748b !important;
 }
 
-body.tema-terang .breadcrumb-root { color: #64748b !important; }
+body.tema-terang .breadcrumb-root { color: #64748b !important; }
+
 body.tema-terang .breadcrumb-root:hover { color: #0284c7 !important; }
 body.tema-terang .breadcrumb-separator { color: #94a3b8 !important; }
 body.tema-terang .breadcrumb-middle { color: #475569 !important; }
@@ -1372,8 +1373,14 @@ body.tema-terang .item-rapat-sidebar::after {
   }
 
   .top-command-bar {
-    padding: 0 16px;
-    height: 56px;
+    height: auto !important;
+    min-height: 84px;
+    padding: 10px 16px 8px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px;
   }
 
   .main-scrollable-content {
@@ -1404,23 +1411,44 @@ body.tema-terang .item-rapat-sidebar::after {
 
 @media (max-width: 640px) {
   .top-command-bar {
-    padding: 0 12px;
-    height: 54px;
+    padding: 8px 12px 6px 12px !important;
+    height: auto !important;
+    min-height: 80px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 6px;
   }
 
   .command-bar-left {
-    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
     min-width: 0;
-    flex: 1;
     overflow: hidden;
   }
 
   .breadcrumb {
-    font-size: 13px;
-    gap: 6px;
+    font-size: 12.5px;
+    gap: 5px;
     min-width: 0;
+    max-width: 100%;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .breadcrumb-current {
+    max-width: 160px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .breadcrumb-root {

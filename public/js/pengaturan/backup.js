@@ -152,7 +152,6 @@ export function bukaPengaturan(syncHash = true) {
     return;
   }
   resetSemuaMenuAktif();
-  if (elPengaturan.menuPengaturan) elPengaturan.menuPengaturan.classList.add("aktif");
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
   if (el.breadcrumbCurrent) el.breadcrumbCurrent.textContent = "Pengaturan";
@@ -165,15 +164,7 @@ export function bukaPengaturan(syncHash = true) {
  * Inisialisasi event tombol backup, restore file, dan hapus log
  */
 export function initBackupEvents() {
-  if (elPengaturan.menuPengaturan) {
-    elPengaturan.menuPengaturan.addEventListener("click", () => {
-      if (window.location.hash === "#/pengaturan") {
-        bukaPengaturan(false);
-      } else {
-        window.location.hash = "#/pengaturan";
-      }
-    });
-  }
+
 
   const btnBackupDb = document.getElementById("btn-backup-db");
   const labelBtnBackup = document.getElementById("label-btn-backup");

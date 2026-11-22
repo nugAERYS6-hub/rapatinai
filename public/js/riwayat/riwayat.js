@@ -215,7 +215,6 @@ export function bukaRiwayat(syncHash = true) {
     return;
   }
   resetSemuaMenuAktif();
-  if (el.menuRiwayatRapat) el.menuRiwayatRapat.classList.add("aktif");
   el.breadcrumbMiddle?.classList.add("tersembunyi");
   el.breadcrumbSepMiddle?.classList.add("tersembunyi");
   if (el.breadcrumbCurrent) el.breadcrumbCurrent.textContent = "Riwayat Rapat";
@@ -227,16 +226,7 @@ export function bukaRiwayat(syncHash = true) {
  * Inisialisasi event pencarian, filter, dan pagination
  */
 export function initRiwayatEvents() {
-  // Menu sidebar click
-  if (el.menuRiwayatRapat) {
-    el.menuRiwayatRapat.addEventListener("click", () => {
-      if (window.location.hash === "#/riwayat") {
-        bukaRiwayat(false);
-      } else {
-        window.location.hash = "#/riwayat";
-      }
-    });
-  }
+
 
   // Breadcrumb middle click
   if (el.breadcrumbMiddle) {
